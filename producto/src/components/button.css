@@ -1,0 +1,32 @@
+.btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-start {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-start:hover {
+  background-color: #2563eb;
+}
+
+.btn-paus {
+  background-color: #6b7280;
+  color: white;
+}
+
+.btn-paus:hover {
+  background-color: #4b5563;
+}
