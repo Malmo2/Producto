@@ -1,8 +1,12 @@
+
 import "./App.css";
 import Button from "./components/button";
+import Card from './components/cards/Card'
+
 
 function App() {
   return (
+
     <div style={{ padding: "2rem" }}>
       <h1>Button test</h1>
 
@@ -27,6 +31,19 @@ function App() {
       </div>
     </div>
   );
+
+<div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap'}}>
+      <Card>
+        <h2>Aktivt arbetsblock</h2>
+        <p>25 minuter kvar</p>
+        <button>Starta</button>
+        <button>Pausa</button>
+      </Card>
+
+    </div>
+
+  )
+
 }
 
 export default App;
