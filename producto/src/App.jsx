@@ -1,8 +1,5 @@
 import "./styles/App.css";
 import Button from "./components/button";
-
-import Card from "./components/cards/Card";
-
 import Card from "./components/cards/Card";
 import Upcoming from "./components/Upcoming/Upcoming";
 import timer from "./components/timer";
