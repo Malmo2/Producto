@@ -1,8 +1,8 @@
-import Button from "../../button";
+import Button from "../button/button";
 
-function HeroPanel({ title, eyebrow, body }) {
+function RecommendationBanner({ eyebrow, title, body }) {
   return (
-    <section className="panel hero">
+    <section className="panel recommendation-banner">
       <div>
         <p className="eyebrow">{eyebrow}</p>
         <h3 className="hero-title">{title}</h3>
@@ -16,4 +16,4 @@ function HeroPanel({ title, eyebrow, body }) {
   );
 }
 
-export default HeroPanel;
+export default RecommendationBanner;

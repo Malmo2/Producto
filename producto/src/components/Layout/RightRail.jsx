@@ -1,5 +1,5 @@
-import QuickActions from "../QuickActions";
-import UpcomingPanel from "../panels/UpcomingPanel";
+import QuickActions from "../quick-actions/QuickActions";
+import UpcomingPanel from "../Upcoming/Upcoming";
 import ActivityLogPanel from "../panels/ActivityLogPanel";
 
 function RightRail({ events, activityItems }) {

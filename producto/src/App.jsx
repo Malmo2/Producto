@@ -3,12 +3,16 @@ import "./App.css";
 // import Card from "./components/cards/Card";
 // import Upcoming from "./components/Upcoming/Upcoming";
 import DashboardLayout from "./components/Layout/DashboardLayout";
-import Sidebar from "./components/Layout/mainlayout/Sidebar";
-import TopHeader from "./components/Layout/mainlayout/TopHeader";
-import KpiRow from "./components/Layout/rows/KpiRow";
-import RecommendationBanner from "./components/Layout/RecommendationBanner";
-import EnergyChartCard from "./components/Layout/EnergyChartCard";
-import RightRail from "./components/Layout/mainlayout/RightRail";
+import Sidebar from "./components/Layout/Sidebar";
+import TopHeader from './components/Layout/TopHeader';
+import KpiRow from './components/rows/KpiRow';
+import RecommendationBanner from "./components/banner/RecommendationBanner";
+import EnergyChartCard from "./components/chart/EnergyChartCard";
+import RightRail from './components/Layout/RightRail';
+
+
+
+
 
 
 

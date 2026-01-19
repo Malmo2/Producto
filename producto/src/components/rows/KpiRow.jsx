@@ -1,4 +1,4 @@
-import StatCard from "../../cards/StatCard";
+import StatCard from '../cards/StatCard';
 function KpiRow({ items = [] }) {
   return (
     <section className="kpi-row">

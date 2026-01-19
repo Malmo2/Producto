@@ -1,4 +1,4 @@
-import Upcoming from "../../Upcoming/Upcoming";
+import Upcoming from "../Upcoming/Upcoming";
 
 function UpcomingPanel({ events }) {
   return (

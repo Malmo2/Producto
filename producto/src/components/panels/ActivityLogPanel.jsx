@@ -1,4 +1,4 @@
-import ActivityList from "../ActivityList";
+import ActivityList from "../activity/ActivityList";
 
 function ActivityLogPanel({ items }) {
   return (

@@ -1,4 +1,4 @@
-import logo from '../../../assets/producto-logo.svg';
+import logo from "../../assets/producto-logo.svg";
 
 function Sidebar({ navItems, activeIndex = 0, profileName = "Alex Rivera", profileMeta = "Pro Account" }) {
   return (
