@@ -1,14 +1,10 @@
 
 import "./App.css";
+import ActivityLog from "./components/Activitylog/Activitylog";
 import Button from "./components/button";
+import CalendarPopup from "./components/Calendar/Calendar";
 import Card from './components/cards/Card'
 import Upcoming from "./components/Upcoming/Upcoming";
-
-
-const upcomingEvents = [
-  { id: 1, title: "Benjame's Playground", date: "2024-07-01", time: '13:00', description: 'Playtime', color: 'purple' },
-  { id: 2, title: "Johannes Oatcows milked", date: "2024-07-05", time: '19:00', description: 'Milky', color: 'orange' },
-];
 
 function App() {
   return (
@@ -38,8 +34,14 @@ function App() {
         </div>
       </div>
       <aside style={{ width: "320px", padding: "1rem" }}>
-        <Upcoming events={upcomingEvents} />
+        <CalendarPopup/>
+        <Upcoming />
+        <ActivityLog/>
+        
+        
       </aside>
+      
+      
     </div>
   );
 
