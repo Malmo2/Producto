@@ -1,8 +1,9 @@
 import './Upcoming.css';
 
-const UpcomingEvent = ({ time, title, description, color = 'blue' }) => {
+const UpcomingEvent = ({ time, date, title, description, color = 'blue' }) => {
   return (
     <div className={`upcoming-event upcoming-event--${color}`}>
+      <span className="upcoming-event-date">{date}</span>
       <span className="upcoming-event-time">{time}</span>
       <h4 className="upcoming-event-title">{title}</h4>
       <p className="upcoming-event-description">{description}</p>
@@ -22,6 +23,7 @@ const Upcoming = ({ events = []}) => {
         {events.map((event, index) => (
           <UpcomingEvent
             key={index}
+            date={event.date}
             time={event.time}
             title={event.title}
             description={event.description}
