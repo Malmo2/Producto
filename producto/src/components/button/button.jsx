@@ -1,4 +1,4 @@
-import "../../styles/button.css";
+import '../button/button.css'
 
 function Button({ children, onClick, variant = "primary", disabled = false }) {
   return (

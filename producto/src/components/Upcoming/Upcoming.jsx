@@ -1,4 +1,4 @@
-import "../../styles/Upcoming.css";
+import '../Upcoming/Upcoming.css'
 
 const UpcomingEvent = ({ time, title, description, color = "blue" }) => {
   return (
