@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./styles/timer.css";
 
-function timer() {
+function Timer() {
   const [timeLeft, setTimeLeft] = useState(20 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
