@@ -1,19 +1,10 @@
-function Card({ children, style = {} }) {
+function Card({ children, onClick}) {
   return (
-    <div
-      style={{
-        border: '1px solid #ccc',
-        borderRadius: '10px',
-        padding: '1rem',
-        maxWidth: '300px',
-        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-        boxSizing: 'border-box',
-        width: '100%',
-        ...style,
-      }}
+    <button onClick={onClick}
+    
     >
       {children}
-    </div>
+    </button>
   );
 }
 
