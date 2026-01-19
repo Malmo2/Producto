@@ -1,0 +1,36 @@
+import './Upcoming.css';
+
+const UpcomingEvent = ({ time, title, description, color = 'blue' }) => {
+  return (
+    <div className={`upcoming-event upcoming-event--${color}`}>
+      <span className="upcoming-event-time">{time}</span>
+      <h4 className="upcoming-event-title">{title}</h4>
+      <p className="upcoming-event-description">{description}</p>
+    </div>
+  );
+};
+
+const Upcoming = ({ events = []}) => {
+  return (
+    <div className="upcoming">
+      <div className="upcoming-header">
+        <h3 className="upcoming-title">Upcoming</h3>
+        <a href="#" className="upcoming-link">View Calendar</a>
+      </div>
+      
+      <div className="upcoming-events">
+        {events.map((event, index) => (
+          <UpcomingEvent
+            key={index}
+            time={event.time}
+            title={event.title}
+            description={event.description}
+            color={event.color}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Upcoming;
