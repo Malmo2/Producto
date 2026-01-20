@@ -1,0 +1,43 @@
+<svg
+  width="420"
+  height="96"
+  viewBox="0 0 420 96"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    d="M32 24
+       h24
+       a24 24 0 0 1 0 48
+       h-24
+       a12 12 0 0 1 -12 -12
+       v-24
+       a12 12 0 0 1 12 -12
+       z"
+    fill="url(#blueGradient)"
+  />
+  <text
+    x="96"
+    y="62"
+    fill="#FFFFFF"
+    font-size="48"
+    font-weight="700"
+    font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+    letter-spacing="-0.5"
+  >
+    Producto
+  </text>
+  <defs>
+    <linearGradient
+      id="blueGradient"
+      x1="20"
+      y1="24"
+      x2="68"
+      y2="72"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop offset="0%" stop-color="#3DDCFF"/>
+      <stop offset="100%" stop-color="#0AA2FF"/>
+    </linearGradient>
+  </defs>
+</svg>

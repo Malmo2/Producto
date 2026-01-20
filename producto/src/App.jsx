@@ -1,53 +1,51 @@
-
 import "./App.css";
-import ActivityLog from "./components/Activitylog/Activitylog";
-import Button from "./components/button";
-import CalendarPopup from "./components/Calendar/Calendar";
-import Card from './components/cards/Card'
+import Button from "./components/button/button";
+import Card from "./components/cards/Card";
+import Timer from "./components/timer/timer";
+
 import Upcoming from "./components/Upcoming/Upcoming";
+import ActivityLog from "./components/Activitylog/Activitylog";
+import CalendarPopup from "./components/Calendar/Calendar";
+
+import Navbar from "./components/Nav/Navbar";
+import navLinks from "./components/Nav/navLinks";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Dashboard from "./components/nav/pages/Dashboard";
+import Insights from "./components/nav/pages/Insights";
+import Projects from "./components/nav/pages/Projects";
+import Schedule from "./components/nav/pages/Schedule";
+import Team from "./components/nav/pages/Team";
 
 function App() {
   return (
+    <>
+      <Navbar links={navLinks} />
 
-    <div style={{ display: "flex", justifyContent: "space-between", padding: "2rem", minHeight: "100vh" }}>
-      <div>
-        <h1>Button test</h1>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/insights" element={<Insights />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/schedule" element={<Schedule />} />
+        <Route path="/team" element={<Team />} />
+      </Routes>
 
-        <div style={{ display: "flex", gap: "1rem", marginTop: "2rem" }}>
-          <Button
-            text="Start"
-            variant="primary"
-            onClick={() => alert("Start button clicked!")}
-          />
+      <Card>
+        <Button>Hejhej</Button>
+        <Button>Hejhej</Button>
+        <Button>Hejhej</Button>
+        <Button>Hejhej</Button>
+      </Card>
 
-          <Button
-            text="Pause"
-            variant="secondary"
-            onClick={() => alert("Pause button clicked!")}
-          />
+      <Timer />
 
-          <Button
-            text="Stop"
-            variant="danger"
-            onClick={() => alert("Stop button clicked!")}
-          />
-        </div>
-      </div>
-      <aside style={{ width: "320px", padding: "1rem" }}>
-        <CalendarPopup/>
+      <aside className="aside-panel">
+        <CalendarPopup />
         <Upcoming />
-        <ActivityLog/>
-        
-        
+        <ActivityLog />
       </aside>
-      
-      
-    </div>
+    </>
   );
-
-
-
-
 }
 
 export default App;
