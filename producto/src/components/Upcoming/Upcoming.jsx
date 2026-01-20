@@ -6,9 +6,9 @@ const upcomingEvents = [
   { id: 2, title: "Johannes Oatcows milked", date: "2024-07-05", time: '19:00', description: 'Milky', color: 'orange' },
 ];
 
-const UpcomingEvent = ({ time, date, title, description, color = 'blue' }) => {
 
-const UpcomingEvent = ({ time, title, description, color = "blue" }) => {
+
+const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
 
   return (
     <div className={`upcoming-event upcoming-event--${color}`}>
@@ -21,9 +21,9 @@ const UpcomingEvent = ({ time, title, description, color = "blue" }) => {
 };
 
 
-const Upcoming = ({ events = upcomingEvents }) => {
 
-const Upcoming = ({ events = [] }) => {
+
+const Upcoming = ({ events = [upcomingEvents] }) => {
 
   return (
     <div className="upcoming">

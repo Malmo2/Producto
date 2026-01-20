@@ -40,4 +40,4 @@ function ActivityLog({ items = activities }) {
 }
 
 
-export default ActivityLog
+export default ActivityLog;
