@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import "./styles/timer.css";
+import "../timer/timer.css";
+import Button from "../button/button";
 
 function Timer() {
   const [timeLeft, setTimeLeft] = useState(20 * 60);
@@ -45,7 +46,7 @@ function Timer() {
 
       <div className="timer-controls">
         {isRunning ? (
-          <button onClick={handleStart}>Start</button>
+          <Button onClick={handleStart}>Start</Button>
         ) : (
           <button onClick={handlePause}>Pause</button>
         )}
