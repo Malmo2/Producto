@@ -1,4 +1,5 @@
-import './Upcoming.css';
+import '../Upcoming/Upcoming.css'
+
 
 const upcomingEvents = [
   { id: 1, title: "Benjame's Playground", date: "2024-07-01", time: '13:00', description: 'Playtime', color: 'purple' },
@@ -6,6 +7,9 @@ const upcomingEvents = [
 ];
 
 const UpcomingEvent = ({ time, date, title, description, color = 'blue' }) => {
+
+const UpcomingEvent = ({ time, title, description, color = "blue" }) => {
+
   return (
     <div className={`upcoming-event upcoming-event--${color}`}>
       <span className="upcoming-event-date">{date}</span>
@@ -16,14 +20,20 @@ const UpcomingEvent = ({ time, date, title, description, color = 'blue' }) => {
   );
 };
 
+
 const Upcoming = ({ events = upcomingEvents }) => {
+
+const Upcoming = ({ events = [] }) => {
+
   return (
     <div className="upcoming">
       <div className="upcoming-header">
         <h3 className="upcoming-title">Upcoming</h3>
-        <a href="#" className="upcoming-link">View Calendar</a>
+        <a href="#" className="upcoming-link">
+          View Calendar
+        </a>
       </div>
-      
+
       <div className="upcoming-events">
         {events.map((event, index) => (
           <UpcomingEvent
