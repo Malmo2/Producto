@@ -19,14 +19,14 @@
   margin: 0;
 }
 
-.upcoming-event--purple {
+.upcoming-link {
   color: #3b82f6;
   font-size: 0.875rem;
   text-decoration: none;
   transition: color 0.2s;
 }
 
-.upcomin-link:hover {
+.upcoming-link:hover {
   color: #60a5fa;
 }
 
@@ -85,6 +85,9 @@
 
 .upcoming-event--orange .upcoming-event-time {
   color: #f97316;
+}
+.upcoming-event-date {
+  color: rgb(0, 136, 255);
 }
 
 .upcoming-event-title {
