@@ -1,17 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { FaCalendarAlt } from "react-icons/fa";
 import "./Calendar.css";
-
-const activities = [
-  { date: "2026-01-05", title: "Möte" },
-  { date: "2026-01-12", title: "Gym" },
-  { date: "2026-01-12", title: "Lunch" },
-];
-
 
 function CalendarPopup() {
   const [open, setOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [activities, setActivities] = useState([])
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/activities');
+        if(!res.ok) throw new Error('Något gick fel vid hämtning');
+        const data = await res.json();
+        setActivities(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Kunde inte hämta aktiviteter', error);
+        setActivities([]);
+      }
+    };
+    fetchActivities();
+  }, [])
 
   const today = new Date();
   const year = today.getFullYear();
