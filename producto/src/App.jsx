@@ -9,28 +9,12 @@ import CalendarPopup from "./components/Calendar/Calendar";
 
 import Navbar from "./components/Nav/Navbar";
 import navLinks from "./components/Nav/navLinks";
-
 import { Routes, Route, Navigate } from "react-router-dom";
-
-function Dashboard() {
-  return <h1>Dashboard</h1>;
-}
-
-function Insights() {
-  return <h1>Insights</h1>;
-}
-
-function Projects() {
-  return <h1>Projects</h1>;
-}
-
-function Schedule() {
-  return <h1>Schedule</h1>;
-}
-
-function Team() {
-  return <h1>Team</h1>;
-}
+import Dashboard from "./components/nav/pages/Dashboard";
+import Insights from "./components/nav/pages/Insights";
+import Projects from "./components/nav/pages/Projects";
+import Schedule from "./components/nav/pages/Schedule";
+import Team from "./components/nav/pages/Team";
 
 function App() {
   return (
