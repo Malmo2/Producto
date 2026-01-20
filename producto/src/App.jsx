@@ -26,7 +26,7 @@ function App() {
     <Timer />
     
 
-    <aside style={{ width: "320px", padding: "1rem" }}>
+    <aside className="aside-panel">
         <CalendarPopup/>
         <Upcoming />
         <ActivityLog/>

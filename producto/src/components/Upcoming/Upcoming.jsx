@@ -23,7 +23,7 @@ const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
 
 
 
-const Upcoming = ({ events = [upcomingEvents] }) => {
+const Upcoming = ({ events = upcomingEvents }) => {
 
   return (
     <div className="upcoming">
