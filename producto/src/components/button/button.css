@@ -35,3 +35,21 @@
 .btn-secondary:hover:not(:disabled) {
   background-color: #545b62;
 }
+
+.btn-purple {
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  background: linear-gradient(135deg, #7c3aed, #a855f7, #ec4899);
+  box-shadow: 0 10px 20px rgba(124, 58, 237, 0.35);
+}
+
+.btn-purple:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow: 0 14px 28px rgba(124, 58, 237, 0.45);
+}
+
+.btn-purple:active:not(:disabled) {
+  transform: translateY(0px);
+  filter: brightness(0.98);
+}

@@ -15,6 +15,7 @@ import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
 import Team from "./components/nav/pages/Team";
+import TimerWithReducer from "./components/timer/TimerWithReducer";
 
 function App() {
   return (
@@ -44,6 +45,11 @@ function App() {
         <Upcoming />
         <ActivityLog />
       </aside>
+
+
+
+      <TimerWithReducer />
+
     </>
   );
 }
