@@ -72,27 +72,6 @@
     color: rgba(255, 120, 120, 0.95);
 }
 
-.button {
-    width: 100%;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-weight: 700;
-    cursor: pointer;
-    color: #0b1220;
-    background: #ffffff;
-    transition: transform 120ms ease, opacity 120ms ease;
-}
-
-.button:hover {
-    transform: translateY(-1px);
-}
-
-.button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
 
 .statusArea {
     margin-top: 14px;
@@ -111,4 +90,16 @@
 
 .statusSuccess {
     color: rgba(140, 255, 180, 0.95);
+}
+
+
+.glassCard {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
 }

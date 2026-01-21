@@ -1,5 +1,7 @@
 import { useReducer } from "react";
 import styles from "./LoginForm.module.css";
+import Button from "../button/button";
+import Card from "../cards/Card";
 
 
 
@@ -80,7 +82,7 @@ function LoginForm({ onLoginSuccess }) {
         try {
             await new Promise((r) => setTimeout(r, 600));
             dispatch({ type: "submit_success" });
-            onLoginSuccess();
+            onLoginSuccess(state.values.email);
         } catch (err) {
             dispatch({
                 type: "submit_error",
@@ -93,7 +95,11 @@ function LoginForm({ onLoginSuccess }) {
 
     return (
         <div className={styles.page}>
-            <form className={styles.form} onSubmit={onSubmit}>
+            <Card
+                as="form"
+                tileClassName={styles.title}
+                className={styles.form}
+                onSubmit={onSubmit}>
                 <h1 className={styles.title}>Log in</h1>
 
                 <div className={styles.field}>
@@ -146,13 +152,13 @@ function LoginForm({ onLoginSuccess }) {
                     )}
                 </div>
 
-                <button
-                    className={styles.button}
+                <Button
+                    variant="login"
                     disabled={status === "submitting"}
                     type="submit"
                 >
                     {status === "submitting" ? "Logging in..." : "Log in"}
-                </button>
+                </Button>
 
                 <div className={styles.statusArea}>
                     {status === "error" && submitError && (
@@ -162,7 +168,7 @@ function LoginForm({ onLoginSuccess }) {
                         <p className={`${styles.statusText} ${styles.statusSuccess}`}>Login success!</p>
                     )}
                 </div>
-            </form>
+            </Card>
         </div>
     );
 }

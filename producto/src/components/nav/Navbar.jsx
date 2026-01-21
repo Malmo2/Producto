@@ -34,13 +34,13 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
         {isLoggedIn && (
           <div className={styles.authSection}>
             {userEmail && <p className={styles.userEmail}>{userEmail}</p>}
-            <button
+            <Button
               type="button"
-              className={styles.logoutButton}
+              variant="logoutButton"
               onClick={onLogout}
             >
               Logout
-            </button>
+            </Button>
           </div>
         )}
       </nav>
