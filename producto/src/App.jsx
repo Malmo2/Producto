@@ -16,6 +16,7 @@ import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
 import Team from "./components/nav/pages/Team";
 import TimerWithReducer from "./components/timer/TimerWithReducer";
+import LoginForm from "./components/forms/LoginForm";
 
 function App() {
   return (
@@ -49,6 +50,11 @@ function App() {
 
 
       <TimerWithReducer />
+
+
+      <LoginForm />
+
+
 
     </>
   );
