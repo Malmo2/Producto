@@ -1,0 +1,114 @@
+/* LoginForm.module.css */
+
+.page {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: #0b1220;
+    box-sizing: border-box;
+}
+
+.form {
+    width: 100%;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(10px);
+}
+
+.title {
+    margin: 0 0 18px 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    letter-spacing: 0.2px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.input {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 12px 12px;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.input:focus {
+    border-color: rgba(120, 180, 255, 0.8);
+    box-shadow: 0 0 0 4px rgba(120, 180, 255, 0.18);
+}
+
+.inputError {
+    border-color: rgba(255, 90, 90, 0.75);
+    box-shadow: 0 0 0 4px rgba(255, 90, 90, 0.14);
+}
+
+.errorText {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 120, 120, 0.95);
+}
+
+.button {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #0b1220;
+    background: #ffffff;
+    transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.button:hover {
+    transform: translateY(-1px);
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.statusArea {
+    margin-top: 14px;
+    min-height: 22px;
+    text-align: center;
+}
+
+.statusText {
+    margin: 0;
+    font-size: 14px;
+}
+
+.statusError {
+    color: rgba(255, 140, 140, 0.95);
+}
+
+.statusSuccess {
+    color: rgba(140, 255, 180, 0.95);
+}

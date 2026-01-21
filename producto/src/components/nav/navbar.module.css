@@ -91,3 +91,42 @@
   background: linear-gradient(180deg, #2f7cff 0%, #1b57ff 100%);
   box-shadow: 0 8px 18px rgba(47, 124, 255, 0.25);
 }
+
+
+.authSection {
+  margin-top: auto;
+  padding: 12px 8px 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userEmail {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  word-break: break-word;
+}
+
+.logoutButton {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+}
+
+.logoutButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+.logoutButton:active {
+  transform: translateY(0);
+}

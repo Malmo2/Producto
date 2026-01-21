@@ -1,4 +1,5 @@
 import "./App.css";
+import { useState } from 'react';
 import Button from "./components/button/button";
 import Card from "./components/cards/Card";
 import Timer from "./components/timer/timer";
@@ -9,54 +10,77 @@ import CalendarPopup from "./components/Calendar/Calendar";
 
 import Navbar from "./components/Nav/Navbar";
 import navLinks from "./components/Nav/navLinks";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Dashboard from "./components/nav/pages/Dashboard";
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
 import Team from "./components/nav/pages/Team";
+
+
 import TimerWithReducer from "./components/timer/TimerWithReducer";
 import LoginForm from "./components/forms/LoginForm";
 
 function App() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = (email) => {
+    setIsLoggedIn(true);
+    setUserEmail(email);
+    navigate('/dashboard', { replace: true });
+  }
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserEmail('')
+    navigate('/login', { replace: true });
+  }
+
+
   return (
-    <>
-      <Navbar links={navLinks} />
+    <div className="appShell">
+      <Navbar links={navLinks} userEmail={userEmail} onLogout={handleLogout} isLoggedIn={isLoggedIn} />
 
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/insights" element={<Insights />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/schedule" element={<Schedule />} />
-        <Route path="/team" element={<Team />} />
-      </Routes>
+      <main className="appMain">
+        <Routes>
+          <Route path="/" element={isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginForm onLoginSuccess={handleLogin} />} />
+          <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />} />
+          <Route path="/insights" element={isLoggedIn ? <Insights /> : <Navigate to="/login" replace />} />
+          <Route path="/projects" element={isLoggedIn ? <Projects /> : <Navigate to="/login" replace />} />
+          <Route path="/schedule" element={isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />} />
+          <Route path="/team" element={isLoggedIn ? <Team /> : <Navigate to="/login" replace />} />
+          <Route path="/login" element={<LoginForm onLoginSuccess={handleLogin} />} />
+        </Routes>
 
-      <Card>
-        <Button>Hejhej</Button>
-        <Button>Hejhej</Button>
-        <Button>Hejhej</Button>
-        <Button>Hejhej</Button>
-      </Card>
+        {isLoggedIn && (
+          <>
+            <Card>
+              <Button>Hejhej</Button>
+              <Button>Hejhej</Button>
+              <Button>Hejhej</Button>
+              <Button>Hejhej</Button>
+            </Card>
 
-      <Timer />
+            <Timer />
 
-      <aside className="aside-panel">
-        <CalendarPopup />
-        <Upcoming />
-        <ActivityLog />
-      </aside>
-
-
-
-      <TimerWithReducer />
-
-
-      <LoginForm />
+            <aside className="aside-panel">
+              <CalendarPopup />
+              <Upcoming />
+              <ActivityLog />
+            </aside>
 
 
 
-    </>
+            <TimerWithReducer />
+
+
+          </>
+        )}
+      </main>
+    </div>
   );
 }
 

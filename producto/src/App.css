@@ -1,6 +1,18 @@
-html, body {
-    margin: 0;
-    gap: 0;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 .aside-panel {
@@ -11,4 +23,15 @@ html, body {
   right: 1rem;
   top: 1rem;
   width: 320px;
+}
+
+.appShell {
+  display: flex;
+  min-height: 100dvh;
+}
+
+.appMain {
+  flex: 1;
+  min-height: 100dvh;
+  overflow: auto;
 }

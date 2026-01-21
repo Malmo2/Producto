@@ -1,4 +1,7 @@
 import { useReducer } from "react";
+import styles from "./LoginForm.module.css";
+
+
 
 const initialFormState = {
     values: { email: "", password: "" },
@@ -59,14 +62,12 @@ function loginFormReducer(state, action) {
     }
 }
 
-function LoginForm() {
-    // ✅ correct destructuring
+function LoginForm({ onLoginSuccess }) {
     const [state, dispatch] = useReducer(loginFormReducer, initialFormState);
 
     const onSubmit = async (e) => {
         e.preventDefault();
 
-        // mark both as touched
         dispatch({ type: "blur_field", payload: "email" });
         dispatch({ type: "blur_field", payload: "password" });
 
@@ -79,6 +80,7 @@ function LoginForm() {
         try {
             await new Promise((r) => setTimeout(r, 600));
             dispatch({ type: "submit_success" });
+            onLoginSuccess();
         } catch (err) {
             dispatch({
                 type: "submit_error",
@@ -90,49 +92,78 @@ function LoginForm() {
     const { values, touched, errors, status, submitError } = state;
 
     return (
-        <form onSubmit={onSubmit}>
-            <div>
-                <label>Email</label>
-                <input
-                    type="email"
-                    name="email"
-                    value={values.email}
-                    onChange={(e) =>
-                        dispatch({
-                            type: "change_field",
-                            payload: { name: e.target.name, value: e.target.value },
-                        })
-                    }
-                    onBlur={(e) => dispatch({ type: "blur_field", payload: e.target.name })}
-                />
-                {touched.email && errors.email && <p>{errors.email}</p>}
-            </div>
+        <div className={styles.page}>
+            <form className={styles.form} onSubmit={onSubmit}>
+                <h1 className={styles.title}>Log in</h1>
 
-            <div>
-                <label>Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    value={values.password}
-                    onChange={(e) =>
-                        dispatch({
-                            type: "change_field",
+                <div className={styles.field}>
+                    <label className={styles.label} htmlFor="email">
+                        Email
+                    </label>
 
-                            payload: { name: e.target.name, value: e.target.value },
-                        })
-                    }
-                    onBlur={(e) => dispatch({ type: "blur_field", payload: e.target.name })}
-                />
-                {touched.password && errors.password && <p>{errors.password}</p>}
-            </div>
+                    <input
+                        id="email"
+                        className={`${styles.input} ${touched.email && errors.email ? styles.inputError : ""}`}
+                        type="email"
+                        name="email"
+                        value={values.email}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "change_field",
+                                payload: { name: e.target.name, value: e.target.value },
+                            })
+                        }
+                        onBlur={(e) => dispatch({ type: "blur_field", payload: e.target.name })}
+                        autoComplete="email"
+                    />
 
-            <button disabled={status === "submitting"} type="submit">
-                {status === "submitting" ? "Logging in..." : "Log in"}
-            </button>
+                    {touched.email && errors.email && <p className={styles.errorText}>{errors.email}</p>}
+                </div>
 
-            {status === "error" && submitError && <p>{submitError}</p>}
-            {status === "success" && <p>Login success!</p>}
-        </form>
+                <div className={styles.field}>
+                    <label className={styles.label} htmlFor="password">
+                        Password
+                    </label>
+
+                    <input
+                        id="password"
+                        className={`${styles.input} ${touched.password && errors.password ? styles.inputError : ""}`}
+                        type="password"
+                        name="password"
+                        value={values.password}
+                        onChange={(e) =>
+                            dispatch({
+                                type: "change_field",
+                                payload: { name: e.target.name, value: e.target.value },
+                            })
+                        }
+                        onBlur={(e) => dispatch({ type: "blur_field", payload: e.target.name })}
+                        autoComplete="current-password"
+                    />
+
+                    {touched.password && errors.password && (
+                        <p className={styles.errorText}>{errors.password}</p>
+                    )}
+                </div>
+
+                <button
+                    className={styles.button}
+                    disabled={status === "submitting"}
+                    type="submit"
+                >
+                    {status === "submitting" ? "Logging in..." : "Log in"}
+                </button>
+
+                <div className={styles.statusArea}>
+                    {status === "error" && submitError && (
+                        <p className={`${styles.statusText} ${styles.statusError}`}>{submitError}</p>
+                    )}
+                    {status === "success" && (
+                        <p className={`${styles.statusText} ${styles.statusSuccess}`}>Login success!</p>
+                    )}
+                </div>
+            </form>
+        </div>
     );
 }
 
