@@ -86,7 +86,7 @@ function LoginForm({ onLoginSuccess }) {
         } catch (err) {
             dispatch({
                 type: "submit_error",
-                payload: "Inloggning misslyckades",
+                payload: "Log in failed",
             });
         }
     };
@@ -97,7 +97,6 @@ function LoginForm({ onLoginSuccess }) {
         <div className={styles.page}>
             <Card
                 as="form"
-                tileClassName={styles.title}
                 className={styles.form}
                 onSubmit={onSubmit}>
                 <h1 className={styles.title}>Log in</h1>
