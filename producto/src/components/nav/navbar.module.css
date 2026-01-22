@@ -109,24 +109,3 @@
   word-break: break-word;
 }
 
-.logoutButton {
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.9);
-  padding: 10px 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
-}
-
-.logoutButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.22);
-  transform: translateY(-1px);
-}
-
-.logoutButton:active {
-  transform: translateY(0);
-}
