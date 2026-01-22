@@ -1,10 +1,8 @@
-function Card({ children, onClick}) {
+function Card({ children, onClick }) {
   return (
-    <button onClick={onClick}
-    
-    >
+    <div onClick={onClick} style={{ border: 'none', background: 'none', padding: 0 }}>
       {children}
-    </button>
+    </div>
   );
 }
 

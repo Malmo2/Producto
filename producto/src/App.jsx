@@ -40,9 +40,11 @@ function App() {
       <Timer />
 
       <aside className="aside-panel">
-        <CalendarPopup />
-        <Upcoming />
-        <ActivityLog />
+        <div className="sidebar-box">
+          <CalendarPopup />
+          <Upcoming />
+          <ActivityLog />
+        </div>
       </aside>
     </>
   );
