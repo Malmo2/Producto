@@ -3,18 +3,31 @@
     grid-template-columns: 1fr 320px;
     gap: 16px;
     align-items: start;
+    grid-template-areas: "main right";
 }
 
 .dashboardMain {
+    grid-area: main;
     min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
+.rightColumn {
+    grid-area: right;
+}
 
 @media (max-width: 900px) {
     .dashboardLayout {
         grid-template-columns: 1fr;
+        grid-template-areas:
+            "main"
+            "right";
+    }
+
+    .rightColumn {
+        display: flex;
+        justify-content: center;
     }
 }

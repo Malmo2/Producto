@@ -26,3 +26,18 @@
 
     box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.12);
 }
+
+@media (max-width: 900px) {
+    .rightPanel {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+        min-height: auto;
+        position: static;
+        overflow: visible;
+    }
+
+    .panelBox {
+        border-radius: 18px;
+    }
+}

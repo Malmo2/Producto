@@ -8,3 +8,7 @@ export default function RightPanel({ children }) {
         </div >
     );
 }
+
+/// Möjligtvis ha stylingen i dashboard för själva panelen,
+/// Istället för att ha den här så komponenten är mer återanvändbar.
+
