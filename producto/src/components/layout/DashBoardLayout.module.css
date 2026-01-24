@@ -1,0 +1,19 @@
+.dashboardLayout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 16px;
+    align-items: start;
+}
+
+.dashboardMain {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (max-width: 900px) {
+    .dashboardLayout {
+        grid-template-columns: 1fr;
+    }
+}

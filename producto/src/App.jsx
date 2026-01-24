@@ -83,7 +83,6 @@ function App() {
               auth.isLoggedIn ? (
                 <DashboardLayout>
                   <Timer />
-                  <TimerWithReducer />
                 </DashboardLayout>
               ) : (
                 <Navigate to="/login" replace />

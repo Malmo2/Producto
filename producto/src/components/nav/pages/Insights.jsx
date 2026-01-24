@@ -1,6 +1,9 @@
+import TimerWithReducer from "../../timer/TimerWithReducer"
+import '../../timer/timer.css'
+
 function Insights() {
-    return(
-        <h1>Youre on the Insights page.</h1>
+    return (
+        <TimerWithReducer />
     )
 }
 
