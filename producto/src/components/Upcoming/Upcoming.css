@@ -1,9 +1,15 @@
+.upcoming-event--red .upcoming-event-time {
+  color: #ef4444 !important;
+}
+.upcoming-event--red {
+  border-left-color: #ef4444 !important;
+}
 .upcoming {
-  background-color: #1a1f2e;
-  border-radius: 12px;
-  padding: 1.5rem;
-  min-width: 280px;
-  
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  min-width: 100%;
+  margin-top: -45px;
 }
 
 .upcoming-header {
@@ -37,7 +43,6 @@
   gap: 1rem;
 }
 
-/* Event Card */
 .upcoming-event {
   background-color: #242b3d;
   border-radius: 8px;
@@ -51,7 +56,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Color variants */
 .upcoming-event--blue {
   border-left-color: #3b82f6;
 }
@@ -87,6 +91,7 @@
 .upcoming-event--orange .upcoming-event-time {
   color: #f97316;
 }
+
 .upcoming-event-date {
   color: rgb(0, 136, 255);
 }

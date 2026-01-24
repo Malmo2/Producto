@@ -1,5 +1,5 @@
 import { useState, useEffect} from "react";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaBell, FaQuestionCircle } from "react-icons/fa";
 import "./Calendar.css";
 
 function CalendarPopup() {
@@ -35,18 +35,20 @@ function CalendarPopup() {
         `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
     );
 
-  return (
-    <div style={{ position: "relative", marginLeft: '300px' }}>
-      <FaCalendarAlt onClick={() => setOpen(!open)} style={{ cursor: "pointer" }} />
+    return (
+      <div className="calendar-icon-row">
+        <FaQuestionCircle/>
+        <FaBell />
+        <FaCalendarAlt onClick={() => setOpen(!open)}/>
 
-      {open && (
-        <div className="calendar-popup">
-          <h4>
-            {today.toLocaleString("sv-SE", {
-              month: "long",
-              year: "numeric",
-            })}
-          </h4>
+        {open && (
+          <div className="calendar-popup">
+            <h4>
+              {today.toLocaleString("sv-SE", {
+                month: "long",
+                year: "numeric",
+              })}
+            </h4>
 
           <div className="calendar-grid">
             {Array.from({ length: daysInMonth }, (_, i) => {

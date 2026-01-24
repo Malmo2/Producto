@@ -1,7 +1,7 @@
 .calendar-popup {
   position: absolute;
   top: 49px;
-  left: -293px;
+  left: 5px;
   background: #1a1f2e;
   border: 1px solid #333;
   border-radius: 8px;
@@ -9,7 +9,18 @@
   z-index: 100;
   min-width: 280px;
   color: #fff;
-  height: 20em;
+  height: 22em;
+}
+
+.calendar-icon-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+  gap: 30px;
+  margin-top: 20px;
+  cursor: pointer;
+
 }
 
 .calendar-popup h4 {

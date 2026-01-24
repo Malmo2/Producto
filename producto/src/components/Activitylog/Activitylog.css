@@ -1,9 +1,8 @@
 .activity-log {
-  background-color: #1a1f2e;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-top: 1rem;
-  width: 280px;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  width: 100%;
 }
 
 .activity-log-title {
