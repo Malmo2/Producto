@@ -3,9 +3,15 @@ import Button from "../button/button";
 import "./timer.css";
 
 function Timer() {
-  const [timeLeft, setTimeLeft] = useState(20 * 60);
+  const [mode, setMode] = useState("work");
+  const WORK_TIME = 50 * 60;
+  const BREAK_TIME = 20 * 60;
+
+  const [timeLeft, setTimeLeft] = useState(WORK_TIME);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
+  const [sessions, setSessions] = useState([]);
+  const [startTime, setStartTime] = useState(null);
 
   const formatTime = (seconds) => {
     const min = Math.floor(seconds / 60);
@@ -25,8 +31,33 @@ function Timer() {
     return () => clearInterval(intervalRef.current);
   }, [isRunning, timeLeft]);
 
-  const handleStart = () => setIsRunning(true);
-  const handlePause = () => setIsRunning(false);
+  const handleStart = () => {
+    setIsRunning(true);
+    if (!startTime) {
+      setStartTime(new Date());
+    }
+  };
+
+  const handlePause = () => {
+    setIsRunning(false);
+    if (mode === "work" && startTime) {
+      const endTime = new Date();
+      const durationInSeconds = Math.floor((endTime - startTime) / 1000);
+
+      const newSession = {
+        id: Date.now(),
+        mode: mode,
+        startTime: startTime,
+        endTime: endTime,
+        duration: durationInSeconds,
+        date: new Date().toLocaleDateString("sv-SE"),
+      };
+
+      setSessions([...sessions, newSession]);
+      setStartTime(null);
+    }
+  };
+
   const handleReset = () => {
     setIsRunning(false);
     setTimeLeft(20 * 60);
@@ -49,6 +80,19 @@ function Timer() {
         )}
         <Button onClick={handleReset}>Reset</Button>
       </div>
+      {sessions.length > 0 && (
+        <div className="sessions-list">
+          <h3>Completed Sessions</h3>
+          <ul>
+            {sessions.map((session) => (
+              <li key={session.id}>
+                <span>{session.date}</span>
+                <span>{Math.floor(session.duration / 60)} min</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
