@@ -84,12 +84,7 @@ function App() {
 
         {isLoggedIn && location.pathname === "/dashboard" && (
           <>
-            <Card>
-              <Button>Hejhej</Button>
-              <Button>Hejhej</Button>
-              <Button>Hejhej</Button>
-              <Button>Hejhej</Button>
-            </Card>
+
 
             <Timer />
 
