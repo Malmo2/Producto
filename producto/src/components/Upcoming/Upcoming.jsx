@@ -4,7 +4,7 @@ import '../Upcoming/Upcoming.css'
 const upcomingEvents = [
   { id: 1, title: "Benjame's Playground", date: "2024-07-01", time: '13:00', description: 'Playtime', color: 'purple' },
   { id: 2, title: "Johannes Oatcows milked", date: "2024-07-05", time: '19:00', description: 'Milky', color: 'orange' },
-  { id: 3, title: "Workout", date: "2024-07-08", time: "15:00", description: "Leg-day", color: 'red'}
+  { id: 3, title: "Workout", date: "2024-07-08", time: "15:00", description: "Leg-day", color: 'red' }
 ];
 
 

@@ -1,0 +1,9 @@
+.rightPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 320px;
+}
