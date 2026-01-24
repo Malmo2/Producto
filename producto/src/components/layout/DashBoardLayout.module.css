@@ -1,6 +1,6 @@
 .dashboardLayout {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1fr 320px;
     gap: 16px;
     align-items: start;
 }
@@ -11,6 +11,7 @@
     flex-direction: column;
     gap: 16px;
 }
+
 
 @media (max-width: 900px) {
     .dashboardLayout {
