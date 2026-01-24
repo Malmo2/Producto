@@ -1,6 +1,18 @@
-html, body {
-    margin: 0;
-    gap: 0;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 .aside-panel {
@@ -11,19 +23,15 @@ html, body {
   right: 0;
   top: 0;
   width: 320px;
-  height: 100vh;
-  justify-content: flex-start;
 }
 
-.sidebar-box {
-  background: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
-  border-radius: 18px 0 0 18px;
-  padding: 0 1.2rem 1.2rem 1.2rem;
+.appShell {
   display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.12);
-  height: 100vh;
-  min-height: 100vh;
-  box-sizing: border-box;
+  min-height: 100dvh;
+}
+
+.appMain {
+  flex: 1;
+  min-height: 100dvh;
+  overflow: auto;
 }

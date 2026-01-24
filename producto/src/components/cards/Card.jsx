@@ -1,8 +1,9 @@
-function Card({ children, onClick }) {
+function Card({ title, children, className = "", titleClassName = "", as: Component = "div", ...rest }) {
   return (
-    <div onClick={onClick} style={{ border: 'none', background: 'none', padding: 0 }}>
-      {children}
-    </div>
+    <Component className={className} {...rest}>
+      {title ? <h2 className={titleClassName}>{title}</h2> : null}
+      <div>{children}</div>
+    </Component>
   );
 }
 
