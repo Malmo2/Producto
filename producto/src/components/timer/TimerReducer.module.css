@@ -1,0 +1,73 @@
+/* ---------- TIMER CARD CONTENT (inside your <Card>) ---------- */
+
+.ringWrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Your Circle component wrapper */
+.circleWrap {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circleSvg {
+    transform: rotate(-90deg);
+}
+
+.circleBg {
+    stroke: rgba(255, 255, 255, 0.08);
+}
+
+.circleFg {
+    stroke: #3b82f6;
+    transition: stroke-dashoffset 250ms linear;
+}
+
+.circleCenter {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Center text */
+.ringTime {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.ringLabel {
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* ---------- RESPONSIVE BUTTON ROW ---------- */
+
+.timerControls {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.timerControls>* {
+    flex: 1 1 96px;
+    min-width: 96px;
+}
+
+
+
+@media (max-width: 360px) {
+    .timerControls>* {
+        flex: 1 1 100%;
+    }
+}

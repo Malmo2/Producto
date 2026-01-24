@@ -1,8 +1,9 @@
 import { useEffect, useReducer, useRef } from "react";
 import formatTime from "../../utils/formatTime";
-import "../timer/timer.css";
+import timerStyles from "./TimerReducer.module.css";
 import Button from "../button/button";
 import Circle from "../../utils/circle";
+import Card from "../cards/Card";
 
 const WORK_SECONDS = 20 * 60;
 
@@ -24,8 +25,7 @@ function timerReducer(state, action) {
 
     case "TICK":
       if (!state.isRunning) return state;
-      if (state.timeLeft <= 1)
-        return { ...state, timeLeft: 0, isRunning: false };
+      if (state.timeLeft <= 1) return { ...state, timeLeft: 0, isRunning: false };
       return { ...state, timeLeft: state.timeLeft - 1 };
 
     default:
@@ -52,24 +52,31 @@ export default function TimerWithReducer() {
   }, [state.isRunning]);
 
   return (
-    <div className="timer-container">
-      <div className="ring-wrap">
+    <Card
+      style={{
+        width: "100%",
+        maxWidth: 320,
+        margin: "0 auto",
+        padding: 16,
+        borderRadius: 16,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 12,
+        boxSizing: "border-box",
+        background: "#162238",
+      }}
+    >
+      <div className={timerStyles.ringWrap}>
         <Circle timeLeft={state.timeLeft} totalSeconds={WORK_SECONDS}>
-          <div className="ring-time">{formatTime(state.timeLeft)}</div>
-          <div className="ring-label">
+          <div className={timerStyles.ringTime}>{formatTime(state.timeLeft)}</div>
+          <div className={timerStyles.ringLabel}>
             {state.isRunning ? "Running" : "Paused"}
           </div>
         </Circle>
-
-        <div className="ring-center">
-          <div className="ring-time">{formatTime(state.timeLeft)}</div>
-          <div className="ring-label">
-            {state.isRunning ? "Running" : "Paused"}
-          </div>
-        </div>
       </div>
 
-      <div className="timer-controls">
+      <div className={timerStyles.timerControls}>
         <Button
           onClick={() => dispatch({ type: "START" })}
           variant="purple"
@@ -90,6 +97,6 @@ export default function TimerWithReducer() {
           Reset
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }

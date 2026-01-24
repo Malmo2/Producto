@@ -1,3 +1,5 @@
+import '../components/globalStyles/circle.css'
+
 export default function Circle({
   timeLeft,
   totalSeconds,
