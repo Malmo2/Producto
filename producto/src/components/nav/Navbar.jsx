@@ -27,7 +27,7 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
         className={styles.hamburger}
         aria-label="Open menu"
         aria-expanded={isOpen}
-        onClick={() => setIsOpen((v) => !v)}
+        onClick={() => setIsOpen((open) => !open)}
       >
         <span className={styles.hamburgerBar} />
         <span className={styles.hamburgerBar} />

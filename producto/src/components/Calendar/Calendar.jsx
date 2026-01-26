@@ -1,4 +1,4 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaCalendarAlt, FaBell, FaQuestionCircle } from "react-icons/fa";
 import "./Calendar.css";
 
@@ -6,12 +6,13 @@ function CalendarPopup() {
   const [open, setOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([])
+  const popupRef = useRef(null);
 
   useEffect(() => {
     const fetchActivities = async () => {
       try {
         const res = await fetch('http://localhost:3001/activities');
-        if(!res.ok) throw new Error('Något gick fel vid hämtning');
+        if (!res.ok) throw new Error('Något gick fel vid hämtning');
         const data = await res.json();
         setActivities(Array.isArray(data) ? data : []);
       } catch (error) {
@@ -22,33 +23,72 @@ function CalendarPopup() {
     fetchActivities();
   }, [])
 
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
+  
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setOpen(false);
+        setSelectedDay(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Kalenderstate för visad månad/år
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  const monthNames = [
+    "Januari", "Februari", "Mars", "April", "Maj", "Juni",
+    "Juli", "Augusti", "September", "Oktober", "November", "December"
+  ];
+
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
   const activitiesForDay = (day) =>
     activities.filter(
       (a) =>
         a.date ===
-        `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+        `${currentYear}-${String(currentMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
     );
 
-    return (
-      <div className="calendar-icon-row">
-        <FaQuestionCircle/>
-        <FaBell />
-        <FaCalendarAlt onClick={() => setOpen(!open)}/>
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear(currentYear - 1);
+    } else {
+      setCurrentMonth(currentMonth - 1);
+    }
+    setSelectedDay(null);
+  };
 
-        {open && (
-          <div className="calendar-popup">
-            <h4>
-              {today.toLocaleString("sv-SE", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h4>
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear(currentYear + 1);
+    } else {
+      setCurrentMonth(currentMonth + 1);
+    }
+    setSelectedDay(null);
+  };
+
+  return (
+    <div className="calendar-icon-row">
+      <FaQuestionCircle />
+      <FaBell />
+      <FaCalendarAlt onClick={() => setOpen(!open)} />
+
+      {open && (
+        <div className="calendar-popup" ref={popupRef}>
+          <div className="calendar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+            <button onClick={handlePrevMonth} style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Föregående">‹</button>
+            <span style={{ fontWeight: 'bold' }}>{monthNames[currentMonth]} {currentYear}</span>
+            <button onClick={handleNextMonth} style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Nästa">›</button>
+          </div>
 
           <div className="calendar-grid">
             {Array.from({ length: daysInMonth }, (_, i) => {
