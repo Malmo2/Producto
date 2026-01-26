@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "../button/button";
+import formatTime from "../../utils/formatTime";
 import "./timer.css";
 
-function Timer() {
+export default function Timer() {
   const [mode, setMode] = useState("work");
   const WORK_TIME = 50 * 60;
+  const MEETING_TIME = 25 * 60;
   const BREAK_TIME = 20 * 60;
 
   const [timeLeft, setTimeLeft] = useState(WORK_TIME);
@@ -12,12 +14,6 @@ function Timer() {
   const intervalRef = useRef(null);
   const [sessions, setSessions] = useState([]);
   const [startTime, setStartTime] = useState(null);
-
-  const formatTime = (seconds) => {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-  };
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
@@ -40,9 +36,16 @@ function Timer() {
 
   const handlePause = () => {
     setIsRunning(false);
+
     if (mode === "work" && startTime) {
       const endTime = new Date();
       const durationInSeconds = Math.floor((endTime - startTime) / 1000);
+
+      // Dont save if its under 60 sec
+      if (durationInSeconds < 60) {
+        setStartTime(null);
+        return;
+      }
 
       const newSession = {
         id: Date.now(),
@@ -53,7 +56,12 @@ function Timer() {
         date: new Date().toLocaleDateString("sv-SE"),
       };
 
-      setSessions([...sessions, newSession]);
+      const updatedSessions = [...sessions, newSession];
+      if (updatedSessions.length > 5) {
+        updatedSessions.shift();
+      }
+
+      setSessions(updatedSessions);
       setStartTime(null);
     }
   };
@@ -62,6 +70,38 @@ function Timer() {
     setIsRunning(false);
     setTimeLeft(mode === "work" ? WORK_TIME : BREAK_TIME);
     setStartTime(null);
+
+    if (mode === "work") {
+      setTimeLeft(WORK_TIME);
+    } else if (mode === "meeting") {
+      setTimeLeft(MEETING_TIME);
+    } else {
+      setTimeLeft(BREAK_TIME);
+    }
+  };
+
+  const getTotalMinutesToday = () => {
+    const totalSeconds = sessions.reduce((total, session) => {
+      return total + session.duration;
+    }, 0);
+    return Math.floor(totalSeconds / 60);
+  };
+
+  const formatTotalTime = () => {
+    const totalMinutes = getTotalMinutesToday();
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    }
+    return `${minutes}m`;
+  };
+
+  const DAILY_GOAL = 360;
+
+  const getProgressPercentage = () => {
+    return Math.min((getTotalMinutesToday() / DAILY_GOAL) * 100, 100);
   };
 
   return (
@@ -78,7 +118,18 @@ function Timer() {
             setStartTime(null);
           }}
         >
-          Work (50min)
+          Work
+        </button>
+        <button
+          className={mode === "meeting" ? "mode-btn active" : "mode-btn"}
+          onClick={() => {
+            setMode("meeting");
+            setTimeLeft(MEETING_TIME);
+            setIsRunning(false);
+            setStartTime(null);
+          }}
+        >
+          Meeting
         </button>
         <button
           className={mode === "break" ? "mode-btn active" : "mode-btn"}
@@ -89,14 +140,22 @@ function Timer() {
             setStartTime(null);
           }}
         >
-          Break (20min)
+          Break
         </button>
       </div>
 
       <div className="timer-display">
         <div className="time-text">{formatTime(timeLeft)}</div>
+
         <p className="status-text">
           {mode === "work" ? "Working" : "On break ☕ "} -{" "}
+        </p>
+        <p className="status-text">
+          {mode === "work" && "Work"}
+          {mode === "meeting" && " Meeting"}
+          {mode === "break" && "☕ Break"}
+          {" - "}
+
           {isRunning ? "Running..." : "Paused"}
         </p>
       </div>
@@ -109,6 +168,7 @@ function Timer() {
         )}
         <Button onClick={handleReset}>Reset</Button>
       </div>
+
       {sessions.length > 0 && (
         <div className="sessions-list">
           <h3>Completed Sessions</h3>
@@ -122,8 +182,24 @@ function Timer() {
           </ul>
         </div>
       )}
+
+      {sessions.length > 0 && (
+        <div className="total-focus">
+          <h3>TOTAL FOCUSED TODAY</h3>
+          <p className="total-time">{formatTotalTime()}</p>
+
+          <div className="progress-container">
+            <div
+              className="progress-bar"
+              style={{ width: `${getProgressPercentage()}%` }}
+            ></div>
+          </div>
+
+          <p className="goal-text">
+            DAILY GOAL: 6H • {Math.round(getProgressPercentage())}%
+          </p>
+        </div>
+      )}
     </div>
   );
 }
-
-export default Timer;
