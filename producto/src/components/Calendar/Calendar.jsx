@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { FaCalendarAlt, FaBell, FaQuestionCircle } from "react-icons/fa";
 import "./Calendar.css";
+import { useRef } from "react";
 
 function CalendarPopup() {
   const [open, setOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([])
+  const popupRef = useRef(null);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -21,6 +23,21 @@ function CalendarPopup() {
     };
     fetchActivities();
   }, [])
+
+  
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setOpen(false);
+        setSelectedDay(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   const today = new Date();
   const year = today.getFullYear();
@@ -42,7 +59,7 @@ function CalendarPopup() {
       <FaCalendarAlt onClick={() => setOpen(!open)} />
 
       {open && (
-        <div className="calendar-popup">
+        <div className="calendar-popup" ref={popupRef}>
           <h4>
             {today.toLocaleString("sv-SE", {
               month: "long",
