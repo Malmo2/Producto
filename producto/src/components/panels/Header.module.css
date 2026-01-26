@@ -1,0 +1,60 @@
+.headerContainer {
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 6px 18px;
+  align-items: center;
+  padding: 22px 24px;
+  border-radius: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 24, 39, 0.92) 0%,
+    rgba(8, 12, 22, 0.92) 100%
+  );
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.headerContainer::before {
+  content: "";
+  position: absolute;
+  top: -90px;
+  right: -120px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.35) 0%,
+    rgba(59, 130, 246, 0.12) 35%,
+    rgba(59, 130, 246, 0) 70%
+  );
+  pointer-events: none;
+}
+
+.headerContainer h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.headerContainer p {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.headerContainer :global(button) {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  justify-self: end;
+}

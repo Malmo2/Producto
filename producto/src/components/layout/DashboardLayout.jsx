@@ -5,17 +5,17 @@ import Upcoming from "../Upcoming/Upcoming";
 import ActivityLog from "../Activitylog/Activitylog";
 
 export default function DashboardLayout({ children }) {
-    return (
-        <div className={styles.dashboardLayout}>
-            <section className={styles.dashboardMain}>{children}</section>
+  return (
+    <div className={styles.dashboardLayout}>
+      <section className={styles.dashboardMain}>{children}</section>
 
-            <div className={styles.rightColumn}>
-                <RightPanel>
-                    <CalendarPopup/>
-                    <Upcoming />
-                    <ActivityLog />
-                </RightPanel>
-            </div>
-        </div>
-    );
+      <div className={styles.rightColumn}>
+        <RightPanel>
+          <CalendarPopup />
+          <Upcoming />
+          <ActivityLog />
+        </RightPanel>
+      </div>
+    </div>
+  );
 }
