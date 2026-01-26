@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import Navbar from "./components/Nav/Navbar";
-import navLinks from "./components/Nav/navLinks";
+import navLinks from "./components/nav/navLinks";
 
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Timer from "./components/timer/timer";
