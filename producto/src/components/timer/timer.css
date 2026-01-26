@@ -59,6 +59,7 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
+
 }
 
 .sessions-list {
@@ -98,3 +99,8 @@
   color: #3b82f6;
   font-weight: bold;
 }
+
+
+
+
+        <h3 className="upcoming-title">Upcoming</h3>

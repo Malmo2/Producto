@@ -1,0 +1,26 @@
+.insightsLayoutContainer {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.insightsMain {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+
+@media (max-width: 900px) {
+    .insightsLayoutContainer {
+        grid-template-columns: 1fr;
+    }
+}

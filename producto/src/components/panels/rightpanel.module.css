@@ -1,0 +1,43 @@
+.rightPanel {
+    width: 320px;
+    height: 100vh;
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: flex-start;
+
+    position: sticky;
+    top: 0;
+
+    overflow: auto;
+}
+
+.panelBox {
+    background: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
+    border-radius: 18px 0 0 18px;
+    padding: 0 1.2rem 1.2rem 1.2rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 900px) {
+    .rightPanel {
+        width: 100%;
+        max-width: 420px;
+        height: auto;
+        min-height: auto;
+        position: static;
+        overflow: visible;
+    }
+
+    .panelBox {
+        border-radius: 18px;
+    }
+}

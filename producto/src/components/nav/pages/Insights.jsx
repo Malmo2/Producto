@@ -1,6 +1,13 @@
+import TimerWithReducer from "../../timer/TimerWithReducer"
+import '../../timer/timer.css'
+import InsightsLayout from "../../layout/InsightsLayout"
+
 function Insights() {
-    return(
-        <h1>Youre on the Insights page.</h1>
+    return (
+        <InsightsLayout>
+            <TimerWithReducer />
+        </InsightsLayout>
+
     )
 }
 
