@@ -7,7 +7,6 @@ import navLinks from "./components/Nav/navLinks";
 
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Timer from "./components/timer/timer";
-import TimerWithReducer from "./components/timer/TimerWithReducer";
 
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
@@ -16,13 +15,8 @@ import Team from "./components/nav/pages/Team";
 import LoginForm from "./components/forms/LoginForm";
 
 function App() {
-
-
-
   const STORAGE_KEY = "auth";
   const navigate = useNavigate();
-
-
 
   const [auth, setAuth] = useState(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -56,36 +50,6 @@ function App() {
   };
 
   return (
-    <>
-      <Navbar links={navLinks} />
-
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/insights" element={<Insights />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/schedule" element={<Schedule />} />
-        <Route path="/team" element={<Team />} />
-      </Routes>
-
-      <Card>
-        <Button>Hejhej</Button>
-        <Button>Hejhej</Button>
-        <Button>Hejhej</Button>
-        <Button>Hejhej</Button>
-      </Card>
-
-      <Timer />
-
-      <aside className="aside-panel">
-        <div className="sidebar-box">
-          <CalendarPopup />
-          <Upcoming />
-          <ActivityLog />
-        </div>
-      </aside>
-    </>
-
     <div className="appShell">
       <Navbar
         links={navLinks}
@@ -122,19 +86,27 @@ function App() {
 
           <Route
             path="/insights"
-            element={auth.isLoggedIn ? <Insights /> : <Navigate to="/login" replace />}
+            element={
+              auth.isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/projects"
-            element={auth.isLoggedIn ? <Projects /> : <Navigate to="/login" replace />}
+            element={
+              auth.isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/schedule"
-            element={auth.isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />}
+            element={
+              auth.isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
+            }
           />
           <Route
             path="/team"
-            element={auth.isLoggedIn ? <Team /> : <Navigate to="/login" replace />}
+            element={
+              auth.isLoggedIn ? <Team /> : <Navigate to="/login" replace />
+            }
           />
 
           <Route
@@ -150,7 +122,6 @@ function App() {
         </Routes>
       </main>
     </div>
-
   );
 }
 

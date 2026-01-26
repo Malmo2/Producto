@@ -60,45 +60,16 @@ function Timer() {
 
   const handleReset = () => {
     setIsRunning(false);
-    setTimeLeft(mode === "work" ? WORK_TIME : BREAK_TIME);
-    setStartTime(null);
+    setTimeLeft(20 * 60);
   };
 
   return (
     <div className="timer-container">
       <h1>Timer</h1>
 
-      <div className="mode-selector">
-        <button
-          className={mode === "work" ? "mode-btn active" : "mode-btn"}
-          onClick={() => {
-            setMode("work");
-            setTimeLeft(WORK_TIME);
-            setIsRunning(false);
-            setStartTime(null);
-          }}
-        >
-          Work (50min)
-        </button>
-        <button
-          className={mode === "break" ? "mode-btn active" : "mode-btn"}
-          onClick={() => {
-            setMode("break");
-            setTimeLeft(BREAK_TIME);
-            setIsRunning(false);
-            setStartTime(null);
-          }}
-        >
-          Break (20min)
-        </button>
-      </div>
-
       <div className="timer-display">
         <div className="time-text">{formatTime(timeLeft)}</div>
-        <p className="status-text">
-          {mode === "work" ? "Working" : "On break ☕ "} -{" "}
-          {isRunning ? "Running..." : "Paused"}
-        </p>
+        <p className="status-text">{isRunning ? "On a break..." : "Paused"}</p>
       </div>
 
       <div className="timer-controls">
