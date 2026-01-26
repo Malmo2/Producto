@@ -16,7 +16,9 @@ function Header() {
         <p>
           Today is {weekDay}, {month} {day}
         </p>
-        <Button type="button" variant="primary" />
+        <Button type="button" variant="primary">
+          New task
+        </Button>
       </div>
     </>
   );
