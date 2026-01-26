@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }) {
 
             <div className={styles.rightColumn}>
                 <RightPanel>
-                    <CalendarPopup />
+                    <CalendarPopup/>
                     <Upcoming />
                     <ActivityLog />
                 </RightPanel>
