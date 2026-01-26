@@ -1,6 +1,6 @@
 import styles from "./DashboardLayout.module.css";
 import RightPanel from "../panels/Rightpanel";
-import CalendarPopup from "../Calendar/Calendar";
+import Calendar from "../Calendar/Calendar";
 import Upcoming from "../Upcoming/Upcoming";
 import ActivityLog from "../Activitylog/Activitylog";
 
@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }) {
 
       <div className={styles.rightColumn}>
         <RightPanel>
-          <CalendarPopup />
+          <Calendar />
           <Upcoming />
           <ActivityLog />
         </RightPanel>
