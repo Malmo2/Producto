@@ -5,6 +5,8 @@ import styles from "./navbar.module.css";
 import Button from "../button/button";
 
 function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
+
+
   const [isOpen, setIsOpen] = useState(false);
 
   const visibleLinks = isLoggedIn
@@ -12,10 +14,15 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
     : [{ url: "/login", label: "Login" }];
 
   useEffect(() => {
+
+
     const onResize = () => {
+
       if (window.innerWidth > 900) setIsOpen(false);
     };
+
     window.addEventListener("resize", onResize);
+
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
