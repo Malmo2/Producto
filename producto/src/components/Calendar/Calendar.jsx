@@ -1,17 +1,19 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { FaCalendarAlt, FaBell, FaQuestionCircle } from "react-icons/fa";
 import "./Calendar.css";
+import { useRef } from "react";
 
 function CalendarPopup() {
   const [open, setOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([])
+  const popupRef = useRef(null);
 
   useEffect(() => {
     const fetchActivities = async () => {
       try {
         const res = await fetch('http://localhost:3001/activities');
-        if(!res.ok) throw new Error('Något gick fel vid hämtning');
+        if (!res.ok) throw new Error('Något gick fel vid hämtning');
         const data = await res.json();
         setActivities(Array.isArray(data) ? data : []);
       } catch (error) {
@@ -21,6 +23,21 @@ function CalendarPopup() {
     };
     fetchActivities();
   }, [])
+
+  
+  useEffect(() => {
+    if (!open) return;
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setOpen(false);
+        setSelectedDay(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
 
   const today = new Date();
   const year = today.getFullYear();
@@ -35,20 +52,20 @@ function CalendarPopup() {
         `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
     );
 
-    return (
-      <div className="calendar-icon-row">
-        <FaQuestionCircle/>
-        <FaBell />
-        <FaCalendarAlt onClick={() => setOpen(!open)}/>
+  return (
+    <div className="calendar-icon-row">
+      <FaQuestionCircle />
+      <FaBell />
+      <FaCalendarAlt onClick={() => setOpen(!open)} />
 
-        {open && (
-          <div className="calendar-popup">
-            <h4>
-              {today.toLocaleString("sv-SE", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h4>
+      {open && (
+        <div className="calendar-popup" ref={popupRef}>
+          <h4>
+            {today.toLocaleString("sv-SE", {
+              month: "long",
+              year: "numeric",
+            })}
+          </h4>
 
           <div className="calendar-grid">
             {Array.from({ length: daysInMonth }, (_, i) => {

@@ -10,7 +10,33 @@
   z-index: 100;
   min-width: 280px;
   color: #fff;
-  height: 20em;
+}
+
+.mode-selector {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.mode-btn {
+  padding: 0.5rem 1.5rem;
+  border: 2px solid #3b82f6;
+  background: transparent;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.mode-btn:hover {
+  background: #2563eb;
+}
+
+.mode-btn.active {
+  background: #3b82f6;
+  font-weight: bold;
 }
 
 .timer-display {
@@ -33,4 +59,43 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
+
+}
+
+.sessions-list {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #2a3142;
+  width: 100%;
+}
+
+.sessions-list h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #3b82f6;
+}
+
+.sessions-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sessions-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: #2a3142;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.sessions-list li span:first-child {
+  color: #888;
+}
+
+.sessions-list li span:last-child {
+  color: #3b82f6;
+  font-weight: bold;
 }
