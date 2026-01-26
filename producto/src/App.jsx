@@ -11,8 +11,8 @@ import Timer from "./components/timer/timer";
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
-import Team from "./components/nav/pages/Team";
 import LoginForm from "./components/forms/LoginForm";
+import Header from "./components/panels/Header";
 
 function App() {
   const STORAGE_KEY = "auth";
@@ -76,6 +76,7 @@ function App() {
             element={
               auth.isLoggedIn ? (
                 <DashboardLayout>
+                  <Header />
                   <Timer />
                 </DashboardLayout>
               ) : (
@@ -100,12 +101,6 @@ function App() {
             path="/schedule"
             element={
               auth.isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route
-            path="/team"
-            element={
-              auth.isLoggedIn ? <Team /> : <Navigate to="/login" replace />
             }
           />
 
