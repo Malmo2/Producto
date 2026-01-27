@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaCalendarAlt, FaBell, FaQuestionCircle } from "react-icons/fa";
+import { FaCalendarAlt, FaBell, FaCog } from "react-icons/fa";
 import "./Calendar.css";
 
 function Calendar() {
@@ -62,9 +62,9 @@ function Calendar() {
   return (
     <div>
       <div className="calendar-icon-row">
-        <FaQuestionCircle />
-        <FaBell />
         <FaCalendarAlt />
+        <FaBell />
+        <FaCog />
       </div>
       <div className="calendar-container">
         <div className="calendar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
