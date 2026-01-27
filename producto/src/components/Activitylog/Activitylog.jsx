@@ -45,9 +45,10 @@ function ActivityLog({ items = activities }) {
   return (
     <>
       <div className="calendar-icon-row">
-        <FaCog />
-        <FaBell onClick={handleBellClick} />
         <FaCalendarAlt onClick={handleCalendarClick} />
+        <FaBell onClick={handleBellClick} />
+        <FaCog />
+        
       </div>
       {view === "activitylog" ? (
         <div className="activity-log">
