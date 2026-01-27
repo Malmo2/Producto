@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { FaCalendarAlt, FaBell, FaCog } from "react-icons/fa";
 import "./Calendar.css";
 
 function Calendar() {
@@ -60,13 +59,7 @@ function Calendar() {
   };
 
   return (
-    <div>
-      <div className="calendar-icon-row">
-        <FaCalendarAlt />
-        <FaBell />
-        <FaCog />
-      </div>
-      <div className="calendar-container">
+    <div className="calendar-container">
         <div className="calendar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
           <button onClick={handlePrevMonth} style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Föregående">‹</button>
           <span style={{ fontWeight: 'bold' }}>{monthNames[currentMonth]} {currentYear}</span>
@@ -99,7 +92,6 @@ function Calendar() {
           </ul>
         )}
       </div>
-    </div>
   );
 }
 
