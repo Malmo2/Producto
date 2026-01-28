@@ -72,7 +72,7 @@ function LoginForm() {
   const { login } = useAuthActions();
   const { status: authStatus, errorMessage } = useAuthState();
 
-  // ✅ Hooks must be here (top-level), NOT inside onSubmit
+
   useEffect(() => {
     if (authStatus === "error" && errorMessage) {
       dispatch({ type: "submit_error", payload: errorMessage });
