@@ -1,12 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import { FaCalendarAlt, FaBell, FaQuestionCircle } from "react-icons/fa";
+import { useState, useEffect } from "react";
 import "./Calendar.css";
 
-function CalendarPopup() {
-  const [open, setOpen] = useState(false);
+function Calendar() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [activities, setActivities] = useState([])
-  const popupRef = useRef(null);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -24,21 +21,6 @@ function CalendarPopup() {
   }, [])
 
   
-  useEffect(() => {
-    if (!open) return;
-    const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
-        setOpen(false);
-        setSelectedDay(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [open]);
-
-  // Kalenderstate för visad månad/år
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
@@ -77,49 +59,41 @@ function CalendarPopup() {
   };
 
   return (
-    <div className="calendar-icon-row">
-      <FaQuestionCircle />
-      <FaBell />
-      <FaCalendarAlt onClick={() => setOpen(!open)} />
-
-      {open && (
-        <div className="calendar-popup" ref={popupRef}>
-          <div className="calendar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-            <button onClick={handlePrevMonth} style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Föregående">‹</button>
-            <span style={{ fontWeight: 'bold' }}>{monthNames[currentMonth]} {currentYear}</span>
-            <button onClick={handleNextMonth} style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Nästa">›</button>
-          </div>
-
-          <div className="calendar-grid">
-            {Array.from({ length: daysInMonth }, (_, i) => {
-              const day = i + 1;
-              const hasActivities = activitiesForDay(day).length > 0;
-
-              return (
-                <div
-                  key={day}
-                  onClick={() => setSelectedDay(day)}
-                  className={`calendar-day ${hasActivities ? "calendar-day--has-activity" : ""}`}
-                >
-                  {day}
-                  {hasActivities && <span className="calendar-dot" />}
-                </div>
-              );
-            })}
-          </div>
-
-          {selectedDay && (
-            <ul className="calendar-activities">
-              {activitiesForDay(selectedDay).map((a, i) => (
-                <li key={i}>{a.title}</li>
-              ))}
-            </ul>
-          )}
+    <div className="calendar-container">
+        <div className="calendar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          <button onClick={handlePrevMonth} style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Föregående">‹</button>
+          <span style={{ fontWeight: 'bold' }}>{monthNames[currentMonth]} {currentYear}</span>
+          <button onClick={handleNextMonth} style={{ fontSize: 16, background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Nästa">›</button>
         </div>
-      )}
-    </div>
+
+        <div className="calendar-grid">
+          {Array.from({ length: daysInMonth }, (_, i) => {
+            const day = i + 1;
+            const hasActivities = activitiesForDay(day).length > 0;
+
+            return (
+              <div
+                key={day}
+                onClick={() => setSelectedDay(day)}
+                className={`calendar-day ${hasActivities ? "calendar-day--has-activity" : ""}`}
+              >
+                {day}
+                {hasActivities && <span className="calendar-dot" />}
+              </div>
+            );
+          })}
+        </div>
+
+        {selectedDay && (
+          <ul className="calendar-activities">
+            {activitiesForDay(selectedDay).map((a, i) => (
+              <li key={i}>{a.title}</li>
+            ))}
+          </ul>
+        )}
+      </div>
   );
 }
 
 
-export default CalendarPopup
+export default Calendar

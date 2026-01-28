@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import Navbar from "./components/Nav/Navbar";
-import navLinks from "./components/Nav/navLinks";
+import navLinks from "./components/nav/navLinks";
 
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Timer from "./components/timer/timer";
@@ -11,7 +11,6 @@ import Timer from "./components/timer/timer";
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
-import Team from "./components/nav/pages/Team";
 import LoginForm from "./components/forms/LoginForm";
 
 function App() {
@@ -100,12 +99,6 @@ function App() {
             path="/schedule"
             element={
               auth.isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route
-            path="/team"
-            element={
-              auth.isLoggedIn ? <Team /> : <Navigate to="/login" replace />
             }
           />
 

@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import logo from "../../assets/producto-logo.svg";
 import styles from "./navbar.module.css";
 import Button from "../button/button";
 
 function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
+
+
   const [isOpen, setIsOpen] = useState(false);
 
   const visibleLinks = isLoggedIn
@@ -11,10 +14,15 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
     : [{ url: "/login", label: "Login" }];
 
   useEffect(() => {
+
+
     const onResize = () => {
+
       if (window.innerWidth > 900) setIsOpen(false);
     };
+
     window.addEventListener("resize", onResize);
+
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
@@ -39,8 +47,7 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
       <div className={`${styles.navbarContainer} ${isOpen ? styles.open : ""}`}>
         <nav className={styles.sidebar}>
           <div className={styles.logo}>
-            <span className={styles.logoIcon}>stuff</span>
-            <span className={styles.logoText}>morestuff</span>
+            <img src={logo} alt="Producto logo" className={styles.logoImage} />
           </div>
 
           <ul className={styles.navbar}>

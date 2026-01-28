@@ -1,7 +1,7 @@
-import '../Upcoming/Upcoming.css'
-
+import "../Upcoming/Upcoming.css";
 
 const upcomingEvents = [
+
 
   { id: 1, title: "Benjame's Playground", date: "2024-07-01", time: '13:00', description: 'Playtime', color: 'purple' },
   { id: 2, title: "Johannes Oatcows milked", date: "2024-07-05", time: '19:00', description: 'Milky', color: 'orange' },
@@ -11,12 +11,36 @@ const upcomingEvents = [
   { id: 2, title: "Milk Cows", date: "2026-02-13", time: '19:00', description: 'Milky', color: 'orange' },
   { id: 3, title: "Workout", date: "2026-03-08", time: "15:00", description: "Leg-day", color: 'red' }
 
+
+  {
+    id: 1,
+    title: "Workout",
+    date: "2024-07-08",
+    time: "15:00",
+    description: "Leg-day",
+    color: "red",
+  },
+
+  {
+    id: 2,
+    title: "Doctors Appointment",
+    date: "2026-01-05",
+    time: "13:00",
+    description: "Checkup",
+    color: "purple",
+  },
+  {
+    id: 3,
+    title: "Milk Cows",
+    date: "2026-02-13",
+    time: "19:00",
+    description: "Milky",
+    color: "orange",
+  }
+
 ];
 
-
-
 const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
-
   return (
     <div className={`upcoming-event upcoming-event--${color}`}>
       <span className="upcoming-event-date">{date}</span>
@@ -27,18 +51,12 @@ const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
   );
 };
 
-
-
-
 const Upcoming = ({ events = upcomingEvents }) => {
-
   return (
     <div className="upcoming">
       <div className="upcoming-header">
         <h3 className="upcoming-title">Upcoming</h3>
-        <a href="#" className="upcoming-link">
-          View Calendar
-        </a>
+        <a href="#" className="upcoming-link"></a>
       </div>
 
       <div className="upcoming-events">

@@ -27,6 +27,10 @@ body {
   min-width: 0;
 }
 
+
 .appShell > {
+
+.appShell > * {
+
   min-width: 0;
 }
