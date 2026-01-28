@@ -9,7 +9,7 @@ const upcomingEvents = [
 
   { id: 1, title: "Doctors Appointment", date: "2026-01-05", time: '13:00', description: 'Checkup', color: 'purple' },
   { id: 2, title: "Milk Cows", date: "2026-02-13", time: '19:00', description: 'Milky', color: 'orange' },
-  { id: 3, title: "Workout", date: "2026-03-08", time: "15:00", description: "Leg-day", color: 'red' }
+  { id: 3, title: "Workout", date: "2026-03-08", time: "15:00", description: "Leg-day", color: 'red' },
 
 
   {
