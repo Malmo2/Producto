@@ -11,7 +11,7 @@ const AuthStateContext = createContext(null);
 const AuthActionsContext = createContext(null);
 
 const initialState = {
-  status: "anonymous", // keep this consistent
+  status: "anonymous",
   user: null,
   token: null,
   errorMessage: null,

@@ -1,7 +1,9 @@
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./LoginForm.module.css";
 import Button from "../button/button";
 import Card from "../cards/Card";
+import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
 const initialFormState = {
   values: { email: "", password: "" },
@@ -63,8 +65,19 @@ function loginFormReducer(state, action) {
   }
 }
 
-function LoginForm({ onLoginSuccess }) {
+function LoginForm() {
   const [state, dispatch] = useReducer(loginFormReducer, initialFormState);
+
+  const navigate = useNavigate();
+  const { login } = useAuthActions();
+  const { status: authStatus, errorMessage } = useAuthState();
+
+  // ✅ Hooks must be here (top-level), NOT inside onSubmit
+  useEffect(() => {
+    if (authStatus === "error" && errorMessage) {
+      dispatch({ type: "submit_error", payload: errorMessage });
+    }
+  }, [authStatus, errorMessage]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -78,15 +91,16 @@ function LoginForm({ onLoginSuccess }) {
 
     dispatch({ type: "submit_start" });
 
-    try {
-      await new Promise((r) => setTimeout(r, 600));
+    const result = await login({
+      email: state.values.email,
+      password: state.values.password,
+    });
+
+    if (result.ok) {
       dispatch({ type: "submit_success" });
-      onLoginSuccess(state.values.email);
-    } catch {
-      dispatch({
-        type: "submit_error",
-        payload: "Log in failed",
-      });
+      navigate("/dashboard", { replace: true });
+    } else {
+      dispatch({ type: "submit_error", payload: "Log in failed" });
     }
   };
 
@@ -104,7 +118,9 @@ function LoginForm({ onLoginSuccess }) {
 
           <input
             id="email"
-            className={`${styles.input} ${touched.email && errors.email ? styles.inputError : ""}`}
+            className={`${styles.input} ${
+              touched.email && errors.email ? styles.inputError : ""
+            }`}
             type="email"
             name="email"
             value={values.email}
@@ -132,7 +148,9 @@ function LoginForm({ onLoginSuccess }) {
 
           <input
             id="password"
-            className={`${styles.input} ${touched.password && errors.password ? styles.inputError : ""}`}
+            className={`${styles.input} ${
+              touched.password && errors.password ? styles.inputError : ""
+            }`}
             type="password"
             name="password"
             value={values.password}

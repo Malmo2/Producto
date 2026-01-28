@@ -1,6 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/Nav/Navbar";
 import navLinks from "./components/nav/navLinks";
@@ -13,67 +12,30 @@ import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
 import LoginForm from "./components/forms/LoginForm";
 
+import { useAuthState } from "./contexts/AuthContext";
+
 function App() {
-  const STORAGE_KEY = "auth";
-  const navigate = useNavigate();
+  const { status } = useAuthState();
 
-  const [auth, setAuth] = useState(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { isLoggedIn: false, userEmail: "" };
-
-    try {
-      const saved = JSON.parse(raw);
-      return {
-        isLoggedIn: Boolean(saved?.isLoggedIn),
-        userEmail: saved?.userEmail || "",
-      };
-    } catch {
-      localStorage.removeItem(STORAGE_KEY);
-      return { isLoggedIn: false, userEmail: "" };
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(auth));
-  }, [auth]);
-
-  const handleLogin = (email) => {
-    setAuth({ isLoggedIn: true, userEmail: email });
-    navigate("/dashboard", { replace: true });
-  };
-
-  const handleLogout = () => {
-    setAuth({ isLoggedIn: false, userEmail: "" });
-    localStorage.removeItem(STORAGE_KEY);
-    navigate("/login", { replace: true });
-  };
+  let isLoggedIn = status === "authenticated";
 
   return (
     <div className="appShell">
-      <Navbar
-        links={navLinks}
-        userEmail={auth.userEmail}
-        onLogout={handleLogout}
-        isLoggedIn={auth.isLoggedIn}
-      />
+      <Navbar links={navLinks} />
 
       <main className="appMain">
         <Routes>
           <Route
             path="/"
             element={
-              auth.isLoggedIn ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginForm onLoginSuccess={handleLogin} />
-              )
+              isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginForm />
             }
           />
 
           <Route
             path="/dashboard"
             element={
-              auth.isLoggedIn ? (
+              isLoggedIn ? (
                 <DashboardLayout>
                   <Timer />
                 </DashboardLayout>
@@ -86,30 +48,26 @@ function App() {
           <Route
             path="/insights"
             element={
-              auth.isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
+              isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
             }
           />
           <Route
             path="/projects"
             element={
-              auth.isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
+              isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
             }
           />
           <Route
             path="/schedule"
             element={
-              auth.isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
+              isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
             }
           />
 
           <Route
             path="/login"
             element={
-              auth.isLoggedIn ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginForm onLoginSuccess={handleLogin} />
-              )
+              isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginForm />
             }
           />
         </Routes>
