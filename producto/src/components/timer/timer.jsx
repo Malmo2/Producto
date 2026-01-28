@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Button from "../button/button";
+import formatTime from "../../utils/formatTime";
 import "./timer.css";
 
 export default function Timer() {
@@ -13,12 +14,6 @@ export default function Timer() {
   const intervalRef = useRef(null);
   const [sessions, setSessions] = useState([]);
   const [startTime, setStartTime] = useState(null);
-
-  const formatTime = (seconds) => {
-    const min = Math.floor(seconds / 60);
-    const sec = seconds % 60;
-    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
-  };
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
