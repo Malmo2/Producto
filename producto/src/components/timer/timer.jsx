@@ -148,7 +148,9 @@ export default function Timer() {
         ) : (
           <Button onClick={handleStart}>Start</Button>
         )}
-        <Button onClick={handleReset}>Reset</Button>
+        <Button onClick={handleReset} disabled={!isRunning}>
+          Reset
+        </Button>
       </div>
       {sessions.length > 0 && (
         <div className="sessions-list">
