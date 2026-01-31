@@ -18,6 +18,8 @@ function App() {
   const { status } = useAuthState();
 
   let isLoggedIn = status === "authenticated";
+  const isChecking = status === 'checking';
+  if (isChecking) return null;
 
   return (
     <div className="appShell">
