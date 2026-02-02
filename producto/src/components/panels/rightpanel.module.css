@@ -14,7 +14,7 @@
 }
 
 .panelBox {
-    background: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
+    background: var(--panel);
     border-radius: 18px 0 0 18px;
     padding: 0 1.2rem 1.2rem 1.2rem;
 
@@ -22,7 +22,7 @@
     flex-direction: column;
     gap: 2.5rem;
 
-    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.08);
 }
 
 @media (max-width: 900px) {

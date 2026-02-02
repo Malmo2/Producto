@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/producto-logo.svg";
+import logoDark from "../../assets/producto-logo-dark.svg";
 import styles from "./navbar.module.css";
 import Button from "../button/button";
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
@@ -60,6 +61,7 @@ function Navbar({ links = [] }: NavbarProps) {
         <nav className={styles.sidebar}>
           <div className={styles.logo}>
             <img src={logo} alt="Producto logo" className={styles.logoImage} />
+            <img src={logoDark} alt="Producto logo dark" className={`${styles.logoImage} ${styles.logoDark}`} />
           </div>
 
           <ul className={styles.navbar}>

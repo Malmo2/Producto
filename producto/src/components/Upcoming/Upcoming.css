@@ -20,12 +20,25 @@
 }
 
 .upcoming-title {
-  color: #ffffff;
+  color: var(--text);
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
 }
 
+.upcoming-event {
+  background-color: var(--card);
+  border-radius: 8px;
+  padding: 1rem;
+  border-left: 4px solid;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.upcoming-event-description {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin: 0;
+}
 .upcoming-link {
   color: #3b82f6;
   font-size: 0.875rem;

@@ -1,7 +1,7 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Navbar from "./components/Nav/Navbar";
+import Navbar from "./components/nav/Navbar";
 import navLinks from "./components/nav/navLinks";
 
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -11,6 +11,8 @@ import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
 import LoginForm from "./components/forms/LoginForm";
+import SmartRecommendation from "./components/smartRecommendation/SmartRecommendation";
+import EnergyLevel from "./components/energy/energyLevelBox/EnergyLevel";
 
 import { useAuthState } from "./contexts/AuthContext";
 
@@ -39,7 +41,11 @@ function App() {
             element={
               isLoggedIn ? (
                 <DashboardLayout>
-                  <Timer />
+                  <div className="topRow">
+                    <EnergyLevel />
+                    <Timer />
+                  </div>
+                  <SmartRecommendation />
                 </DashboardLayout>
               ) : (
                 <Navigate to="/login" replace />

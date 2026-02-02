@@ -12,8 +12,15 @@ export default function Timer() {
   const [timeLeft, setTimeLeft] = useState(WORK_TIME);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState(() => {
+    const saved = localStorage.getItem("timerSessions");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [startTime, setStartTime] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("timerSessions", JSON.stringify(sessions));
+  }, [sessions]);
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
@@ -65,6 +72,11 @@ export default function Timer() {
     } else {
       setTimeLeft(BREAK_TIME);
     }
+  };
+
+  const handleClearSessions = () => {
+    setSessions([]);
+    localStorage.removeItem("timerSessions");
   };
 
   const getTotal = () => {
@@ -152,6 +164,7 @@ export default function Timer() {
           Reset
         </Button>
       </div>
+
       {sessions.length > 0 && (
         <div className="sessions-list">
           <h3>Completed Sessions</h3>
@@ -163,6 +176,7 @@ export default function Timer() {
               </li>
             ))}
           </ul>
+          <Button onClick={handleClearSessions}>Clear history</Button>
         </div>
       )}
 

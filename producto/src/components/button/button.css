@@ -56,9 +56,9 @@
 
 .btn-logoutButton {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
   padding: 10px 12px;
   border-radius: 12px;
   cursor: pointer;
@@ -67,8 +67,8 @@
 }
 
 .btn-logoutButton:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: var(--hover-bg);
+  border-color: rgba(0,0,0,0.08);
   transform: translateY(-1px);
 }
 
