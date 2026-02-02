@@ -17,6 +17,11 @@ export default function Timer() {
     return saved ? JSON.parse(saved) : [];
   });
   const [startTime, setStartTime] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [sessionTitle, setSessionTitle] = useState("");
+  const [sessionCategory, setSessionCategory] = useState("Working");
+
+  const Categories = ["Coding", "Meeting", "Testing", "On break"];
 
   useEffect(() => {
     localStorage.setItem("timerSessions", JSON.stringify(sessions));
@@ -43,22 +48,37 @@ export default function Timer() {
 
   const handlePause = () => {
     setIsRunning(false);
+
     if (mode === "work" && startTime) {
-      const endTime = new Date();
-      const durationInSeconds = Math.floor((endTime - startTime) / 1000);
-
-      const newSession = {
-        id: Date.now(),
-        mode: mode,
-        startTime: startTime,
-        endTime: endTime,
-        duration: durationInSeconds,
-        date: new Date().toLocaleDateString("sv-SE"),
-      };
-
-      setSessions([...sessions, newSession]);
-      setStartTime(null);
+      setShowPopup(true);
     }
+  };
+
+  const handleSaveSession = () => {
+    if (!sessionTitle.trim()) {
+      alert("You have to fill in a title");
+      return;
+    }
+
+    const endTime = new Date();
+    const durationInSeconds = Math.floor((endTime - start) / 1000);
+
+    const newSession = {
+      id: Date.now(),
+      mode: mode,
+      title: sessionTitle,
+      category: sessionCategory,
+      startTime: startTime,
+      endTime: endTime,
+      duration: durationInSeconds,
+      date: new Date().toLocaleDateString("sv-SE"),
+    };
+
+    setSessions([...sessions, newSession]);
+    setShowPopup(false);
+    setSessionTitle("");
+    setSessionCategory("Working");
+    setStartTime(null);
   };
 
   const handleReset = () => {
