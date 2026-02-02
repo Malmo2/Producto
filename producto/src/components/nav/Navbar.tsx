@@ -5,7 +5,16 @@ import styles from "./navbar.module.css";
 import Button from "../button/button";
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
-function Navbar({ links = [] }) {
+type NavItem = {
+  url: string;
+  label: string;
+};
+
+type NavbarProps = {
+  links?: NavItem[];
+};
+
+function Navbar({ links = [] }: NavbarProps) {
   const { status, user } = useAuthState();
   const { logout } = useAuthActions();
 
@@ -13,7 +22,7 @@ function Navbar({ links = [] }) {
 
   const isLoggedIn = status === "authenticated";
 
-  const visibleLinks = useMemo(() => {
+  const visibleLinks = useMemo<NavItem[]>(() => {
     return isLoggedIn
       ? links.filter((link) => link.url !== "/login")
       : [{ url: "/login", label: "Login" }];
