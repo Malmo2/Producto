@@ -36,16 +36,9 @@ export default function Timer() {
 
   const handlePause = () => {
     setIsRunning(false);
-
     if (mode === "work" && startTime) {
       const endTime = new Date();
       const durationInSeconds = Math.floor((endTime - startTime) / 1000);
-
-      // Dont save if its under 60 sec
-      if (durationInSeconds < 60) {
-        setStartTime(null);
-        return;
-      }
 
       const newSession = {
         id: Date.now(),
@@ -56,19 +49,13 @@ export default function Timer() {
         date: new Date().toLocaleDateString("sv-SE"),
       };
 
-      const updatedSessions = [...sessions, newSession];
-      if (updatedSessions.length > 5) {
-        updatedSessions.shift();
-      }
-
-      setSessions(updatedSessions);
+      setSessions([...sessions, newSession]);
       setStartTime(null);
     }
   };
 
   const handleReset = () => {
     setIsRunning(false);
-    setTimeLeft(mode === "work" ? WORK_TIME : BREAK_TIME);
     setStartTime(null);
 
     if (mode === "work") {
@@ -80,15 +67,16 @@ export default function Timer() {
     }
   };
 
-  const getTotalMinutesToday = () => {
+  const getTotal = () => {
     const totalSeconds = sessions.reduce((total, session) => {
       return total + session.duration;
     }, 0);
     return Math.floor(totalSeconds / 60);
   };
 
+  //This formats as X=h and Y=m
   const formatTotalTime = () => {
-    const totalMinutes = getTotalMinutesToday();
+    const totalMinutes = getTotal();
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
 
@@ -98,16 +86,17 @@ export default function Timer() {
     return `${minutes}m`;
   };
 
+  //Set daily goal 6h - 360 minutes
   const DAILY_GOAL = 360;
 
-  const getProgressPercentage = () => {
-    return Math.min((getTotalMinutesToday() / DAILY_GOAL) * 100, 100);
+  //progress in %
+  const getProgress = () => {
+    return Math.min((getTotal() / DAILY_GOAL) * 100, 100);
   };
 
   return (
     <div className="timer-container">
       <h1>Timer</h1>
-
       <div className="mode-selector">
         <button
           className={mode === "work" ? "mode-btn active" : "mode-btn"}
@@ -120,6 +109,7 @@ export default function Timer() {
         >
           Work
         </button>
+
         <button
           className={mode === "meeting" ? "mode-btn active" : "mode-btn"}
           onClick={() => {
@@ -131,6 +121,7 @@ export default function Timer() {
         >
           Meeting
         </button>
+
         <button
           className={mode === "break" ? "mode-btn active" : "mode-btn"}
           onClick={() => {
@@ -143,32 +134,24 @@ export default function Timer() {
           Break
         </button>
       </div>
-
       <div className="timer-display">
         <div className="time-text">{formatTime(timeLeft)}</div>
 
         <p className="status-text">
-          {mode === "work" ? "Working" : "On break ☕ "} -{" "}
-        </p>
-        <p className="status-text">
-          {mode === "work" && "Work"}
-          {mode === "meeting" && " Meeting"}
-          {mode === "break" && "☕ Break"}
-          {" - "}
-
+          {mode === "work" ? "Working Mode" : "On break "} -{" "}
           {isRunning ? "Running..." : "Paused"}
         </p>
       </div>
-
       <div className="timer-controls">
         {isRunning ? (
           <Button onClick={handlePause}>Pause</Button>
         ) : (
           <Button onClick={handleStart}>Start</Button>
         )}
-        <Button onClick={handleReset}>Reset</Button>
+        <Button onClick={handleReset} disabled={!isRunning}>
+          Reset
+        </Button>
       </div>
-
       {sessions.length > 0 && (
         <div className="sessions-list">
           <h3>Completed Sessions</h3>
@@ -191,12 +174,12 @@ export default function Timer() {
           <div className="progress-container">
             <div
               className="progress-bar"
-              style={{ width: `${getProgressPercentage()}%` }}
+              style={{ width: `{getProgress()}` }}
             ></div>
           </div>
 
-          <p className="goal-text">
-            DAILY GOAL: 6H • {Math.round(getProgressPercentage())}%
+          <p className="goal-texg">
+            DAILY GOAL: 6H • {Math.round(getProgress())}%
           </p>
         </div>
       )}
