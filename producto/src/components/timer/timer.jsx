@@ -164,6 +164,7 @@ export default function Timer() {
           Reset
         </Button>
       </div>
+
       {sessions.length > 0 && (
         <div className="sessions-list">
           <h3>Completed Sessions</h3>
@@ -175,6 +176,7 @@ export default function Timer() {
               </li>
             ))}
           </ul>
+          <Button onClick={handleClearSessions}>Clear history</Button>
         </div>
       )}
 
