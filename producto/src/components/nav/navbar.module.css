@@ -8,13 +8,13 @@
 
 .sidebar {
   height: 100%;
-  background: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--panel);
+  border-right: 1px solid var(--border);
   padding: 18px 14px;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
+  box-shadow: inset -1px 0 0 rgba(0,0,0,0.03);
 }
 
 .logo {
@@ -27,6 +27,20 @@
 .logoImage {
   height: 32px;
   width: auto;
+  display: block;
+}
+
+.logoDark {
+  display: none;
+}
+
+/* Show dark logo in light theme, and hide default white logo */
+:global([data-theme="light"]) .logoImage {
+  display: none;
+}
+
+:global([data-theme="light"]) .logoDark {
+  display: block;
 }
 
 .navbar {
@@ -49,20 +63,20 @@
   gap: 10px;
   padding: 10px 12px;
   border-radius: 12px;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
   text-decoration: none;
   font-size: 13px;
   transition: background 160ms ease, color 160ms ease;
 }
 
 .navLink:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.9);
+  background: var(--hover-bg);
+  color: var(--text);
 }
 
 .active {
   background: rgba(47, 124, 255, 0.16);
-  color: #fff;
+  color: var(--text);
 }
 
 .active::before {
@@ -81,7 +95,7 @@
 .authSection {
   margin-top: auto;
   padding: 12px 8px 6px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -90,7 +104,7 @@
 .userEmail {
   margin: 0;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--muted);
   word-break: break-word;
 }
 
@@ -116,9 +130,9 @@
     z-index: 1002;
     width: 44px;
     height: 44px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
     border-radius: 12px;
-    background: rgba(11, 18, 32, 0.9);
+    background: var(--panel);
     backdrop-filter: blur(8px);
     align-items: center;
     justify-content: center;
@@ -130,7 +144,7 @@
   .hamburgerBar {
     width: 18px;
     height: 2px;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--text);
     border-radius: 999px;
   }
 

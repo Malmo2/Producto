@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FaCalendarAlt, FaBell, FaCog } from "react-icons/fa";
 import Calendar from '../Calendar/Calendar';
 import Upcoming from '../Upcoming/Upcoming';
+import Settings from '../Settings/Settings';
 
 const activities = [
   { id: 1, icon: 'check', title: 'Completed Landing Page Mockup', timestamp: '45 MINUTES AGO' },
@@ -42,13 +43,25 @@ function ActivityLog({ items = activities }) {
     setView("default");
   };
 
+  const handleSettingsClick = () => {
+    console.log("Settings clicked");
+    setView("settings")
+
+
+  }
+
   return (
     <>
       <div className="calendar-icon-row">
-        <FaCalendarAlt onClick={handleCalendarClick} />
-        <FaBell onClick={handleBellClick} />
-        <FaCog />
-        
+        <button type="button" className="icon-btn" aria-label="Calendar" onClick={handleCalendarClick}>
+          <FaCalendarAlt />
+        </button>
+        <button type="button" className="icon-btn" aria-label="Notifications" onClick={handleBellClick}>
+          <FaBell />
+        </button>
+        <button type="button" className="icon-btn" aria-label="Settings" onClick={handleSettingsClick}>
+          <FaCog />
+        </button>
       </div>
       {view === "activitylog" ? (
         <div className="activity-log">
@@ -64,6 +77,8 @@ function ActivityLog({ items = activities }) {
             ))}
           </div>
         </div>
+      ) : view === "settings" ? (
+        <Settings onClose={() => setView("default")} />
       ) : (
         <>
           <Calendar />
