@@ -118,8 +118,8 @@ export default function Timer() {
     return `${minutes}m`;
   };
 
-  //Set daily goal 6h - 360 minutes
-  const DAILY_GOAL = 360;
+  //Set daily goal 8h - 480 minutes
+  const DAILY_GOAL = 480;
 
   //progress in %
   const getProgress = () => {
@@ -213,7 +213,7 @@ export default function Timer() {
           </div>
 
           <p className="goal-texg">
-            DAILY GOAL: 6H • {Math.round(getProgress())}%
+            DAILY GOAL: 8H • {Math.round(getProgress())}%
           </p>
         </div>
       )}
