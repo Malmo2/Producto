@@ -100,5 +100,29 @@ input:checked + .slider:before {
     transform: translateX(22px);
 }
 
+.row {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
 
+}
 
+.input1 {
+    width:20%;
+
+}
+
+.timer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.timer-input {
+    width: 50px;
+    padding: 6px 8px;
+    border: 1px solid var(--border, #ddd);
+    border-radius: 8px;
+    text-align: center;
+}

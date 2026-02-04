@@ -39,7 +39,19 @@
       "id": "8",
       "date": "2026-01-01",
       "title": "Resa"
+    },
+    {
+      "id": "2d6e",
+      "title": "Dansa",
+      "date": "2026-02-01"
+    },
+    {
+      "id": "889a",
+      "title": "Jobba hårt",
+      "date": "2026-02-06",
+      "time": "18:30",
+      "description": "",
+      "color": "red"
     }
-
   ]
 }

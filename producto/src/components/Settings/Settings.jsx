@@ -44,12 +44,23 @@ function Settings() {
                     <div className="settings-box-header">
                         <span className="settings-box-title">Timer defaults</span>
                     </div>
-                    <div className="settings-timer-durations">
-                        <div>Deep work duration</div>
-                        
-                        <div>Meeting duration</div>
-        
-                        <div>Break duration</div>
+                    <div className="settings-box-body">
+                        <div className="settings-timer-durations">
+                            <label className="timer-row">
+                                <div className="settings-theme-label">Deep work duration</div>
+                                <input type="text" className="timer-input" defaultValue="25" />
+                            </label>
+
+                            <label className="timer-row">
+                                <div className="settings-theme-label">Meeting duration</div>
+                                <input type="text" className="timer-input" defaultValue="45" />
+                            </label>
+
+                            <label className="timer-row">
+                                <div className="settings-theme-label">Break duration</div>
+                                <input type="text" className="timer-input" defaultValue="5" />
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

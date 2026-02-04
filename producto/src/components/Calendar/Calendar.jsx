@@ -6,6 +6,9 @@ function Calendar() {
   const [activities, setActivities] = useState([]);
   const [newActivity, setNewActivity] = useState('')
   const [newDate, setNewDate] = useState('')
+  const [newTime, setNewTime] = useState('')
+  const [newDescription, setNewDescription] = useState('')
+  const [newColor, setNewColor] = useState('blue')
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -99,7 +102,10 @@ function Calendar() {
 
           const newEntry = {
             title: newActivity,
-            date: newDate
+            date: newDate,
+            time: newTime,
+            description: newDescription,
+            color: newColor
           }
           console.log('Skickar till backend:', newEntry)
 
@@ -114,6 +120,10 @@ function Calendar() {
             const added = await res.json();
             setActivities([...activities, added]);
             setNewActivity('')
+            setNewDate('')
+            setNewTime('')
+            setNewDescription('')
+            setNewColor('blue')
           } catch(error) {
             console.error(error)
           }
@@ -126,7 +136,8 @@ function Calendar() {
           placeholder="Ny aktivitet"
           value={newActivity}
           onChange={(e) => setNewActivity(e.target.value)}
-          className="calendar-input" />
+          className="calendar-input"
+          required />
           <button type="submit" className="calendar-add-btn">+</button>
         </div>
         
@@ -135,6 +146,23 @@ function Calendar() {
         onChange={(e) => setNewDate(e.target.value)}
         className="calendar-input"
         required />
+        
+        <input type="time"
+        placeholder="Tid"
+        value={newTime}
+        onChange={(e) => setNewTime(e.target.value)}
+        className="calendar-input" />
+        
+        <select
+        value={newColor}
+        onChange={(e) => setNewColor(e.target.value)}
+        className="calendar-input">
+          <option value="blue">Blå</option>
+          <option value="purple">Lila</option>
+          <option value="orange">Orange</option>
+          <option value="red">Röd</option>
+          <option value="green">Grön</option>
+        </select>
         </form>
       </div>
   );
