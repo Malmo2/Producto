@@ -7,6 +7,8 @@ import {
     useCallback,
 } from "react";
 
+import { supabase } from '../lib/supabaseClient';
+
 type AuthStatus = "anonymous" | "loading" | "authenticated" | "error";
 
 type User = {
@@ -26,6 +28,10 @@ type AuthState = {
     token: string | null;
     errorMessage: string | null;
 };
+
+// type RestoreSession = {
+//      type: "restore_session"; payload: Session | null 
+// };
 
 type AuthAction =
     | { type: "restore_session"; payload: Session | null }
@@ -98,25 +104,13 @@ function clearSession() {
     localStorage.removeItem("session");
 }
 
-async function fakeLoginApi(input: { email: string; password: string }):
-    Promise<Session> {
-    await new Promise((r) => setTimeout(r, 600));
 
-
-    if (!input.email.includes("@")) throw new Error("Invalid Email");
-    if (input.password.length < 8) throw new Error('Wrong password');
-
-    return {
-        user: { id: "u1", name: "Demo User", email: input.email },
-        token: "demo-token-123",
-    };
-
-};
 
 
 type AuthActions = {
     login: (input: { email: string; password: string }) => Promise<{ ok: boolean }>;
-    logout: () => void;
+    signup: (input: { email: string; password: string; name?: string }) => Promise<{ ok: boolean }>;
+    logout: () => Promise<void>;
 };
 
 const AuthStateContext = createContext<AuthState | undefined>(undefined);
@@ -141,14 +135,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [state.status, state.user, state.token]);
 
 
-    const login = useCallback(async (input: { email: string; password: string }) => {
+    const login = useCallback(async (input: { email: string; password: string; }) => {
         dispatch({ type: "login_start" });
-
-
         try {
-            const session = await fakeLoginApi(input);
-            dispatch({ type: "login_success", payload: session });
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: input.email,
+                password: input.password,
+            });
+
+            if (error) throw error;
+
+            const session = data.session;
+            const user = data.user;
+
+            if (!session || !user) throw new Error("No session returned from Supabase");
+
+            const mappedSession: Session = {
+                user: {
+                    id: user.id,
+                    name: (user.user_metadata?.name ?? "User") as string,
+                    email: user.email ?? input.email,
+                },
+                token: session.access_token,
+            };
+
+            dispatch({ type: "login_success", payload: mappedSession });
+
             return { ok: true };
+
         } catch (e) {
             const message = e instanceof Error ? e.message : "Login failed";
             dispatch({ type: "login_error", payload: message });
@@ -156,12 +170,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, [])
 
-    const logout = useCallback(() => {
+    const signup = useCallback(async (input: { email: string; password: string; name?: string; }) => {
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email: input.email,
+                password: input.password,
+                options: {
+                    data: { name: input.name ?? "User" },
+                },
+            });
+
+            if (error) throw error;
+
+            const session = data.session;
+            const user = data.user;
+
+            if (!user) throw new Error("Signup failed: no user returned");
+
+            if (!session) {
+                dispatch({ type: "login_error", payload: "Account created. Please verify your email, then log in." });
+                return { ok: true };
+            }
+
+            const mappedSession: Session = {
+                user: {
+                    id: user.id,
+                    name: (user.user_metadata?.name ?? input.name ?? "User") as string,
+                    email: user.email ?? input.email,
+                },
+                token: session.access_token,
+            };
+
+            dispatch({ type: "login_success", payload: mappedSession });
+            return { ok: true };
+
+        } catch (e) {
+            const message = e instanceof Error ? e.message : "Signup failed";
+            dispatch({ type: "login_error", payload: message });
+            return { ok: false };
+        }
+    }, []);
+
+    const logout = useCallback(async () => {
+        await supabase.auth.signOut();
         clearSession();
         dispatch({ type: "logout" });
     }, [])
 
-    const actions = useMemo<AuthActions>(() => ({ login, logout }), [login, logout]);
+    const actions = useMemo<AuthActions>(() => ({ login, signup, logout }), [login, signup, logout]);
 
     return (
         <AuthStateContext.Provider value={state}>
