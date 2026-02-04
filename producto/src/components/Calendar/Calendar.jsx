@@ -3,7 +3,9 @@ import "./Calendar.css";
 
 function Calendar() {
   const [selectedDay, setSelectedDay] = useState(null);
-  const [activities, setActivities] = useState([])
+  const [activities, setActivities] = useState([]);
+  const [newActivity, setNewActivity] = useState('')
+  const [newDate, setNewDate] = useState('')
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -91,6 +93,49 @@ function Calendar() {
             ))}
           </ul>
         )}
+        <form className="calendar-add-form" onSubmit={async (e) => {
+          e.preventDefault();
+          if(!newActivity.trim()) return;
+
+          const newEntry = {
+            title: newActivity,
+            date: newDate
+          }
+          console.log('Skickar till backend:', newEntry)
+
+          try{
+
+             const res = await fetch('http://localhost:3001/activities', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newEntry)
+              });
+            if(!res.ok) throw new Error('Kunde inte lägga till aktivitet');
+            const added = await res.json();
+            setActivities([...activities, added]);
+            setNewActivity('')
+          } catch(error) {
+            console.error(error)
+          }
+
+        }}
+        >
+
+       <div className="calendar-date-row">
+          <input type="text"
+          placeholder="Ny aktivitet"
+          value={newActivity}
+          onChange={(e) => setNewActivity(e.target.value)}
+          className="calendar-input" />
+          <button type="submit" className="calendar-add-btn">+</button>
+        </div>
+        
+        <input type="date"
+        value={newDate}
+        onChange={(e) => setNewDate(e.target.value)}
+        className="calendar-input"
+        required />
+        </form>
       </div>
   );
 }

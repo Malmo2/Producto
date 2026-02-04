@@ -1,27 +1,25 @@
 import { useState } from 'react';
 import './Settings.css';
 import { useContext } from 'react'
-import { ThemeContext } from '../Darkmode/ThemeContext.jsx';
+import { ThemeContext } from '../Darkmode/ThemeContext';
+
 
 function Settings() {
     const { theme, toggleTheme} = useContext(ThemeContext)
-    const [settings, setSettings] = useState({
+    const [settings] = useState({
         notifications: true,
         theme: 'light',
     });
 
 
-    const handleChangeTheme = (theme) => {
-        setSettings(prev => ({ ...prev, theme }));
-    };
+  
 
     return (
         <div>
             <div className="settings-content">
                 <div className="settings-box appearance-box">
                     <div className="settings-box-header">
-                        <span role="img" aria-label="appearance" style={{fontSize: '1.3em', marginRight: 8}}></span>
-                        <span className="settings-box-title">Appearance</span>
+                        <div className="settings-box-title">Appearance</div>
                     </div>
                     <div className="settings-box-body">
                         <div className="settings-theme-row">
@@ -38,7 +36,20 @@ function Settings() {
                                 <span className="slider round"></span>
                                 <span className="theme-icon" role="img" aria-label="theme">{settings.theme === 'dark' ? '🌙' : '☀️'}</span>
                             </label>
+
                         </div>
+                    </div>
+                </div>
+                <div className="settings-box timer-box">
+                    <div className="settings-box-header">
+                        <span className="settings-box-title">Timer defaults</span>
+                    </div>
+                    <div className="settings-timer-durations">
+                        <div>Deep work duration</div>
+                        
+                        <div>Meeting duration</div>
+        
+                        <div>Break duration</div>
                     </div>
                 </div>
             </div>
