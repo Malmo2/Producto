@@ -9,7 +9,7 @@ import navLinks from "./components/nav/navLinks";
 
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
-import Schedule from "./components/nav/pages/Schedule";
+import Sessions from "./components/nav/pages/Sessions";
 import LoginForm from "./components/forms/LoginForm";
 import Signup from "./components/nav/pages/Signup";
 import Dashboard from "./components/nav/pages/Dashboard";
@@ -56,9 +56,9 @@ function App() {
             }
           />
           <Route
-            path="/schedule"
+            path="/sessions"
             element={
-              isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
+              isLoggedIn ? <Sessions /> : <Navigate to="/login" replace />
             }
           />
 

@@ -199,6 +199,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     email: user.email ?? input.email,
                 },
                 token: session.access_token,
+
             };
 
             dispatch({ type: "login_success", payload: mappedSession });

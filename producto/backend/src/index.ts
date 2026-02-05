@@ -67,6 +67,23 @@ type Worksession = {
     endAt: string | null;
 };
 
+type WorkSessionRow = {
+    id: string;
+    user_id: string;
+    title: string;
+    category: string;
+    start_at: string;
+    end_at: string | null;
+    created_at: string;
+};
+
+type CreateWorkSessionInput = {
+    title: string;
+    category: string;
+    startAt: string;
+    endAt?: string | null;
+};
+
 const sessions: Worksession[] = [];
 
 function makeId() {
@@ -83,13 +100,30 @@ app.get("/api/me", requireAuth, (req, res) => {
     res.json({ ok: true, user });
 });
 
-app.get("/api/sessions", requireAuth, (req, res) => {
+
+app.get("/api/sessions", requireAuth, async (req, res) => {
     const user = (req as AuthedRequest).user;
-    const mySessions = sessions.filter((s) => s.userId === user.id);
-    res.json({ ok: true, sessions: mySessions });
+
+    const header = req.header("authorization") ?? "";
+    const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : "";
+
+    const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+
+    const { data, error } = await supabaseUser
+        .from("work_sessions")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("start_at", { ascending: false });
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    return res.json({ ok: true, sessions: data ?? [] });
 });
 
-app.post("/api/sessions", requireAuth, (req, res) => {
+
+app.post("/api/sessions", requireAuth, async (req, res) => {
     const user = (req as AuthedRequest).user;
 
     const { title, category, startAt, endAt } = req.body as {
@@ -103,19 +137,82 @@ app.post("/api/sessions", requireAuth, (req, res) => {
         return res.status(400).json({ error: "title, category, startAt are required" });
     }
 
-    const newSession: Worksession = {
-        id: makeId(),
-        userId: user.id,
-        title,
-        category,
-        startAt,
-        endAt: endAt ?? null
-    };
+    const header = req.header("authorization") ?? "";
+    const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : "";
 
-    sessions.push(newSession);
-    res.status(201).json({ ok: true, session: newSession });
+    const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+    });
 
+    const { data, error } = await supabaseUser
+        .from("work_sessions")
+        .insert({
+            user_id: user.id,
+            title,
+            category,
+            start_at: startAt,
+            end_at: endAt ?? null,
+        })
+        .select("*")
+        .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    return res.status(201).json({ ok: true, session: data });
 });
+
+app.put("/api/sessions/:id", requireAuth, async (req, res) => {
+    const user = (req as AuthedRequest).user;
+    const header = req.header("authorization") ?? "";
+    const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : "";
+    const sessionId = req.params.id;
+
+    const { endAt } = req.body as { endAt?: string | null };
+    if (!endAt) return res.status(400).json({ error: "endAt is required" });
+
+    const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+
+    const { data, error, count } = await supabaseUser
+        .from("work_sessions")
+        .update({ end_at: endAt }, { count: "exact" })
+        .eq("id", sessionId)
+        .select("*");
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    if (!count || count === 0) {
+        return res.status(404).json({ error: "Session not found (or not allowed)" });
+    }
+
+    return res.json({ ok: true, session: data?.[0] ?? null });
+});
+
+app.delete("/api/sessions/:id", requireAuth, async (req, res) => {
+    const sessionId = req.params.id;
+
+    const header = req.header("authorization") ?? "";
+    const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : "";
+
+    const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+
+    const { error, count } = await supabaseUser
+        .from("work_sessions")
+        .delete({ count: "exact" })
+        .eq("id", sessionId);
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    if (!count || count === 0) {
+        return res.status(404).json({ error: "Session not found (or not allowed)" });
+    }
+
+    return res.json({ ok: true });
+});
+
 
 
 app.listen(port, () => {

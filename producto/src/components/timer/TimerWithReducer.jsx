@@ -1,9 +1,12 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
+import { apiFetch } from "../../lib/api";
+import { useAuthState } from "../../contexts/AuthContext";
 import formatTime from "../../utils/formatTime";
 import timerStyles from "./TimerReducer.module.css";
 import Button from "../button/button";
 import Circle from "../../utils/circle";
 import Card from "../cards/Card";
+
 
 const WORK_SECONDS = 20 * 60;
 
@@ -11,6 +14,9 @@ const initialState = {
   timeLeft: WORK_SECONDS,
   isRunning: false,
 };
+
+
+
 
 function timerReducer(state, action) {
   switch (action.type) {
@@ -35,6 +41,70 @@ function timerReducer(state, action) {
 
 export default function TimerWithReducer() {
   const [state, dispatch] = useReducer(timerReducer, initialState);
+  const [activeSessionId, setActiveSessionId] = useState(null);
+  const [startAt, setStartAt] = useState(null);
+  const { token } = useAuthState();
+
+  const handleStart = async () => {
+    if (!token) return;
+    if (state.isRunning) return;
+
+    dispatch({ type: "START" });
+
+    if (startAt) return;
+
+    const start = new Date();
+    setStartAt(start);
+
+    try {
+      const created = await apiFetch("/api/sessions", token, {
+        method: "POST",
+        body: JSON.stringify({
+          title: "Timer session",
+          category: "Deep Work",
+          startAt: start.toISOString(),
+          endAt: null,
+        }),
+      });
+
+      setActiveSessionId(created.session.id);
+
+    } catch (e) {
+      dispatch({ type: "PAUSE" });
+      setStartAt(null);
+      setActiveSessionId(null);
+      console.error(e);
+    }
+  };
+
+
+  const handlePause = async () => {
+    if (!token) return;
+    if (!state.isRunning) return;
+
+    dispatch({ type: "PAUSE" });
+
+    if (!activeSessionId) {
+      setStartAt(null)
+      return;
+    }
+
+    try {
+      await apiFetch(`/api/sessions/${activeSessionId}`, token, {
+        method: "PUT",
+        body: JSON.stringify({
+          endAt: new Date().toISOString(),
+        }),
+      });
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setStartAt(null);
+      setActiveSessionId(null);
+    }
+  };
+
+
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -78,7 +148,7 @@ export default function TimerWithReducer() {
 
       <div className={timerStyles.timerControls}>
         <Button
-          onClick={() => dispatch({ type: "START" })}
+          onClick={handleStart}
           variant="purple"
           disabled={state.isRunning}
         >
@@ -86,16 +156,23 @@ export default function TimerWithReducer() {
         </Button>
 
         <Button
-          onClick={() => dispatch({ type: "PAUSE" })}
+          onClick={handlePause}
           variant="purple"
           disabled={!state.isRunning}
         >
           Pause
         </Button>
 
-        <Button onClick={() => dispatch({ type: "RESET" })} variant="purple">
+        <Button
+          onClick={async () => {
+            if (state.isRunning) await handlePause();
+            dispatch({ type: "RESET" });
+          }}
+          variant="purple"
+        >
           Reset
         </Button>
+
       </div>
     </Card>
   );
