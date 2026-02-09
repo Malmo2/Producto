@@ -9,8 +9,12 @@ export default function Timer() {
   const MEETING_TIME = 25 * 60;
   const BREAK_TIME = 20 * 60;
 
-  const [timeLeft, setTimeLeft] = useState(WORK_TIME);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [customMinutes, setCustomMinutes] = useState(() => {
+    const saved = localStorage.getItem("customMinutes");
+    return saved ? Number(saved) : "";
+  });
   const intervalRef = useRef(null);
   const [sessions, setSessions] = useState(() => {
     const saved = localStorage.getItem("timerSessions");
@@ -21,11 +25,23 @@ export default function Timer() {
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionCategory, setSessionCategory] = useState("Working");
 
-  const Categories = ["Coding", "Meeting", "Testing", "On break"];
+  const Categories = ["Coding", "Meeting", "Testing", "On break", "Other"];
 
   useEffect(() => {
     localStorage.setItem("timerSessions", JSON.stringify(sessions));
   }, [sessions]);
+
+  useEffect(() => {
+    if (customMinutes !== "") {
+      localStorage.setItem("customMinutes", customMinutes.toString());
+    }
+  }, [customMinutes]);
+
+  useEffect(() => {
+    if (customMinutes !== "" && timeLeft === 0) {
+      setTimeLeft(customMinutes * 60);
+    }
+  }, []);
 
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
@@ -61,7 +77,7 @@ export default function Timer() {
     }
 
     const endTime = new Date();
-    const durationInSeconds = Math.floor((endTime - start) / 1000);
+    const durationInSeconds = Math.floor((endTime - startTime) / 1000);
 
     const newSession = {
       id: Date.now(),
@@ -84,13 +100,8 @@ export default function Timer() {
   const handleReset = () => {
     setIsRunning(false);
     setStartTime(null);
-
-    if (mode === "work") {
-      setTimeLeft(WORK_TIME);
-    } else if (mode === "meeting") {
-      setTimeLeft(MEETING_TIME);
-    } else {
-      setTimeLeft(BREAK_TIME);
+    if (customMinutes !== "") {
+      setTimeLeft(customMinutes * 60);
     }
   };
 
@@ -106,7 +117,6 @@ export default function Timer() {
     return Math.floor(totalSeconds / 60);
   };
 
-  //This formats as X=h and Y=m
   const formatTotalTime = () => {
     const totalMinutes = getTotal();
     const hours = Math.floor(totalMinutes / 60);
@@ -117,106 +127,177 @@ export default function Timer() {
     }
     return `${minutes}m`;
   };
-
-  //Set daily goal 8h - 480 minutes
+  // daily goal = 8h
   const DAILY_GOAL = 480;
 
-  //progress in %
   const getProgress = () => {
     return Math.min((getTotal() / DAILY_GOAL) * 100, 100);
   };
 
   return (
-    <div className="timer-container">
-      <h1>Timer</h1>
-      <div className="mode-selector">
-        <button
-          className={mode === "work" ? "mode-btn active" : "mode-btn"}
-          onClick={() => {
-            setMode("work");
-            setTimeLeft(WORK_TIME);
-            setIsRunning(false);
-            setStartTime(null);
-          }}
-        >
-          Work
-        </button>
+    <>
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-content">
+            <h2>Save your work session</h2>
 
-        <button
-          className={mode === "meeting" ? "mode-btn active" : "mode-btn"}
-          onClick={() => {
-            setMode("meeting");
-            setTimeLeft(MEETING_TIME);
-            setIsRunning(false);
-            setStartTime(null);
-          }}
-        >
-          Meeting
-        </button>
+            <div className="popup-field">
+              <label>What did you work on?</label>
+              <input
+                type="text"
+                value={sessionTitle}
+                onChange={(e) => setSessionTitle(e.target.value)}
+                placeholder="Fixed something.."
+                autoFocus
+              />
+            </div>
 
-        <button
-          className={mode === "break" ? "mode-btn active" : "mode-btn"}
-          onClick={() => {
-            setMode("break");
-            setTimeLeft(BREAK_TIME);
-            setIsRunning(false);
-            setStartTime(null);
-          }}
-        >
-          Break
-        </button>
-      </div>
-      <div className="timer-display">
-        <div className="time-text">{formatTime(timeLeft)}</div>
+            <div className="popup-field">
+              <label>Category</label>
+              <select
+                value={sessionCategory}
+                onChange={(e) => setSessionCategory(e.target.value)}
+              >
+                {Categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <p className="status-text">
-          {mode === "work" ? "Working Mode" : "On break "} -{" "}
-          {isRunning ? "Running..." : "Paused"}
-        </p>
-      </div>
-      <div className="timer-controls">
-        {isRunning ? (
-          <Button onClick={handlePause}>Pause</Button>
-        ) : (
-          <Button onClick={handleStart}>Start</Button>
-        )}
-        <Button onClick={handleReset} disabled={!isRunning}>
-          Reset
-        </Button>
-      </div>
-
-      {sessions.length > 0 && (
-        <div className="sessions-list">
-          <h3>Completed Sessions</h3>
-          <ul>
-            {sessions.map((session) => (
-              <li key={session.id}>
-                <span>{session.date}</span>
-                <span>{Math.floor(session.duration / 60)} min</span>
-              </li>
-            ))}
-          </ul>
-          <Button onClick={handleClearSessions}>Clear history</Button>
+            <div className="popup-buttons">
+              <Button onClick={handleSaveSession}>Save</Button>
+              <Button
+                onClick={() => {
+                  setShowPopup(false);
+                  setSessionTitle("");
+                  setStartTime(null);
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
         </div>
       )}
 
-      {sessions.length > 0 && (
-        <div className="total-focus">
-          <h3>TOTAL FOCUSED TODAY</h3>
-          <p className="total-time">{formatTotalTime()}</p>
+      <div className="timer-container">
+        <h1>Timer</h1>
+        <div className="mode-selector">
+          <button
+            className={mode === "work" ? "mode-btn active" : "mode-btn"}
+            onClick={() => {
+              setMode("work");
+              setIsRunning(false);
+              setStartTime(null);
+            }}
+          >
+            Work
+          </button>
 
-          <div className="progress-container">
-            <div
-              className="progress-bar"
-              style={{ width: `{getProgress()}` }}
-            ></div>
-          </div>
+          <button
+            className={mode === "meeting" ? "mode-btn active" : "mode-btn"}
+            onClick={() => {
+              setMode("meeting");
+              setIsRunning(false);
+              setStartTime(null);
+            }}
+          >
+            Meeting
+          </button>
 
-          <p className="goal-texg">
-            DAILY GOAL: 8H • {Math.round(getProgress())}%
+          <button
+            className={mode === "break" ? "mode-btn active" : "mode-btn"}
+            onClick={() => {
+              setMode("break");
+              setIsRunning(false);
+              setStartTime(null);
+            }}
+          >
+            Break
+          </button>
+        </div>
+
+        <div className="time-input">
+          <label>Minutes</label>
+          <input
+            type="number"
+            min="1"
+            max="120"
+            value={customMinutes}
+            placeholder="Enter time"
+            disabled={isRunning}
+            onChange={(e) => {
+              const val = e.target.value === "" ? "" : Number(e.target.value);
+              setCustomMinutes(val);
+              if (val !== "") setTimeLeft(val * 60);
+            }}
+          />
+        </div>
+
+        <div className="timer-display">
+          <div className="time-text">{formatTime(timeLeft)}</div>
+
+          <p className="status-text">
+            {mode === "work" ? "Working Mode" : "On break "} -{" "}
+            {isRunning ? "Running..." : "Paused"}
           </p>
         </div>
-      )}
-    </div>
+
+        <div className="timer-controls">
+          {isRunning ? (
+            <Button onClick={handlePause}>Pause</Button>
+          ) : (
+            <Button onClick={handleStart}>Start</Button>
+          )}
+          <Button onClick={handleReset} disabled={!isRunning}>
+            Reset
+          </Button>
+        </div>
+
+        {sessions.length > 0 && (
+          <div className="sessions-list">
+            <h3>Completed Sessions</h3>
+            <ul>
+              {sessions.map((session) => (
+                <li key={session.id}>
+                  <div>
+                    <strong>{session.title}</strong>
+                    <span className="session-category">
+                      {" "}
+                      ({session.category})
+                    </span>
+                  </div>
+                  <div>
+                    <span>{session.date}</span>
+                    <span> • {Math.floor(session.duration / 60)} min</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <Button onClick={handleClearSessions}>Clear history</Button>
+          </div>
+        )}
+
+        {sessions.length > 0 && (
+          <div className="total-focus">
+            <h3>TOTAL FOCUSED TODAY</h3>
+            <p className="total-time">{formatTotalTime()}</p>
+
+            <div className="progress-container">
+              <div
+                className="progress-bar"
+                style={{ width: `${getProgress()}%` }}
+              ></div>
+            </div>
+
+            <p className="goal-text">
+              DAILY GOAL: 8H • {Math.round(getProgress())}%
+            </p>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
