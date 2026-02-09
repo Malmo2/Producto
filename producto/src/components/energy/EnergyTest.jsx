@@ -10,6 +10,9 @@ function EnergyTest() {
 
   useEffect(() => {
     localStorage.setItem("energyLogs", JSON.stringify(logs));
+
+    // tell other components that energi logs changed
+    window.dispatchEvent(new Event("energyLogsUpdated"))
   }, [logs]);
 
   // Avergage energy
@@ -24,18 +27,7 @@ function EnergyTest() {
   };
 
 
-   {/* recommendation  */}
-  const latestEnergy = logs[0]?.level;
 
-  let recommendation = "No data yet";
-
-  if (latestEnergy <= 2) {
-    recommendation = "Take a breakk";
-  } else if (latestEnergy === 3) {
-    recommendation = "Do light work...";
-  } else if (latestEnergy >= 4) {
-    recommendation = "Great time for deep work";
-  }
 
   return (
     <div>
@@ -67,10 +59,7 @@ function EnergyTest() {
         Save energy
       </button>
 
-
-      <h3>Recommendation: {recommendation}</h3>
-
-
+   
       {/* graph */}
       <h3>Energy graph (latest first)</h3>
       <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
@@ -126,7 +115,7 @@ function EnergyTest() {
         {logs.map((log, index) => {
           return (
             <li key={index}>
-              Energy: {log.level} -
+              Energy: {log.level} - {" "}
               {new Date(log.createdAt).toLocaleTimeString()}
               {/* delete button */}
               <button
@@ -139,7 +128,7 @@ function EnergyTest() {
           );
         })}
       </ul>
-      <p>Average energy: {average.toFixed(2)}</p>{" "}
+      <p>Average energy: {average.toFixed(2)}</p>
       {/* toFixed is for the decimals */}
     </div>
   );
