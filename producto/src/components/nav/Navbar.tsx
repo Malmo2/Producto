@@ -1,23 +1,36 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/producto-logo.svg";
+import logoDark from "../../assets/producto-logo-dark.svg";
 import styles from "./navbar.module.css";
 import Button from "../button/button";
+import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
-function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
+type NavItem = {
+  url: string;
+  label: string;
+};
 
+type NavbarProps = {
+  links?: NavItem[];
+};
+
+function Navbar({ links = [] }: NavbarProps) {
+  const { status, user } = useAuthState();
+  const { logout } = useAuthActions();
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const visibleLinks = isLoggedIn
-    ? links.filter((link) => link.url !== "/login")
-    : [{ url: "/login", label: "Login" }];
+  const isLoggedIn = status === "authenticated";
+
+  const visibleLinks = useMemo<NavItem[]>(() => {
+    return isLoggedIn
+      ? links.filter((link) => link.url !== "/login")
+      : [{ url: "/login", label: "Login" }];
+  }, [isLoggedIn, links]);
 
   useEffect(() => {
-
-
     const onResize = () => {
-
       if (window.innerWidth > 900) setIsOpen(false);
     };
 
@@ -48,6 +61,7 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
         <nav className={styles.sidebar}>
           <div className={styles.logo}>
             <img src={logo} alt="Producto logo" className={styles.logoImage} />
+            <img src={logoDark} alt="Producto logo dark" className={`${styles.logoImage} ${styles.logoDark}`} />
           </div>
 
           <ul className={styles.navbar}>
@@ -57,7 +71,9 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
                   to={link.url}
                   onClick={closeMenu}
                   className={({ isActive }) =>
-                    isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+                    isActive
+                      ? `${styles.navLink} ${styles.active}`
+                      : styles.navLink
                   }
                 >
                   {link.label}
@@ -68,8 +84,15 @@ function Navbar({ links = [], isLoggedIn = false, onLogout, userEmail = "" }) {
 
           {isLoggedIn && (
             <div className={styles.authSection}>
-              {userEmail && <p className={styles.userEmail}>{userEmail}</p>}
-              <Button type="button" variant="logoutButton" onClick={() => { closeMenu(); onLogout?.(); }}>
+              {user?.email && <p className={styles.userEmail}>{user.email}</p>}
+              <Button
+                type="button"
+                variant="logoutButton"
+                onClick={() => {
+                  closeMenu();
+                  logout();
+                }}
+              >
                 Logout
               </Button>
             </div>

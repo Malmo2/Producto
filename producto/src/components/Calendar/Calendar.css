@@ -1,13 +1,14 @@
 .calendar-container {
-  background: #1a1f2e;
-  border: 1px solid #333;
+  background: var(--card);
+  border: 1px solid rgba(0,0,0,0.06);
   border-radius: 8px;
   padding: 15px;
   min-width: 280px;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 1.5rem;
   padding-left: 9px;
   margin-left: -5px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
 }
 
 .calendar-icon-row {
@@ -15,14 +16,36 @@
   align-items: center;
   justify-content: flex-end;
   margin-bottom: 0.3rem;
-  gap: 30px;
-  cursor: pointer;
+  gap: 12px;
   position: sticky;
-  background: #0b1220;
   z-index: 60;
   padding-top: 1.2rem;
   transform: translateX(-20px);
+}
 
+.calendar-icon-row .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card, rgba(255,255,255,0.06));
+  color: var(--text, #fff);
+  border: none;
+  cursor: pointer;
+  transition: background .15s, transform .12s;
+}
+
+.calendar-icon-row .icon-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(0.95);
+}
+
+.calendar-icon-row .icon-btn svg {
+  width: 18px;
+  height: 18px;
+  color: inherit;
 }
 
 .calendar-grid {
@@ -37,17 +60,20 @@
   border-radius: 4px;
   cursor: pointer;
   position: relative;
-  background: #242b3d;
-  color: #fff;
-  transition: background 0.2s;
+  background: var(--card);
+  color: var(--text);
+  transition: background 0.2s, color 0.2s;
 }
 
 .calendar-day:hover {
-  background: #3b82f6;
+  background: var(--accent);
+  color: #ffffff;
 }
 
 .calendar-day--has-activity {
-  background: #1e3a5f;
+  background: rgba(59,130,246,0.12);
+  color: var(--text);
+  border: 1px solid rgba(59,130,246,0.12);
 }
 
 .calendar-dot {
@@ -69,5 +95,41 @@
 
 .calendar-activities li {
   padding: 5px 0;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.calendar-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.calendar-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  width: 80%;
+}
+
+.calendar-add-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--accent, #2ec4b6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.calendar-add-btn:hover {
+  background: var(--accent-dark, #26a89c);
+}
+.calendar-date-row {
+  display: flex;
+  gap: 8px;
 }
