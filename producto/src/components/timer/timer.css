@@ -81,6 +81,29 @@
   width: 100%;
 }
 
+.session-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
 .sessions-list h3 {
   font-size: 1rem;
   margin-bottom: 1rem;

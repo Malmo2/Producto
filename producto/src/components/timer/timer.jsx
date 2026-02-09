@@ -110,6 +110,13 @@ export default function Timer() {
     localStorage.removeItem("timerSessions");
   };
 
+  const handleDeleteSession = (sessionId) => {
+    const updatedSessions = sessions.filter(
+      (session) => session.id !== sessionId,
+    );
+    setSessions(updatedSessions);
+  };
+
   const getTotal = () => {
     const totalSeconds = sessions.reduce((total, session) => {
       return total + session.duration;
@@ -127,7 +134,7 @@ export default function Timer() {
     }
     return `${minutes}m`;
   };
-  // daily goal = 8h
+
   const DAILY_GOAL = 480;
 
   const getProgress = () => {
@@ -269,9 +276,16 @@ export default function Timer() {
                       ({session.category})
                     </span>
                   </div>
-                  <div>
+                  <div className="session-info">
                     <span>{session.date}</span>
                     <span> • {Math.floor(session.duration / 60)} min</span>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteSession(session.id)}
+                      title="Delete session"
+                    >
+                      ✕
+                    </button>
                   </div>
                 </li>
               ))}
