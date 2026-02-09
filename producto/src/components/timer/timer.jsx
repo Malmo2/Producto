@@ -227,7 +227,6 @@ export default function Timer() {
         </div>
 
         <div className="time-input">
-          <label>Minutes</label>
           <input
             type="number"
             min="1"
@@ -241,6 +240,7 @@ export default function Timer() {
               if (val !== "") setTimeLeft(val * 60);
             }}
           />
+          <label>Minutes</label>
         </div>
 
         <div className="timer-display">
