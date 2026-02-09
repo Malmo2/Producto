@@ -1,12 +1,57 @@
 {
   "activities": [
-    { "id": 1, "date": "2026-01-05", "title": "Möte" },
-    { "id": 2, "date": "2026-01-12", "title": "Gym" },
-    { "id": 3, "date": "2026-01-11", "title": "Fotboll" },
-    { "id": 4, "date": "2026-01-24", "title": "Jobb" },
-    { "id": 5, "date": "2026-01-27", "title": "Semester" },
-    { "id": 6, "date": "2026-01-22", "title": "Workshop" },
-    { "id": 7, "date": "2026-01-19", "title": "Middag" },
-    { "id": 8, "date": "2026-01-01", "title": "Resa" }
+    {
+      "id": "1",
+      "date": "2026-01-05",
+      "title": "Möte"
+    },
+    {
+      "id": "2",
+      "date": "2026-01-12",
+      "title": "Gym"
+    },
+    {
+      "id": "3",
+      "date": "2026-01-11",
+      "title": "Fotboll"
+    },
+    {
+      "id": "4",
+      "date": "2026-01-24",
+      "title": "Jobb"
+    },
+    {
+      "id": "5",
+      "date": "2026-01-27",
+      "title": "Semester"
+    },
+    {
+      "id": "6",
+      "date": "2026-01-22",
+      "title": "Workshop"
+    },
+    {
+      "id": "7",
+      "date": "2026-01-19",
+      "title": "Middag"
+    },
+    {
+      "id": "8",
+      "date": "2026-01-01",
+      "title": "Resa"
+    },
+    {
+      "id": "2d6e",
+      "title": "Dansa",
+      "date": "2026-02-01"
+    },
+    {
+      "id": "889a",
+      "title": "Jobba hårt",
+      "date": "2026-02-06",
+      "time": "18:30",
+      "description": "",
+      "color": "red"
+    }
   ]
 }

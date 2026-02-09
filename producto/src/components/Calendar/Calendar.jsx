@@ -3,22 +3,27 @@ import "./Calendar.css";
 
 function Calendar() {
   const [selectedDay, setSelectedDay] = useState(null);
-  const [activities, setActivities] = useState([])
+  const [activities, setActivities] = useState([]);
+  const [newActivity, setNewActivity] = useState('')
+  const [newDate, setNewDate] = useState('')
+  const [newTime, setNewTime] = useState('')
+  const [newDescription, setNewDescription] = useState('')
+  const [newColor, setNewColor] = useState('blue')
 
-  // useEffect(() => {
-  //   const fetchActivities = async () => {
-  //     try {
-  //       const res = await fetch('http://localhost:3001/activities');
-  //       if (!res.ok) throw new Error('Något gick fel vid hämtning');
-  //       const data = await res.json();
-  //       setActivities(Array.isArray(data) ? data : []);
-  //     } catch (error) {
-  //       console.error('Kunde inte hämta aktiviteter', error);
-  //       setActivities([]);
-  //     }
-  //   };
-  //   fetchActivities();
-  // }, [])
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/activities');
+        if (!res.ok) throw new Error('Något gick fel vid hämtning');
+        const data = await res.json();
+        setActivities(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error('Kunde inte hämta aktiviteter', error);
+        setActivities([]);
+      }
+    };
+    fetchActivities();
+  }, [])
 
 
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -84,14 +89,82 @@ function Calendar() {
         })}
       </div>
 
-      {selectedDay && (
-        <ul className="calendar-activities">
-          {activitiesForDay(selectedDay).map((a, i) => (
-            <li key={i}>{a.title}</li>
-          ))}
-        </ul>
-      )}
-    </div>
+        {selectedDay && (
+          <ul className="calendar-activities">
+            {activitiesForDay(selectedDay).map((a, i) => (
+              <li key={i}>{a.title}</li>
+            ))}
+          </ul>
+        )}
+        <form className="calendar-add-form" onSubmit={async (e) => {
+          e.preventDefault();
+          if(!newActivity.trim()) return;
+
+          const newEntry = {
+            title: newActivity,
+            date: newDate,
+            time: newTime,
+            description: newDescription,
+            color: newColor
+          }
+          console.log('Skickar till backend:', newEntry)
+
+          try{
+
+             const res = await fetch('http://localhost:3001/activities', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newEntry)
+              });
+            if(!res.ok) throw new Error('Kunde inte lägga till aktivitet');
+            const added = await res.json();
+            setActivities([...activities, added]);
+            setNewActivity('')
+            setNewDate('')
+            setNewTime('')
+            setNewDescription('')
+            setNewColor('blue')
+          } catch(error) {
+            console.error(error)
+          }
+
+        }}
+        >
+
+       <div className="calendar-date-row">
+          <input type="text"
+          placeholder="Ny aktivitet"
+          value={newActivity}
+          onChange={(e) => setNewActivity(e.target.value)}
+          className="calendar-input"
+          required />
+          <button type="submit" className="calendar-add-btn">+</button>
+        </div>
+        
+        <input type="date"
+        value={newDate}
+        onChange={(e) => setNewDate(e.target.value)}
+        className="calendar-input"
+        required />
+        
+        <input type="time"
+        placeholder="Tid"
+        value={newTime}
+        onChange={(e) => setNewTime(e.target.value)}
+        className="calendar-input" />
+        
+        <select
+        value={newColor}
+        onChange={(e) => setNewColor(e.target.value)}
+        className="calendar-input">
+          <option value="blue">Blå</option>
+          <option value="purple">Lila</option>
+          <option value="orange">Orange</option>
+          <option value="red">Röd</option>
+          <option value="green">Grön</option>
+        </select>
+        </form>
+      </div>
   );
 }
 

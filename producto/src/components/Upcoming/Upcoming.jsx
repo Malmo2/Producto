@@ -1,46 +1,5 @@
+import { useState, useEffect } from "react";
 import "../Upcoming/Upcoming.css";
-
-const upcomingEvents = [
-
-
-
-  { id: 1, title: "Benjame's Playground", date: "2024-07-01", time: '13:00', description: 'Playtime', color: 'purple' },
-  { id: 2, title: "Johannes Oatcows milked", date: "2024-07-05", time: '19:00', description: 'Milky', color: 'orange' },
-  { id: 3, title: "Workout", date: "2024-07-08", time: "15:00", description: "Leg-day", color: 'red'},
-
-  { id: 1, title: "Doctors Appointment", date: "2026-01-05", time: '13:00', description: 'Checkup', color: 'purple' },
-  { id: 2, title: "Milk Cows", date: "2026-02-13", time: '19:00', description: 'Milky', color: 'orange' },
-  { id: 3, title: "Workout", date: "2026-03-08", time: "15:00", description: "Leg-day", color: 'red' },
-
-
-
-  {
-    id: 1,
-    title: "Workout",
-    date: "2024-07-08",
-    time: "15:00",
-    description: "Leg-day",
-    color: "red",
-  },
-
-  {
-    id: 2,
-    title: "Doctors Appointment",
-    date: "2026-01-05",
-    time: "13:00",
-    description: "Checkup",
-    color: "purple",
-  },
-  {
-    id: 3,
-    title: "Milk Cows",
-    date: "2026-02-13",
-    time: "19:00",
-    description: "Milky",
-    color: "orange",
-  }
-
-];
 
 const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
   return (
@@ -53,7 +12,37 @@ const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
   );
 };
 
-const Upcoming = ({ events = upcomingEvents }) => {
+const Upcoming = () => {
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchUpcoming = async () => {
+      try {
+        const res = await fetch('http://localhost:3001/activities');
+        if (!res.ok) throw new Error('Kunde inte hämta aktiviteter');
+        const data = await res.json();
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        const upcoming = data
+          .filter(event => {
+            const eventDate = new Date(event.date);
+            return eventDate >= today;
+          })
+          .sort((a, b) => new Date(a.date) - new Date(b.date))
+          .slice(0, 3);
+        
+        setUpcomingEvents(upcoming);
+      } catch (error) {
+        console.error('Fel vid hämtning av upcoming events:', error);
+        setUpcomingEvents([]);
+      }
+    };
+    
+    fetchUpcoming();
+  }, []);
+
   return (
     <div className="upcoming">
       <div className="upcoming-header">
@@ -62,16 +51,20 @@ const Upcoming = ({ events = upcomingEvents }) => {
       </div>
 
       <div className="upcoming-events">
-        {events.map((event, index) => (
-          <UpcomingEvent
-            key={index}
-            date={event.date}
-            time={event.time}
-            title={event.title}
-            description={event.description}
-            color={event.color}
-          />
-        ))}
+        {upcomingEvents.length > 0 ? (
+          upcomingEvents.map((event, index) => (
+            <UpcomingEvent
+              key={event.id || index}
+              date={event.date}
+              time={event.time || 'TBA'}
+              title={event.title}
+              description={event.description || ''}
+              color={event.color || 'blue'}
+            />
+          ))
+        ) : (
+          <p>Inga kommande händelser</p>
+        )}
       </div>
     </div>
   );
