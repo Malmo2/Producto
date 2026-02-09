@@ -17,16 +17,12 @@
   margin-bottom: 1.5rem;
 }
 
+/* Mode Selector */
 .mode-selector {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
   margin-bottom: 1.5rem;
-}
-
-.mode-btn {
-  padding: 0.5rem 1.5rem;
-  flex-wrap: wrap;
 }
 
 .mode-btn {
@@ -37,7 +33,6 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s;
-  font-size: 0.9rem;
   font-size: 0.85rem;
   white-space: nowrap;
 }
@@ -51,6 +46,44 @@
   font-weight: bold;
 }
 
+/* Time Input */
+.time-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.time-input label {
+  color: #888;
+  font-size: 0.85rem;
+  order: 2;
+}
+
+.time-input input {
+  width: 80px;
+  padding: 0.6rem;
+  border: 2px solid #2a3142;
+  border-radius: 5px;
+  background: #2a3142;
+  color: #fff;
+  font-size: 1.2rem;
+  text-align: center;
+  order: 1;
+}
+
+.time-input input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.time-input input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Timer Display */
 .timer-display {
   margin: 2rem 0;
 }
@@ -67,6 +100,7 @@
   font-size: 0.9rem;
 }
 
+/* Timer Controls */
 .timer-controls {
   display: flex;
   gap: 1rem;
@@ -74,11 +108,51 @@
   margin-bottom: 2rem;
 }
 
+/* Sessions List */
 .sessions-list {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid #2a3142;
   width: 100%;
+}
+
+.sessions-list h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #3b82f6;
+}
+
+.sessions-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sessions-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: #2a3142;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.sessions-list li strong {
+  color: #fff;
+}
+
+.sessions-list li div:last-child {
+  color: #888;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.session-category {
+  color: #3b82f6;
+  font-size: 0.85rem;
 }
 
 .session-info {
@@ -104,37 +178,7 @@
   color: white;
 }
 
-.sessions-list h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #3b82f6;
-}
-
-.sessions-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sessions-list li {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem;
-  background: #2a3142;
-  border-radius: 5px;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.sessions-list li span:first-child {
-  color: #888;
-}
-
-.sessions-list li span:last-child {
-  color: #3b82f6;
-  font-weight: bold;
-}
-
+/* Total Focus / Progress */
 .total-focus {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -187,40 +231,71 @@
   letter-spacing: 1px;
 }
 
-.sessions-list {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #2a3142;
-  width: 100%;
+/* Popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.sessions-list h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
+.popup-content {
+  background: #1a1f2e;
+  padding: 2rem;
+  border-radius: 10px;
+  min-width: 350px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+.popup-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
   color: #3b82f6;
 }
 
-.sessions-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.popup-field {
+  margin-bottom: 1rem;
 }
 
-.sessions-list li {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem;
-  background: #2a3142;
-  border-radius: 5px;
+.popup-field label {
+  display: block;
   margin-bottom: 0.5rem;
+  color: #888;
   font-size: 0.9rem;
 }
 
-.sessions-list li span:first-child {
-  color: #888;
+.popup-field input,
+.popup-field select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 2px solid #2a3142;
+  border-radius: 5px;
+  background: #2a3142;
+  color: #fff;
+  font-size: 0.9rem;
+  box-sizing: border-box;
 }
 
-.sessions-list li span:last-child {
-  color: #3b82f6;
-  font-weight: bold;
+.popup-field input:focus,
+.popup-field select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.popup-field select option {
+  background: #1a1f2e;
+  color: #fff;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
