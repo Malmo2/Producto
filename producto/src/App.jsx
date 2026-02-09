@@ -7,6 +7,7 @@ import navLinks from "./components/nav/navLinks";
 
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Timer from "./components/timer/timer";
+import { SessionProvider } from "./contexts/SessionContext";
 
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
@@ -49,72 +50,86 @@ function App() {
   };
 
   return (
-    <div className="appShell">
-      <Navbar
-        links={navLinks}
-        userEmail={auth.userEmail}
-        onLogout={handleLogout}
-        isLoggedIn={auth.isLoggedIn}
-      />
+    <SessionProvider>
+      <div className="appShell">
+        <Navbar
+          links={navLinks}
+          userEmail={auth.userEmail}
+          onLogout={handleLogout}
+          isLoggedIn={auth.isLoggedIn}
+        />
 
-      <main className="appMain">
-        <Routes>
-          <Route
-            path="/"
-            element={
-              auth.isLoggedIn ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginForm onLoginSuccess={handleLogin} />
-              )
-            }
-          />
+        <main className="appMain">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                auth.isLoggedIn ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <LoginForm onLoginSuccess={handleLogin} />
+                )
+              }
+            />
 
-          <Route
-            path="/dashboard"
-            element={
-              auth.isLoggedIn ? (
-                <DashboardLayout>
-                  <Timer />
-                </DashboardLayout>
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
+            <Route
+              path="/dashboard"
+              element={
+                auth.isLoggedIn ? (
+                  <DashboardLayout>
+                    <Timer />
+                  </DashboardLayout>
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
 
-          <Route
-            path="/insights"
-            element={
-              auth.isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route
-            path="/projects"
-            element={
-              auth.isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
-            }
-          />
-          <Route
-            path="/schedule"
-            element={
-              auth.isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
-            }
-          />
+            <Route
+              path="/insights"
+              element={
+                auth.isLoggedIn ? (
+                  <Insights />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                auth.isLoggedIn ? (
+                  <Projects />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
+            <Route
+              path="/schedule"
+              element={
+                auth.isLoggedIn ? (
+                  <Schedule />
+                ) : (
+                  <Navigate to="/login" replace />
+                )
+              }
+            />
 
-          <Route
-            path="/login"
-            element={
-              auth.isLoggedIn ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginForm onLoginSuccess={handleLogin} />
-              )
-            }
-          />
-        </Routes>
-      </main>
-    </div>
+            <Route
+              path="/login"
+              element={
+                auth.isLoggedIn ? (
+                  <Navigate to="/dashboard" replace />
+                ) : (
+                  <LoginForm onLoginSuccess={handleLogin} />
+                )
+              }
+            />
+          </Routes>
+        </main>
+      </div>
+    </SessionProvider>
   );
 }
 
