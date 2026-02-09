@@ -10,4 +10,13 @@ export function SessionProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("timerSessions", JSON.stringify(sessions));
   }, [sessions]);
+
+  const addSession = (session) => {
+    setSessions([...sessions, session]);
+  };
 }
+
+const deleteSession = (sessionId) => {
+  const updatedSessions = sessions.filter((s) => s.id !== sessionId);
+  setSessions(updatedSessions);
+};
