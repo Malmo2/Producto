@@ -13,7 +13,7 @@ import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
 import LoginForm from "./components/forms/LoginForm";
 import SmartRecommendation from "./components/smartRecommendation/SmartRecommendation";
-import EnergyLevel from "./components/energy/energyLevelBox/EnergyLevel";
+import EnergyTest from "./components/energy/EnergyTest";
 
 function App() {
   const STORAGE_KEY = "auth";
@@ -78,7 +78,7 @@ function App() {
               auth.isLoggedIn ? (
                 <DashboardLayout>
                   <div className="topRow">
-                    <EnergyLevel />
+                    <EnergyTest />
                     <Timer />
                   </div>
                   <SmartRecommendation />
