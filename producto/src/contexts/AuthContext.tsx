@@ -217,6 +217,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearSession();
         dispatch({ type: "logout" });
     }, [])
+    
 
     const actions = useMemo<AuthActions>(() => ({ login, signup, logout }), [login, signup, logout]);
 

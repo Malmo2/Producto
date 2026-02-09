@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/producto-logo.svg";
 import logoDark from "../../assets/producto-logo-dark.svg";
-import styles from "./navbar.module.css";
+import styles from "./navbar.module.css"
 import Button from "../button/button";
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
