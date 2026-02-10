@@ -4,6 +4,7 @@ const SessionContext = createContext();
 
 export function SessionProvider({ children }) {
   const [sessions, setSessions] = useState(() => {
+    const saved = localStorage.getItem("timerSessions");
     return saved ? JSON.parse(saved) : [];
   });
 

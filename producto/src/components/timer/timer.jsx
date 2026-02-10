@@ -2,13 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import Button from "../button/button";
 import formatTime from "../../utils/formatTime";
 import "./timer.css";
+import { useSessions } from "../../contexts/SessionContext";
 
 export default function Timer() {
-  const [mode, setMode] = useState("work");
-  const WORK_TIME = 50 * 60;
-  const MEETING_TIME = 25 * 60;
-  const BREAK_TIME = 20 * 60;
-
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [customMinutes, setCustomMinutes] = useState(() => {
@@ -16,20 +12,14 @@ export default function Timer() {
     return saved ? Number(saved) : "";
   });
   const intervalRef = useRef(null);
-  const [sessions, setSessions] = useState(() => {
-    const saved = localStorage.getItem("timerSessions");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { sessions, addSession, deleteSession, clearSessions } = useSessions();
+
   const [startTime, setStartTime] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionCategory, setSessionCategory] = useState("Working");
 
   const Categories = ["Coding", "Meeting", "Testing", "On break", "Other"];
-
-  useEffect(() => {
-    localStorage.setItem("timerSessions", JSON.stringify(sessions));
-  }, [sessions]);
 
   useEffect(() => {
     if (customMinutes !== "") {
@@ -89,8 +79,7 @@ export default function Timer() {
       duration: durationInSeconds,
       date: new Date().toLocaleDateString("sv-SE"),
     };
-
-    setSessions([...sessions, newSession]);
+    addSession(newSession);
     setShowPopup(false);
     setSessionTitle("");
     setSessionCategory("Working");
@@ -103,18 +92,6 @@ export default function Timer() {
     if (customMinutes !== "") {
       setTimeLeft(customMinutes * 60);
     }
-  };
-
-  const handleClearSessions = () => {
-    setSessions([]);
-    localStorage.removeItem("timerSessions");
-  };
-
-  const handleDeleteSession = (sessionId) => {
-    const updatedSessions = sessions.filter(
-      (session) => session.id !== sessionId,
-    );
-    setSessions(updatedSessions);
   };
 
   const getTotal = () => {
@@ -191,40 +168,6 @@ export default function Timer() {
 
       <div className="timer-container">
         <h1>Timer</h1>
-        <div className="mode-selector">
-          <button
-            className={mode === "work" ? "mode-btn active" : "mode-btn"}
-            onClick={() => {
-              setMode("work");
-              setIsRunning(false);
-              setStartTime(null);
-            }}
-          >
-            Work
-          </button>
-
-          <button
-            className={mode === "meeting" ? "mode-btn active" : "mode-btn"}
-            onClick={() => {
-              setMode("meeting");
-              setIsRunning(false);
-              setStartTime(null);
-            }}
-          >
-            Meeting
-          </button>
-
-          <button
-            className={mode === "break" ? "mode-btn active" : "mode-btn"}
-            onClick={() => {
-              setMode("break");
-              setIsRunning(false);
-              setStartTime(null);
-            }}
-          >
-            Break
-          </button>
-        </div>
 
         <div className="time-input">
           <input
@@ -281,7 +224,7 @@ export default function Timer() {
                     <span> • {Math.floor(session.duration / 60)} min</span>
                     <button
                       className="delete-btn"
-                      onClick={() => handleDeleteSession(session.id)}
+                      onClick={() => deleteSession(session.id)}
                       title="Delete session"
                     >
                       ✕
@@ -290,7 +233,7 @@ export default function Timer() {
                 </li>
               ))}
             </ul>
-            <Button onClick={handleClearSessions}>Clear history</Button>
+            <Button onClick={clearSessions}>Clear history</Button>
           </div>
         )}
 
