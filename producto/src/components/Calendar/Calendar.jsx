@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import "./Calendar.css";
 import { apiFetch } from "../../lib/api";
 
-function Calendar() {
+function Calendar({ activities, setActivities }) {
   const [selectedDay, setSelectedDay] = useState(null);
-  const [activities, setActivities] = useState([]);
   const [newActivity, setNewActivity] = useState("");
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
@@ -23,7 +22,7 @@ function Calendar() {
     };
 
     fetchActivities();
-  }, []);
+  }, [setActivities]);
 
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
@@ -159,9 +158,17 @@ function Calendar() {
               body: JSON.stringify(newEntry),
             });
 
+            console.log("Added from API:", data.activity); // debug: check field names
+
             const added = data.activity;
 
-            setActivities((prev) => [added, ...prev]);
+            const normalized = {
+              ...added,
+              activity_date: added.activity_date ?? added.date,
+              activity_time: added.activity_time ?? added.time,
+            };
+
+            setActivities((prev) => [normalized, ...prev]);
             setNewActivity("");
             setNewDate("");
             setNewTime("");

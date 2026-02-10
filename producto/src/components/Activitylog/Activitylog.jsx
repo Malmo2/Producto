@@ -1,35 +1,58 @@
-import './Activitylog.css'
-import { useState } from 'react';
+import "./Activitylog.css";
+import { useState } from "react";
 import { FaCalendarAlt, FaBell, FaCog } from "react-icons/fa";
-import Calendar from '../Calendar/Calendar';
-import Upcoming from '../Upcoming/Upcoming';
-import Settings from '../Settings/Settings';
+import Calendar from "../Calendar/Calendar";
+import Upcoming from "../Upcoming/Upcoming";
+import Settings from "../Settings/Settings";
 
 const activities = [
-  { id: 1, icon: 'check', title: 'Completed Landing Page Mockup', timestamp: '45 MINUTES AGO' },
-  { id: 2, icon: 'target', title: 'Achieved daily 4-hour focus goal', timestamp: '2 HOURS AGO' },
-  { id: 3, icon: 'inbox', title: 'Processed 14 Inbox Items', timestamp: 'TODAY, 10:15 AM' },
-  { id: 4, icon: 'check', title: 'Finished UI Design Review', timestamp: 'YESTERDAY, 3:00 PM' },
-  { id: 5, icon: 'target', title: 'Completed Project Milestone', timestamp: '2 DAYS AGO' },
+  {
+    id: 1,
+    icon: "check",
+    title: "Completed Landing Page Mockup",
+    timestamp: "45 MINUTES AGO",
+  },
+  {
+    id: 2,
+    icon: "target",
+    title: "Achieved daily 4-hour focus goal",
+    timestamp: "2 HOURS AGO",
+  },
+  {
+    id: 3,
+    icon: "inbox",
+    title: "Processed 14 Inbox Items",
+    timestamp: "TODAY, 10:15 AM",
+  },
+  {
+    id: 4,
+    icon: "check",
+    title: "Finished UI Design Review",
+    timestamp: "YESTERDAY, 3:00 PM",
+  },
+  {
+    id: 5,
+    icon: "target",
+    title: "Completed Project Milestone",
+    timestamp: "2 DAYS AGO",
+  },
 ];
 
 const ActivityItem = ({ icon, title, timestamp }) => {
   return (
-
-<div className='activity-item'>
-    <span className={`activity-icon activity-icon--${icon}`}></span>
-    <div className='activity-content'>
-    <p className='activity-title'>{title}</p>
-    <span className='activity-timestamp'>{timestamp}</span>
-    
+    <div className="activity-item">
+      <span className={`activity-icon activity-icon--${icon}`}></span>
+      <div className="activity-content">
+        <p className="activity-title">{title}</p>
+        <span className="activity-timestamp">{timestamp}</span>
+      </div>
     </div>
-</div>
-
   );
 };
 
 function ActivityLog({ items = activities }) {
   const [view, setView] = useState("default");
+  const [activities, setActivities] = useState([]);
 
   console.log("Current view:", view);
 
@@ -45,21 +68,34 @@ function ActivityLog({ items = activities }) {
 
   const handleSettingsClick = () => {
     console.log("Settings clicked");
-    setView("settings")
-
-
-  }
+    setView("settings");
+  };
 
   return (
     <>
       <div className="calendar-icon-row">
-        <button type="button" className="icon-btn" aria-label="Calendar" onClick={handleCalendarClick}>
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="Calendar"
+          onClick={handleCalendarClick}
+        >
           <FaCalendarAlt />
         </button>
-        <button type="button" className="icon-btn" aria-label="Notifications" onClick={handleBellClick}>
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="Notifications"
+          onClick={handleBellClick}
+        >
           <FaBell />
         </button>
-        <button type="button" className="icon-btn" aria-label="Settings" onClick={handleSettingsClick}>
+        <button
+          type="button"
+          className="icon-btn"
+          aria-label="Settings"
+          onClick={handleSettingsClick}
+        >
           <FaCog />
         </button>
       </div>
@@ -81,13 +117,12 @@ function ActivityLog({ items = activities }) {
         <Settings onClose={() => setView("default")} />
       ) : (
         <>
-          <Calendar />
-          <Upcoming />
+          <Calendar activities={activities} setActivities={setActivities} />
+          <Upcoming activities={activities} />
         </>
       )}
     </>
   );
 }
-
 
 export default ActivityLog;
