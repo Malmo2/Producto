@@ -143,7 +143,7 @@ app.get("/api/sessions", requireAuth, async (req, res) => {
   return res.json({ ok: true, sessions: data ?? [] });
 });
 
-app.get("api/activity", requireAuth, async (req, res) => {
+app.get("/api/activities", requireAuth, async (req, res) => {
   const user = (req as AuthedRequest).user;
 
   const header = req.header("authorization") ?? "";
@@ -156,23 +156,23 @@ app.get("api/activity", requireAuth, async (req, res) => {
   });
 
   const { data, error } = await supabaseUser
-    .from("activity_session")
+    .from("activities")
     .select("*")
     .eq("user_id", user.id)
-    .order("starts_at", { ascending: true });
+    .order("activity_date", { ascending: true });
 
   if (error) return res.status(500).json({ error: error.message });
 
-  return res.json({ ok: true, activities: (data ?? []) as ActivityRow[] });
+  return res.json({ ok: true, activities: data ?? [] });
 });
 
-app.post("api/activities", requireAuth, async (req, res) => {
+app.post("/api/activities", requireAuth, async (req, res) => {
   const user = (req as AuthedRequest).user;
 
   const { title, date, time, description, color } =
     req.body as Partial<CreateActivityInput>;
   if (!title || !date || !time) {
-    return res.status(400).json({ error: "title, data, time are required" });
+    return res.status(400).json({ error: "title, date, time are required" });
   }
 
   const header = req.header("authorization") ?? "";
@@ -185,7 +185,7 @@ app.post("api/activities", requireAuth, async (req, res) => {
   });
 
   const { data, error } = await supabaseUser
-    .from("activity_sessions")
+    .from("activities")
     .insert({
       user_id: user.id,
       title,
@@ -199,7 +199,7 @@ app.post("api/activities", requireAuth, async (req, res) => {
 
   if (error) return res.status(500).json({ error: error.message });
 
-  return res.status(201).json({ ok: true, activity: data as ActivityRow });
+  return res.status(201).json({ ok: true, activity: data });
 });
 
 app.post("/api/sessions", requireAuth, async (req, res) => {

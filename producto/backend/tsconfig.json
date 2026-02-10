@@ -9,9 +9,7 @@
     "module": "commonjs",
     "target": "es2020",
     "moduleResolution": "node",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "esModuleInterop": true,
     // For nodejs:
     // "lib": ["esnext"],
@@ -38,9 +36,7 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

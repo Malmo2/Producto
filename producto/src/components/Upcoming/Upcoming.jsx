@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../Upcoming/Upcoming.css";
+import { apiFetch } from "../../lib/api";
 
 const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
   return (
@@ -18,28 +19,34 @@ const Upcoming = () => {
   useEffect(() => {
     const fetchUpcoming = async () => {
       try {
-        const res = await fetch('http://localhost:3001/activities');
-        if (!res.ok) throw new Error('Kunde inte hämta aktiviteter');
-        const data = await res.json();
-        
+        const data = await apiFetch("/api/activities");
+        const activities = Array.isArray(data.activities)
+          ? data.activities
+          : [];
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
-        const upcoming = data
-          .filter(event => {
-            const eventDate = new Date(event.date);
+
+        const upcoming = activities
+          .filter((event) => {
+            const eventDate = new Date(event.activity_date);
+            eventDate.setHours(0, 0, 0, 0);
             return eventDate >= today;
           })
-          .sort((a, b) => new Date(a.date) - new Date(b.date))
+          .sort(
+            (a, b) =>
+              new Date(a.activity_date).getTime() -
+              new Date(b.activity_date).getTime(),
+          )
           .slice(0, 3);
-        
+
         setUpcomingEvents(upcoming);
       } catch (error) {
-        console.error('Fel vid hämtning av upcoming events:', error);
+        console.error("Fel vid hämtning av upcoming events:", error);
         setUpcomingEvents([]);
       }
     };
-    
+
     fetchUpcoming();
   }, []);
 
@@ -55,11 +62,11 @@ const Upcoming = () => {
           upcomingEvents.map((event, index) => (
             <UpcomingEvent
               key={event.id || index}
-              date={event.date}
-              time={event.time || 'TBA'}
+              date={event.activity_date}
+              time={event.activity_time || "TBA"}
               title={event.title}
-              description={event.description || ''}
-              color={event.color || 'blue'}
+              description={event.description || ""}
+              color={event.color || "blue"}
             />
           ))
         ) : (
