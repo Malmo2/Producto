@@ -1,46 +1,5 @@
+import { useMemo } from "react";
 import "../Upcoming/Upcoming.css";
-
-const upcomingEvents = [
-
-
-
-  { id: 1, title: "Benjame's Playground", date: "2024-07-01", time: '13:00', description: 'Playtime', color: 'purple' },
-  { id: 2, title: "Johannes Oatcows milked", date: "2024-07-05", time: '19:00', description: 'Milky', color: 'orange' },
-  { id: 3, title: "Workout", date: "2024-07-08", time: "15:00", description: "Leg-day", color: 'red'},
-
-  { id: 1, title: "Doctors Appointment", date: "2026-01-05", time: '13:00', description: 'Checkup', color: 'purple' },
-  { id: 2, title: "Milk Cows", date: "2026-02-13", time: '19:00', description: 'Milky', color: 'orange' },
-  { id: 3, title: "Workout", date: "2026-03-08", time: "15:00", description: "Leg-day", color: 'red' },
-
-
-
-  {
-    id: 1,
-    title: "Workout",
-    date: "2024-07-08",
-    time: "15:00",
-    description: "Leg-day",
-    color: "red",
-  },
-
-  {
-    id: 2,
-    title: "Doctors Appointment",
-    date: "2026-01-05",
-    time: "13:00",
-    description: "Checkup",
-    color: "purple",
-  },
-  {
-    id: 3,
-    title: "Milk Cows",
-    date: "2026-02-13",
-    time: "19:00",
-    description: "Milky",
-    color: "orange",
-  }
-
-];
 
 const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
   return (
@@ -53,7 +12,27 @@ const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
   );
 };
 
-const Upcoming = ({ events = upcomingEvents }) => {
+const Upcoming = ({ activities }) => {
+  const upcomingEvents = useMemo(() => {
+    const list = Array.isArray(activities) ? activities : [];
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return list
+      .filter((event) => {
+        const eventDate = new Date(event.activity_date);
+        eventDate.setHours(0, 0, 0, 0);
+        return eventDate >= today;
+      })
+      .sort(
+        (a, b) =>
+          new Date(a.activity_date).getTime() -
+          new Date(b.activity_date).getTime(),
+      )
+      .slice(0, 3);
+  }, [activities]);
+
   return (
     <div className="upcoming">
       <div className="upcoming-header">
@@ -62,16 +41,20 @@ const Upcoming = ({ events = upcomingEvents }) => {
       </div>
 
       <div className="upcoming-events">
-        {events.map((event, index) => (
-          <UpcomingEvent
-            key={index}
-            date={event.date}
-            time={event.time}
-            title={event.title}
-            description={event.description}
-            color={event.color}
-          />
-        ))}
+        {upcomingEvents.length > 0 ? (
+          upcomingEvents.map((event) => (
+            <UpcomingEvent
+              key={event.id}
+              date={event.activity_date}
+              time={event.activity_time || "TBA"}
+              title={event.title}
+              description={event.description || ""}
+              color={event.color || "blue"}
+            />
+          ))
+        ) : (
+          <p>Inga kommande händelser</p>
+        )}
       </div>
     </div>
   );
