@@ -11,7 +11,7 @@ import LoginForm from "./components/forms/LoginForm";
 import Signup from "./components/nav/pages/Signup";
 import Dashboard from "./components/nav/pages/Dashboard";
 
-import { SessionProvider } from "./contexts/SessionContext";
+
 import { useAuthState } from "../src/contexts/AuthContext";
 
 function App() {
@@ -22,72 +22,70 @@ function App() {
   if (isChecking) return null;
 
   return (
-    <SessionProvider>
-      <div className="appShell">
-        <Navbar links={navLinks} />
+    <div className="appShell">
+      <Navbar links={navLinks} />
 
-        <main className="appMain">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                isLoggedIn ? (
-                  <Navigate to="/dashboard" replace />
-                ) : (
-                  <LoginForm />
-                )
-              }
-            />
+      <main className="appMain">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              isLoggedIn ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <LoginForm />
+              )
+            }
+          />
 
-            <Route
-              path="/dashboard"
-              element={
-                isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />
-              }
-            />
+          <Route
+            path="/dashboard"
+            element={
+              isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />
+            }
+          />
 
-            <Route
-              path="/insights"
-              element={
-                isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
-              }
-            />
+          <Route
+            path="/insights"
+            element={
+              isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
+            }
+          />
 
-            <Route
-              path="/projects"
-              element={
-                isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
-              }
-            />
+          <Route
+            path="/projects"
+            element={
+              isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
+            }
+          />
 
-            <Route
-              path="/sessions"
-              element={
-                isLoggedIn ? <Sessions /> : <Navigate to="/login" replace />
-              }
-            />
+          <Route
+            path="/sessions"
+            element={
+              isLoggedIn ? <Sessions /> : <Navigate to="/login" replace />
+            }
+          />
 
-            <Route
-              path="/login"
-              element={
-                isLoggedIn ? (
-                  <Navigate to="/dashboard" replace />
-                ) : (
-                  <LoginForm />
-                )
-              }
-            />
+          <Route
+            path="/login"
+            element={
+              isLoggedIn ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <LoginForm />
+              )
+            }
+          />
 
-            <Route
-              path="/signup"
-              element={
-                isLoggedIn ? <Navigate to="/dashboard" replace /> : <Signup />
-              }
-            />
-          </Routes>
-        </main>
-      </div>
-    </SessionProvider>
+          <Route
+            path="/signup"
+            element={
+              isLoggedIn ? <Navigate to="/dashboard" replace /> : <Signup />
+            }
+          />
+        </Routes>
+      </main>
+    </div>
   );
 }
 
