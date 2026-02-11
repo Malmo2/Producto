@@ -39,7 +39,7 @@ function Sessions() {
                 setError("");
                 setLoading(true);
 
-                const data = await apiFetch("/api/sessions", token);
+                const data = await apiFetch("/api/sessions");
                 setSessions(data.sessions ?? []);
             } catch (e) {
                 setError(e instanceof Error ? e.message : "Unknown error");
@@ -54,7 +54,7 @@ function Sessions() {
 
         try {
             setError("");
-            await apiFetch(`/api/sessions/${id}`, token, { method: "DELETE" });
+            await apiFetch(`/api/sessions/${id}`, { method: "DELETE" });
 
             setSessions((prev) => prev.filter((s) => s.id !== id));
         } catch (e) {

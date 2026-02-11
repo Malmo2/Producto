@@ -7,7 +7,6 @@ import Button from "../button/button";
 import Circle from "../../utils/circle";
 import Card from "../cards/Card";
 
-
 const WORK_SECONDS = 20 * 60;
 
 const initialState = {
@@ -15,25 +14,18 @@ const initialState = {
   isRunning: false,
 };
 
-
-
-
 function timerReducer(state, action) {
   switch (action.type) {
     case "START":
       return { ...state, isRunning: true };
-
     case "PAUSE":
       return { ...state, isRunning: false };
-
     case "RESET":
       return { timeLeft: WORK_SECONDS, isRunning: false };
-
     case "TICK":
       if (!state.isRunning) return state;
       if (state.timeLeft <= 1) return { ...state, timeLeft: 0, isRunning: false };
       return { ...state, timeLeft: state.timeLeft - 1 };
-
     default:
       return state;
   }
@@ -43,7 +35,10 @@ export default function TimerWithReducer() {
   const [state, dispatch] = useReducer(timerReducer, initialState);
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [startAt, setStartAt] = useState(null);
+
   const { token } = useAuthState();
+
+  const intervalRef = useRef(null);
 
   const handleStart = async () => {
     if (!token) return;
@@ -57,7 +52,7 @@ export default function TimerWithReducer() {
     setStartAt(start);
 
     try {
-      const created = await apiFetch("/api/sessions", token, {
+      const created = await apiFetch("/api/sessions", {
         method: "POST",
         body: JSON.stringify({
           title: "Timer session",
@@ -68,7 +63,6 @@ export default function TimerWithReducer() {
       });
 
       setActiveSessionId(created.session.id);
-
     } catch (e) {
       dispatch({ type: "PAUSE" });
       setStartAt(null);
@@ -77,7 +71,6 @@ export default function TimerWithReducer() {
     }
   };
 
-
   const handlePause = async () => {
     if (!token) return;
     if (!state.isRunning) return;
@@ -85,12 +78,12 @@ export default function TimerWithReducer() {
     dispatch({ type: "PAUSE" });
 
     if (!activeSessionId) {
-      setStartAt(null)
+      setStartAt(null);
       return;
     }
 
     try {
-      await apiFetch(`/api/sessions/${activeSessionId}`, token, {
+      await apiFetch(`/api/sessions/${activeSessionId}`, {
         method: "PUT",
         body: JSON.stringify({
           endAt: new Date().toISOString(),
@@ -103,9 +96,6 @@ export default function TimerWithReducer() {
       setActiveSessionId(null);
     }
   };
-
-
-  const intervalRef = useRef(null);
 
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -147,19 +137,11 @@ export default function TimerWithReducer() {
       </div>
 
       <div className={timerStyles.timerControls}>
-        <Button
-          onClick={handleStart}
-          variant="purple"
-          disabled={state.isRunning}
-        >
+        <Button onClick={handleStart} variant="purple" disabled={state.isRunning}>
           Start
         </Button>
 
-        <Button
-          onClick={handlePause}
-          variant="purple"
-          disabled={!state.isRunning}
-        >
+        <Button onClick={handlePause} variant="purple" disabled={!state.isRunning}>
           Pause
         </Button>
 
@@ -172,7 +154,6 @@ export default function TimerWithReducer() {
         >
           Reset
         </Button>
-
       </div>
     </Card>
   );
