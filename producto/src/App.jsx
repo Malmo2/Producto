@@ -1,8 +1,7 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import Navbar from "./components/Nav/Navbar";
+import Navbar from "./components/nav/Navbar";
 import navLinks from "./components/nav/navLinks";
 
 import DashboardLayout from "./components/layout/DashboardLayout";
@@ -11,45 +10,21 @@ import { SessionProvider } from "./contexts/SessionContext";
 
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
-import Schedule from "./components/nav/pages/Schedule";
+import Sessions from "./components/nav/pages/Sessions";
 import LoginForm from "./components/forms/LoginForm";
-import SmartRecommendation from "./components/smartRecommendation/SmartRecommendation";
-import EnergyLevel from "./components/energy/energyLevelBox/EnergyLevel";
+import Signup from "./components/nav/pages/Signup";
+import Dashboard from "./components/nav/pages/Dashboard";
+// import SmartRecommendation from "./components/smartRecommendation/SmartRecommendation";
+// import EnergyLevel from "./components/energy/energyLevelBox/EnergyLevel";
+
+import { useAuthState } from '../src/contexts/AuthContext';
 
 function App() {
-  const STORAGE_KEY = "auth";
-  const navigate = useNavigate();
+  const { status } = useAuthState();
 
-  const [auth, setAuth] = useState(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { isLoggedIn: false, userEmail: "" };
-
-    try {
-      const saved = JSON.parse(raw);
-      return {
-        isLoggedIn: Boolean(saved?.isLoggedIn),
-        userEmail: saved?.userEmail || "",
-      };
-    } catch {
-      localStorage.removeItem(STORAGE_KEY);
-      return { isLoggedIn: false, userEmail: "" };
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(auth));
-  }, [auth]);
-
-  const handleLogin = (email) => {
-    setAuth({ isLoggedIn: true, userEmail: email });
-    navigate("/dashboard", { replace: true });
-  };
-
-  const handleLogout = () => {
-    setAuth({ isLoggedIn: false, userEmail: "" });
-    localStorage.removeItem(STORAGE_KEY);
-    navigate("/login", { replace: true });
-  };
+  let isLoggedIn = status === "authenticated";
+  const isChecking = status === 'loading';
+  if (isChecking) return null;
 
   return (
     <SessionProvider>

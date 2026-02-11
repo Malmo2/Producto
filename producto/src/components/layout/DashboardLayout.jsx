@@ -6,7 +6,6 @@ import Header from "../panels/Header";
 export default function DashboardLayout({ children }) {
   return (
     <>
-      <Header />
       <div className={styles.dashboardLayout}>
         <section className={styles.dashboardMain}>{children}</section>
         <div className={styles.rightColumn}>
@@ -18,4 +17,3 @@ export default function DashboardLayout({ children }) {
     </>
   );
 }
- 
