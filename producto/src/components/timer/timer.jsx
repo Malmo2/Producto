@@ -1,20 +1,26 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
+import { timerReducer, initialTimerState } from "./timerReducer";
 import Button from "../button/button";
 import formatTime from "../../utils/formatTime";
 import "./timer.css";
 import { useSessions } from "../../contexts/SessionContext";
 
+function initTimerState() {
+  const saved = localStorage.getItem("customMinutes");
+  const customMinutes = saved ? Number(saved) : "";
+
+  return {
+    ...initialTimerState, //All defaults from timerReducer
+    customMinutes, //If there is a saved value, use it, otherwise use an empty string
+    timeLeft: customMinutes !== "" ? customMinutes * 60 : 0, //And over timeLeft if there is a saved customMinutes, set timeLeft to that value in seconds, otherwise 0
+  };
+}
+
 export default function Timer() {
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-  const [customMinutes, setCustomMinutes] = useState(() => {
-    const saved = localStorage.getItem("customMinutes");
-    return saved ? Number(saved) : "";
-  });
+  const [state, dispatch] = useReducer(timerReducer, null, initTimerState);
+
   const intervalRef = useRef(null);
   const { sessions, addSession, deleteSession, clearSessions } = useSessions();
-
-  const [startTime, setStartTime] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionCategory, setSessionCategory] = useState("Working");
@@ -22,40 +28,24 @@ export default function Timer() {
   const Categories = ["Coding", "Meeting", "Testing", "On break", "Other"];
 
   useEffect(() => {
-    if (customMinutes !== "") {
-      localStorage.setItem("customMinutes", customMinutes.toString());
-    }
-  }, [customMinutes]);
-
-  useEffect(() => {
-    if (customMinutes !== "" && timeLeft === 0) {
-      setTimeLeft(customMinutes * 60);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isRunning && timeLeft > 0) {
+    if (state.isRunning && state.timeLeft > 0) {
       intervalRef.current = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
+        dispatch({ type: "TIMER_TICK" });
       }, 1000);
-    } else if (timeLeft === 0) {
-      setIsRunning(false);
+    } else if (state.timeLeft === 0) {
+      dispatch({ type: "PAUSE_TIMER" });
     }
-
     return () => clearInterval(intervalRef.current);
-  }, [isRunning, timeLeft]);
+  }, [state.isRunning, state.timeLeft]);
 
   const handleStart = () => {
-    setIsRunning(true);
-    if (!startTime) {
-      setStartTime(new Date());
-    }
+    dispatch({ type: "START_TIMER" });
   };
 
   const handlePause = () => {
-    setIsRunning(false);
+    dispatch({ type: "PAUSE_TIMER" });
 
-    if (mode === "work" && startTime) {
+    if (state.startTime) {
       setShowPopup(true);
     }
   };
@@ -67,14 +57,13 @@ export default function Timer() {
     }
 
     const endTime = new Date();
-    const durationInSeconds = Math.floor((endTime - startTime) / 1000);
+    const durationInSeconds = Math.floor((endTime - state.startTime) / 1000);
 
     const newSession = {
       id: Date.now(),
-      mode: mode,
       title: sessionTitle,
       category: sessionCategory,
-      startTime: startTime,
+      startTime: state.startTime,
       endTime: endTime,
       duration: durationInSeconds,
       date: new Date().toLocaleDateString("sv-SE"),
@@ -83,15 +72,10 @@ export default function Timer() {
     setShowPopup(false);
     setSessionTitle("");
     setSessionCategory("Working");
-    setStartTime(null);
   };
 
   const handleReset = () => {
-    setIsRunning(false);
-    setStartTime(null);
-    if (customMinutes !== "") {
-      setTimeLeft(customMinutes * 60);
-    }
+    dispatch({ type: "RESET_TIMER" });
   };
 
   const getTotal = () => {
@@ -156,7 +140,6 @@ export default function Timer() {
                 onClick={() => {
                   setShowPopup(false);
                   setSessionTitle("");
-                  setStartTime(null);
                 }}
               >
                 Cancel
@@ -174,34 +157,32 @@ export default function Timer() {
             type="number"
             min="1"
             max="120"
-            value={customMinutes}
+            value={state.customMinutes}
             placeholder="Enter time"
-            disabled={isRunning}
+            disabled={state.isRunning}
             onChange={(e) => {
               const val = e.target.value === "" ? "" : Number(e.target.value);
-              setCustomMinutes(val);
-              if (val !== "") setTimeLeft(val * 60);
+              dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
             }}
           />
           <label>Minutes</label>
         </div>
 
         <div className="timer-display">
-          <div className="time-text">{formatTime(timeLeft)}</div>
+          <div className="time-text">{formatTime(state.timeLeft)}</div>
 
           <p className="status-text">
-            {mode === "work" ? "Working Mode" : "On break "} -{" "}
-            {isRunning ? "Running..." : "Paused"}
+            {state.isRunning ? "Running..." : "Paused"}
           </p>
         </div>
 
         <div className="timer-controls">
-          {isRunning ? (
+          {state.isRunning ? (
             <Button onClick={handlePause}>Pause</Button>
           ) : (
             <Button onClick={handleStart}>Start</Button>
           )}
-          <Button onClick={handleReset} disabled={!isRunning}>
+          <Button onClick={handleReset} disabled={!state.isRunning}>
             Reset
           </Button>
         </div>
