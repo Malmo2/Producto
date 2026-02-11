@@ -1,28 +1,29 @@
 .timer-container {
   position: relative;
-  max-width: 400px;
+  max-width: min(90vw, 500px);
+  width: 100%;
   margin: 2rem auto;
   text-align: center;
   background: #1a1f2e;
   border: none;
   border-radius: 10px;
-  padding: 20px;
+  padding: clamp(1rem, 3vw, 2rem);
   z-index: 100;
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .timer-container h1 {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
   margin-bottom: 1.5rem;
 }
 
-/* Mode Selector */
 .mode-selector {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .mode-btn {
@@ -33,7 +34,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s;
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
   white-space: nowrap;
 }
 
@@ -46,7 +47,6 @@
   font-weight: bold;
 }
 
-/* Time Input */
 .time-input {
   display: flex;
   flex-direction: column;
@@ -57,18 +57,18 @@
 
 .time-input label {
   color: #888;
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
   order: 2;
 }
 
 .time-input input {
-  width: 80px;
+  width: clamp(60px, 15vw, 80px);
   padding: 0.6rem;
   border: 2px solid #2a3142;
   border-radius: 5px;
   background: #2a3142;
   color: #fff;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   text-align: center;
   order: 1;
 }
@@ -83,13 +83,12 @@
   cursor: not-allowed;
 }
 
-/* Timer Display */
 .timer-display {
   margin: 2rem 0;
 }
 
 .time-text {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 10vw, 4rem);
   font-weight: bold;
   color: #3b82f6;
 }
@@ -97,18 +96,17 @@
 .status-text {
   margin-top: 1rem;
   color: #888;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
-/* Timer Controls */
 .timer-controls {
   display: flex;
   gap: 1rem;
   justify-content: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
-/* Sessions List */
 .sessions-list {
   margin-top: 2rem;
   padding-top: 1.5rem;
@@ -117,7 +115,7 @@
 }
 
 .sessions-list h3 {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   margin-bottom: 1rem;
   color: #3b82f6;
 }
@@ -136,8 +134,9 @@
   background: #2a3142;
   border-radius: 5px;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   text-align: left;
+  gap: 0.5rem;
 }
 
 .sessions-list li strong {
@@ -146,19 +145,20 @@
 
 .sessions-list li div:last-child {
   color: #888;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
   white-space: nowrap;
 }
 
 .session-category {
   color: #3b82f6;
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
 }
 
 .session-info {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .delete-btn {
@@ -178,10 +178,9 @@
   color: white;
 }
 
-/* Total Focus / Progress */
 .total-focus {
   margin-top: 2rem;
-  padding: 1.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   border-radius: 12px;
   text-align: center;
@@ -189,7 +188,7 @@
 }
 
 .total-focus h3 {
-  font-size: 0.7rem;
+  font-size: clamp(0.65rem, 1.8vw, 0.7rem);
   color: #64748b;
   margin-bottom: 0.75rem;
   letter-spacing: 2px;
@@ -198,7 +197,7 @@
 }
 
 .total-time {
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 6vw, 2.5rem);
   font-weight: bold;
   color: #3b82f6;
   margin: 0 0 1.5rem 0;
@@ -224,14 +223,13 @@
 }
 
 .goal-text {
-  font-size: 0.7rem;
+  font-size: clamp(0.65rem, 1.8vw, 0.7rem);
   color: #64748b;
   margin: 0;
   font-weight: 500;
   letter-spacing: 1px;
 }
 
-/* Popup */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -243,13 +241,15 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 1rem;
 }
 
 .popup-content {
   background: #1a1f2e;
-  padding: 2rem;
+  padding: clamp(1.5rem, 4vw, 2rem);
   border-radius: 10px;
-  min-width: 350px;
+  min-width: min(90vw, 350px);
+  max-width: 500px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   color: #fff;
 }
@@ -258,6 +258,7 @@
   margin-top: 0;
   margin-bottom: 1.5rem;
   color: #3b82f6;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
 }
 
 .popup-field {
@@ -268,7 +269,7 @@
   display: block;
   margin-bottom: 0.5rem;
   color: #888;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
 .popup-field input,
@@ -279,7 +280,7 @@
   border-radius: 5px;
   background: #2a3142;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: clamp(0.85rem, 2vw, 0.9rem);
   box-sizing: border-box;
 }
 
@@ -298,4 +299,55 @@
   display: flex;
   gap: 1rem;
   margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .timer-container {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .timer-display {
+    margin: 1.5rem 0;
+  }
+
+  .sessions-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .session-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .popup-buttons {
+    flex-direction: column;
+  }
+
+  .popup-buttons button {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .timer-container {
+    max-width: 600px;
+  }
+
+  .time-text {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .timer-container {
+    max-width: 500px;
+  }
+
+  .timer-container:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
 }
