@@ -166,6 +166,22 @@ export default function Timer() {
       <div className="timer-container">
         <h1>Timer</h1>
 
+        <div className="mode-selector">
+          <button
+            className={mode === "work" ? "mode-btn active" : "mode-btn"}
+            onClick={() => handleModeChange("work")}
+          >
+            Work (50min)
+          </button>
+
+          <button
+            className={mode === "break" ? "mode-btn active" : "mode-btn"}
+            onClick={() => handleModeChange("break")}
+          >
+            Break (15min)
+          </button>
+        </div>
+
         <div className="time-input">
           <input
             type="number"
