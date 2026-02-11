@@ -5,6 +5,20 @@ import formatTime from "../../utils/formatTime";
 import "./timer.css";
 import { useSessions } from "../../contexts/SessionContext";
 
+const handleModeChange = (selectedMode) => {
+  setMode(selectedMode);
+  setIsRunning(false);
+  setStartTime(null);
+
+  if (selectedMode === "work") {
+    setCustomMinutes(50);
+    setTimeLeft(50 * 60);
+  } else if (selectedMode === "break") {
+    setCustomMinutes(15);
+    setTimeLeft(15 * 60);
+  }
+};
+
 function initTimerState() {
   const saved = localStorage.getItem("customMinutes");
   const customMinutes = saved ? Number(saved) : "";
