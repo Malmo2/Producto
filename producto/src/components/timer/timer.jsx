@@ -5,20 +5,6 @@ import formatTime from "../../utils/formatTime";
 import "./timer.css";
 import { useSessions } from "../../contexts/SessionContext";
 
-const handleModeChange = (selectedMode) => {
-  setMode(selectedMode);
-  setIsRunning(false);
-  setStartTime(null);
-
-  if (selectedMode === "work") {
-    setCustomMinutes(50);
-    setTimeLeft(50 * 60);
-  } else if (selectedMode === "break") {
-    setCustomMinutes(15);
-    setTimeLeft(15 * 60);
-  }
-};
-
 function initTimerState() {
   const saved = localStorage.getItem("customMinutes");
   const customMinutes = saved ? Number(saved) : "";
@@ -54,6 +40,15 @@ export default function Timer() {
 
   const handleStart = () => {
     dispatch({ type: "START_TIMER" });
+  };
+  const handleModeChange = (selectedMode) => {
+    dispatch({ type: "CHANGE_MODE", payload: selectedMode });
+
+    if (selectedMode === "work") {
+      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 50 });
+    } else if (selectedMode === "break") {
+      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 15 });
+    }
   };
 
   const handlePause = () => {

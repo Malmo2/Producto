@@ -3,6 +3,7 @@ export const initialTimerState = {
   isRunning: false,
   customMinutes: "",
   startTime: null,
+  mode: "work",
 };
 
 export function timerReducer(state, action) {
@@ -39,6 +40,14 @@ export function timerReducer(state, action) {
         ...state,
         customMinutes: action.payload,
         timeLeft: action.payload !== "" ? action.payload * 60 : 0,
+      };
+
+    case "CHANGE_MODE":
+      return {
+        ...state,
+        mode: action.payload,
+        isRunning: false,
+        startTime: null,
       };
 
     default:
