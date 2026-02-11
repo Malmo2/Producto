@@ -1,0 +1,39 @@
+.smartContainer {
+  background: linear-gradient(220deg, #547dd1 0%, #2a5ec6 60%);
+  padding: 40px;
+  border-radius: 8px;
+  margin:  0px 20px;
+}
+
+.smartContainer h4 {
+  font-size: 0.9rem;
+}
+
+.smartContainer p {
+  width: 50%;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.titleIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.middleIcon {
+  position: absolute;
+  right: 120px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.2;
+}
+
+.middleIcon img {
+  width: 110px;
+  height: 110px;
+}

@@ -27,10 +27,13 @@ body {
   min-width: 0;
 }
 
-
-.appShell > {
+/* dashboard top row layout (energy level and timer ) */
+.topRow {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
 
 .appShell > * {
-
   min-width: 0;
 }

@@ -1,14 +1,43 @@
 :root {
+  --bg: #0b1220;
+  --text: rgba(255, 255, 255, 0.87);
+  --card: rgba(255,255,255,0.04);
+  --panel: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
+  --muted: #9aa6b2;
+  --accent: #2ec4b6;
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.06);
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0b1220;
+  color-scheme: dark;
+  color: var(--text);
+  background-color: var(--bg);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+[data-theme="light"] {
+  --bg: #f7fafc;
+  --text: #0b1220;
+  --card: #ffffff;
+  --panel: #f8fafb;
+  --muted: #6b7786;
+  --hover-bg: rgba(0,0,0,0.04);
+  --border: rgba(0,0,0,0.06);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0b1220;
+  --text: rgba(255, 255, 255, 0.87);
+  --card: rgba(255,255,255,0.04);
+  --panel: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
+  --muted: #9aa6b2;
+  --border: rgba(255, 255, 255, 0.06);
+  color-scheme: dark;
 }
