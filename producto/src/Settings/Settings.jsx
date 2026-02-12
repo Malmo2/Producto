@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './Settings.css';
 import { useContext } from 'react'
-import { ThemeContext } from '../Darkmode/ThemeContext';
+import { ThemeContext } from '../components/Darkmode/ThemeContext';
 
 
 function Settings() {

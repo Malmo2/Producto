@@ -2,7 +2,7 @@ const navLinks = [
   { label: "Dashboard", url: "/dashboard" },
   { label: "Insights", url: "/insights" },
   { label: "Projects", url: "/projects" },
-  { label: "Schedule", url: "/schedule" },
+  { label: "Sessions", url: "/sessions" },
 ];
 
 export default navLinks;

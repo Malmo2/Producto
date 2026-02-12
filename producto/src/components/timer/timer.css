@@ -1,19 +1,21 @@
 .timer-container {
   position: relative;
+  max-width: min(90vw, 500px);
+  width: 100%;
+  margin: 2rem auto;
   min-width: 300px;
   margin: 1rem;
   text-align: center;
   background: #1a1f2e;
   border: none;
   border-radius: 10px;
-  padding: 20px;
-  z-index: 100;
+  padding: clamp(1rem, 3vw, 2rem);
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .timer-container h1 {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
   margin-bottom: 1.5rem;
 }
 
@@ -22,10 +24,6 @@
   gap: 0.5rem;
   justify-content: center;
   margin-bottom: 1.5rem;
-}
-
-.mode-btn {
-  padding: 0.5rem 1.5rem;
   flex-wrap: wrap;
 }
 
@@ -37,8 +35,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s;
-  font-size: 0.9rem;
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
   white-space: nowrap;
 }
 
@@ -51,12 +48,48 @@
   font-weight: bold;
 }
 
+.time-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.time-input label {
+  color: #888;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+  order: 2;
+}
+
+.time-input input {
+  width: clamp(60px, 15vw, 80px);
+  padding: 0.6rem;
+  border: 2px solid #2a3142;
+  border-radius: 5px;
+  background: #2a3142;
+  color: #fff;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  text-align: center;
+  order: 1;
+}
+
+.time-input input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.time-input input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .timer-display {
   margin: 2rem 0;
 }
 
 .time-text {
-  font-size: 4rem;
+  font-size: clamp(2.5rem, 10vw, 4rem);
   font-weight: bold;
   color: #3b82f6;
 }
@@ -64,7 +97,7 @@
 .status-text {
   margin-top: 1rem;
   color: #888;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
 .timer-controls {
@@ -72,6 +105,7 @@
   gap: 1rem;
   justify-content: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .sessions-list {
@@ -82,7 +116,7 @@
 }
 
 .sessions-list h3 {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   margin-bottom: 1rem;
   color: #3b82f6;
 }
@@ -96,25 +130,58 @@
 .sessions-list li {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem;
+  align-items: center;
+  padding: 0.75rem;
   background: #2a3142;
   border-radius: 5px;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  text-align: left;
+  gap: 0.5rem;
 }
 
-.sessions-list li span:first-child {
+.sessions-list li strong {
+  color: #fff;
+}
+
+.sessions-list li div:last-child {
   color: #888;
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  white-space: nowrap;
 }
 
-.sessions-list li span:last-child {
+.session-category {
   color: #3b82f6;
-  font-weight: bold;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
+}
+
+.session-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+  color: white;
 }
 
 .total-focus {
   margin-top: 2rem;
-  padding: 1.5rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   border-radius: 12px;
   text-align: center;
@@ -122,7 +189,7 @@
 }
 
 .total-focus h3 {
-  font-size: 0.7rem;
+  font-size: clamp(0.65rem, 1.8vw, 0.7rem);
   color: #64748b;
   margin-bottom: 0.75rem;
   letter-spacing: 2px;
@@ -131,7 +198,7 @@
 }
 
 .total-time {
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 6vw, 2.5rem);
   font-weight: bold;
   color: #3b82f6;
   margin: 0 0 1.5rem 0;
@@ -157,47 +224,131 @@
 }
 
 .goal-text {
-  font-size: 0.7rem;
+  font-size: clamp(0.65rem, 1.8vw, 0.7rem);
   color: #64748b;
   margin: 0;
   font-weight: 500;
   letter-spacing: 1px;
 }
 
-.sessions-list {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #2a3142;
-  width: 100%;
-}
-
-.sessions-list h3 {
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #3b82f6;
-}
-
-.sessions-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sessions-list li {
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
-  justify-content: space-between;
-  padding: 0.5rem;
-  background: #2a3142;
-  border-radius: 5px;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
 }
 
-.sessions-list li span:first-child {
-  color: #888;
+.popup-content {
+  background: #1a1f2e;
+  padding: clamp(1.5rem, 4vw, 2rem);
+  border-radius: 10px;
+  min-width: min(90vw, 350px);
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  color: #fff;
 }
 
-.sessions-list li span:last-child {
+.popup-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
   color: #3b82f6;
-  font-weight: bold;
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+}
+
+.popup-field {
+  margin-bottom: 1rem;
+}
+
+.popup-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #888;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+}
+
+.popup-field input,
+.popup-field select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 2px solid #2a3142;
+  border-radius: 5px;
+  background: #2a3142;
+  color: #fff;
+  font-size: clamp(0.85rem, 2vw, 0.9rem);
+  box-sizing: border-box;
+}
+
+.popup-field input:focus,
+.popup-field select:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.popup-field select option {
+  background: #1a1f2e;
+  color: #fff;
+}
+
+.popup-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .timer-container {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .timer-display {
+    margin: 1.5rem 0;
+  }
+
+  .sessions-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .session-info {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .popup-buttons {
+    flex-direction: column;
+  }
+
+  .popup-buttons button {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .timer-container {
+    max-width: 600px;
+  }
+
+  .time-text {
+    font-size: 3.5rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .timer-container {
+    max-width: 500px;
+  }
+
+  .timer-container:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
 }

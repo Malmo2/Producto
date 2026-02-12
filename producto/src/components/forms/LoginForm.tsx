@@ -2,6 +2,7 @@ import { useReducer, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./LoginForm.module.css"
 import Button from "../button/button";
+import { Link } from "react-router-dom";
 
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
@@ -169,7 +170,7 @@ function LoginForm() {
             dispatch({ type: "submit_success" });
             navigate("/dashboard", { replace: true });
         } else {
-            dispatch({ type: "submit_error", payload: "Log in failed" });
+            return;
         }
     };
 
@@ -257,6 +258,10 @@ function LoginForm() {
                             {submitError}
                         </p>
                     )}
+
+                    <p className={styles.signupText}>
+                        No account? <Link to="/signup">Sign up</Link>
+                    </p>
 
                     {status === "success" && (
                         <p className={`${styles.statusText} ${styles.statusSuccess}`}>
