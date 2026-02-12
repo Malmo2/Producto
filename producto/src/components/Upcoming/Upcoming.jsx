@@ -1,11 +1,16 @@
 import { useMemo } from "react";
 import "../Upcoming/Upcoming.css";
 
+const formatTime = (time) => {
+  if (!time || time === "TBA") return "TBA";
+  return time.split(':').slice(0, 2).join(':');
+};
+
 const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
   return (
     <div className={`upcoming-event upcoming-event--${color}`}>
       <span className="upcoming-event-date">{date}</span>
-      <span className="upcoming-event-time">{time}</span>
+      <span className="upcoming-event-time">{formatTime(time)}</span>
       <h4 className="upcoming-event-title">{title}</h4>
       <p className="upcoming-event-description">{description}</p>
     </div>

@@ -245,3 +245,20 @@ app.post("/api/activities", requireAuth, async (req, res) => {
 app.listen(port, () => {
   console.log(`Backend running on http://localhost:${port}`);
 });
+
+app.delete("/api/activities/:id", requireAuth, async (req,res) => {
+  const user = (req as AuthedRequest).user
+  const { id } = req.params
+
+  const token = bearerToken(req)
+  const db = supabaseWithToken(token)
+
+  const { error } = await db
+  .from ("activities")
+  .delete()
+  .eq("id", id)
+  .eq("user_id", user.id)
+
+  if (error) return res.status(500).json({ error: error.message})
+    return res.status(204).send()
+})
