@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
 import { apiFetch } from "../../lib/api";
+import { supabase } from "../../lib/supabaseClient";
 
 function Calendar({ activities, setActivities }) {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -70,6 +71,30 @@ function Calendar({ activities, setActivities }) {
     setSelectedDay(null);
   };
 
+  const deleteEvent = async (activityId) => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (!token) throw new Error("Not logged in");
+
+      const response = await fetch(`http://localhost:3001/api/activities/${activityId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const data = await apiFetch("/api/activities");
+        setActivities(Array.isArray(data.activities) ? data.activities : []);
+      } else {
+        console.error('Fel vid radering:', response.status);
+      }
+    } catch (error) {
+      console.error('Fel vid radering:', error);
+    }
+  };
+
   return (
     <div className="calendar-container">
       <div
@@ -126,12 +151,15 @@ function Calendar({ activities, setActivities }) {
             </div>
           );
         })}
-      </div>
+      </div> 
 
       {selectedDay && (
         <ul className="calendar-activities">
           {activitiesForDay(selectedDay).map((a) => (
-            <li key={a.id}>{a.title}</li>
+            <li key={a.id}>
+              {a.title} 
+              <button onClick={() => deleteEvent(a.id)} style={{ marginLeft: '20px', color: 'red' }}>X</button>
+            </li>
           ))}
         </ul>
       )}
@@ -224,5 +252,6 @@ function Calendar({ activities, setActivities }) {
     </div>
   );
 }
+
 
 export default Calendar;
