@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useReducer } from "react";
 import { timerReducer, initialTimerState } from "./timerReducer";
 import "./timer.css";
 import { useSessions } from "../../contexts/SessionContext";
+import { useTheme } from "../Darkmode/ThemeContext";
 import ModeSelector from "./ModeSelector";
 import TimeInput from "./TimeInput";
 import TimerDisplay from "./TimerDisplay";
@@ -26,6 +27,7 @@ export default function Timer() {
 
   const intervalRef = useRef(null);
   const { sessions, addSession, deleteSession, clearSessions } = useSessions();
+  const { theme } = useTheme();
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionCategory, setSessionCategory] = useState("Working");
@@ -108,7 +110,7 @@ export default function Timer() {
         }}
       />
 
-      <div className="timer-container">
+      <div className={`timer-container ${theme}`}>
         <h1>Timer</h1>
 
         <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
