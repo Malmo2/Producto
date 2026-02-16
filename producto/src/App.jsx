@@ -10,6 +10,7 @@ import Sessions from "./components/nav/pages/Sessions";
 import LoginForm from "./components/forms/LoginForm";
 import Signup from "./components/nav/pages/Signup";
 import Dashboard from "./components/nav/pages/Dashboard";
+import Settings from "./components/Settings/Settings";
 
 
 import { useAuthState } from "../src/contexts/AuthContext";
@@ -63,6 +64,13 @@ function App() {
             path="/sessions"
             element={
               isLoggedIn ? <Sessions /> : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              isLoggedIn ? <Settings /> : <Navigate to="/login" replace />
             }
           />
 

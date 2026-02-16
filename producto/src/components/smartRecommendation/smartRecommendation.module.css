@@ -1,8 +1,19 @@
 .smartContainer {
-  background: linear-gradient(220deg, #547dd1 0%, #2a5ec6 60%);
   padding: 40px;
   border-radius: 8px;
   margin:  0px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 -4px 6px rgba(0, 0, 0, 0.3);
+
+}
+
+[data-theme="light"] .smartContainer {
+  background: #ffffff;
+  color: #000000;
+}
+
+[data-theme="dark"] .smartContainer {
+  background: linear-gradient(220deg, #547dd1 0%, #2a5ec6 60%);
+  color: #fff;
 }
 
 .smartContainer h4 {
