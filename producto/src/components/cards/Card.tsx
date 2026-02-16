@@ -2,7 +2,7 @@ import React from "react";
 
 type CardProps = React.HTMLAttributes<HTMLDivElement> & {
   title?: React.ReactNode;
-  titleClassName?: string;
+  titleClassName?: string | undefined;
   children: React.ReactNode;
 };
 

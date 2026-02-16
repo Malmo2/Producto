@@ -10,7 +10,6 @@
   border: none;
   border-radius: 10px;
   padding: clamp(1rem, 3vw, 2rem);
-  z-index: 100;
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
