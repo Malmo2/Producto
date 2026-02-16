@@ -4,23 +4,22 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/nav/Navbar";
 import navLinks from "./components/nav/navLinks";
 
-import DashboardLayout from "./components/layout/DashboardLayout";
-import Timer from "./components/timer/timer";
-
 import Insights from "./components/nav/pages/Insights";
 import Projects from "./components/nav/pages/Projects";
-import Schedule from "./components/nav/pages/Schedule";
+import Sessions from "./components/nav/pages/Sessions";
 import LoginForm from "./components/forms/LoginForm";
-import SmartRecommendation from "./components/smartRecommendation/SmartRecommendation";
+import Signup from "./components/nav/pages/Signup";
+import Dashboard from "./components/nav/pages/Dashboard";
+import Settings from "./components/Settings/Settings";
 
-import { useAuthState } from "./contexts/AuthContext";
-import EnergyPage from "./components/energy/EnergyPage";
+
+import { useAuthState } from "../src/contexts/AuthContext";
 
 function App() {
   const { status } = useAuthState();
 
-  let isLoggedIn = status === "authenticated";
-  const isChecking = status === 'checking';
+  const isLoggedIn = status === "authenticated";
+  const isChecking = status === "loading";
   if (isChecking) return null;
 
   return (
@@ -32,24 +31,18 @@ function App() {
           <Route
             path="/"
             element={
-              isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginForm />
+              isLoggedIn ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <LoginForm />
+              )
             }
           />
 
           <Route
             path="/dashboard"
             element={
-              isLoggedIn ? (
-                <DashboardLayout>
-                  <div className="topRow">
-                    <EnergyPage />
-                    <Timer />
-                  </div>
-                  <SmartRecommendation />
-                </DashboardLayout>
-              ) : (
-                <Navigate to="/login" replace />
-              )
+              isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />
             }
           />
 
@@ -59,23 +52,43 @@ function App() {
               isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
             }
           />
+
           <Route
             path="/projects"
             element={
               isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
             }
           />
+
           <Route
-            path="/schedule"
+            path="/sessions"
             element={
-              isLoggedIn ? <Schedule /> : <Navigate to="/login" replace />
+              isLoggedIn ? <Sessions /> : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              isLoggedIn ? <Settings /> : <Navigate to="/login" replace />
             }
           />
 
           <Route
             path="/login"
             element={
-              isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginForm />
+              isLoggedIn ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <LoginForm />
+              )
+            }
+          />
+
+          <Route
+            path="/signup"
+            element={
+              isLoggedIn ? <Navigate to="/dashboard" replace /> : <Signup />
             }
           />
         </Routes>

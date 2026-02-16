@@ -5,18 +5,22 @@ import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/Darkmode/ThemeContext.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { SessionProvider } from "./contexts/SessionContext";
+
 import { EnergyProvider } from "./components/energy/context/EnergyContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <BrowserRouter>
-        <ThemeProvider>
-          <EnergyProvider>
-            <App />
-          </EnergyProvider>
-        </ThemeProvider>
-      </BrowserRouter>
+      <SessionProvider>
+        <BrowserRouter>
+          <ThemeProvider>
+            <EnergyProvider>
+              <App />
+            </EnergyProvider>
+          </ThemeProvider>
+        </BrowserRouter>
+      </SessionProvider>
     </AuthProvider>
   </StrictMode>,
 );

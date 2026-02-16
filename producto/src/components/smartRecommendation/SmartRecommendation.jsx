@@ -1,8 +1,11 @@
 import Button from "../button/button";
 import { useEnergy } from "../energy/context/EnergyContext";
 import  styles  from "./smartRecommendation.module.css";
+import { useTheme } from '../Darkmode/ThemeContext'
 
 function SmartRecommendation() {
+const { theme }= useTheme()
+
   const { logs } = useEnergy();
 
   const latest = logs[0]?.level;
@@ -39,7 +42,7 @@ function SmartRecommendation() {
   }
 
   return (
-    <div className={styles.smartContainer}>
+    <div className={styles.smartContainer} data-theme={theme}>
       <div className={styles.titleRow}>
         <img  alt="icon" className={styles.titleIcon} />
         <h4>{title}</h4>
