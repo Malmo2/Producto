@@ -12,9 +12,9 @@ import Projects from "./components/nav/pages/Projects";
 import Schedule from "./components/nav/pages/Schedule";
 import LoginForm from "./components/forms/LoginForm";
 import SmartRecommendation from "./components/smartRecommendation/SmartRecommendation";
-import EnergyTest from "./components/energy/EnergyTest";
 
 import { useAuthState } from "./contexts/AuthContext";
+import EnergyPage from "./components/energy/EnergyPage";
 
 function App() {
   const { status } = useAuthState();
@@ -42,7 +42,7 @@ function App() {
               isLoggedIn ? (
                 <DashboardLayout>
                   <div className="topRow">
-                    <EnergyTest />
+                    <EnergyPage />
                     <Timer />
                   </div>
                   <SmartRecommendation />

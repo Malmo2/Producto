@@ -1,9 +1,9 @@
 import Button from "../button/button";
-import useEnergyLogs from "../energy/hooks/useEnergyLogs";
+import { useEnergy } from "../energy/context/EnergyContext";
 import  styles  from "./smartRecommendation.module.css";
 
 function SmartRecommendation() {
-  const logs = useEnergyLogs();
+  const { logs } = useEnergy();
 
   const latest = logs[0]?.level;
   const previous = logs[1]?.level;
