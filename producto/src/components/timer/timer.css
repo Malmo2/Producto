@@ -6,12 +6,20 @@
   min-width: 300px;
   margin: 1rem;
   text-align: center;
-  background: #1a1f2e;
   border: none;
   border-radius: 10px;
   padding: clamp(1rem, 3vw, 2rem);
-  color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.timer-container.light {
+  background: #ffffff;
+  color: #000000;
+}
+
+.timer-container.dark {
+  background: #1a1f2e;
+  color: #fff;
 }
 
 .timer-container h1 {
@@ -31,12 +39,21 @@
   padding: 0.5rem 1rem;
   border: 2px solid #3b82f6;
   background: transparent;
-  color: #fff;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   white-space: nowrap;
+}
+
+.timer-container.light .mode-btn {
+  color: #000;
+  border-color: #3b82f6;
+}
+
+.timer-container.dark .mode-btn {
+  color: #fff;
+  border-color: #3b82f6;
 }
 
 .mode-btn:hover {

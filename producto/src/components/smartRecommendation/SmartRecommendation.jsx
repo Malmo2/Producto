@@ -1,9 +1,12 @@
 import Button from "../button/button";
 import  styles  from "./smartRecommendation.module.css";
+import { useTheme } from '../Darkmode/ThemeContext'
 
 function SmartRecommendation() {
+const { theme }= useTheme()
+
   return (
-    <div className={styles.smartContainer}>
+    <div className={styles.smartContainer} data-theme={theme}>
       <div className={styles.titleRow}>
         <img  alt="icon" className={styles.titleIcon} />
         <h4>Smart Recommendation</h4>
