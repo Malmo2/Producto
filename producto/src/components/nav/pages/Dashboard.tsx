@@ -67,6 +67,7 @@ import DashboardLayout from "../../layout/DashboardLayout"
 import Timer from "../../timer/timer"
 import SmartRecommendation from "../../smartRecommendation/SmartRecommendation"
 import Header from "../../panels/Header";
+import EnergyPage from "../../energy/EnergyPage";
 
 
 function Dashboard() {
@@ -91,6 +92,7 @@ function Dashboard() {
     <>
       <Header />
       <DashboardLayout>
+        <EnergyPage />
         <Timer />
         <SmartRecommendation />
       </DashboardLayout>

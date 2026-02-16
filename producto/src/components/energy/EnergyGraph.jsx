@@ -5,7 +5,7 @@ export default function EnergyGraph({ logs }) {
     <>
       <h3>Energy graph (latest first)</h3>
 
-      <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
+      <div style={{ display: "flex", gap: 10, alignItems: "stretch", maxWidth: "300px" }}>
         <div
           style={{
             display: "flex",
