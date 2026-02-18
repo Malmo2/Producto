@@ -62,7 +62,8 @@
   position: relative;
   background: var(--card);
   color: var(--text);
-  transition: background 0.2s, color 0.2s;
+  transition: background 0.2s, color 0.2s, border-top 0.2s;
+  border-top: 3px solid transparent;
 }
 
 .calendar-day:hover {
@@ -81,10 +82,11 @@
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #3b82f6;
+  transition: background 0.2s;
 }
 
 .calendar-activities {
@@ -94,8 +96,17 @@
 }
 
 .calendar-activities li {
-  padding: 5px 0;
+  padding: 10px 12px;
   border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-radius: 6px;
+  transition: all 0.2s;
+  margin-bottom: 4px;
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+.calendar-activities li span {
+  color: var(--text) !important;
 }
 
 .calendar-add-form {

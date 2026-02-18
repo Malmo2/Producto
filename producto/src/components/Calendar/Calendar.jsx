@@ -2,14 +2,23 @@ import { useState, useEffect } from "react";
 import "./Calendar.css";
 import { apiFetch } from "../../lib/api";
 import { supabase } from "../../lib/supabaseClient";
+import { useEnergy } from "../energy/context/EnergyContext";
 
 function Calendar({ activities, setActivities }) {
+  const { logs } = useEnergy();
   const [selectedDay, setSelectedDay] = useState(null);
   const [newActivity, setNewActivity] = useState("");
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [newColor, setNewColor] = useState("blue");
+  const [newEnergyLevel, setNewEnergyLevel] = useState(null);
+
+  useEffect(() => {
+    if (logs.length > 0) {
+      const latestLog = logs[0];
+      setNewEnergyLevel(latestLog.level);
+    }
+  }, [logs]);
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -42,6 +51,14 @@ function Calendar({ activities, setActivities }) {
     "November",
     "December",
   ];
+
+  const energyColorMap = {
+    1: "#ef4444",
+    2: "#f97316",
+    3: "#eab308",
+    4: "#84cc16", 
+    5: "#22c55e",
+  };
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
@@ -138,31 +155,60 @@ function Calendar({ activities, setActivities }) {
       <div className="calendar-grid">
         {Array.from({ length: daysInMonth }, (_, i) => {
           const day = i + 1;
-          const hasActivities = activitiesForDay(day).length > 0;
+          const dayActivities = activitiesForDay(day);
+          const hasActivities = dayActivities.length > 0;
+          const maxEnergyLevel = hasActivities 
+            ? Math.max(...dayActivities.map(a => a.energy_level || 3))
+            : null;
+          const maxEnergyColor = maxEnergyLevel ? energyColorMap[maxEnergyLevel] : null;
 
           return (
             <div
               key={day}
               onClick={() => setSelectedDay(day)}
               className={`calendar-day ${hasActivities ? "calendar-day--has-activity" : ""}`}
+              style={hasActivities && maxEnergyColor ? {
+                borderTop: `3px solid ${maxEnergyColor}`,
+              } : {}}
             >
               {day}
-              {hasActivities && <span className="calendar-dot" />}
+              {hasActivities && <span className="calendar-dot" style={{ backgroundColor: maxEnergyColor }} />}
             </div>
           );
         })}
       </div> 
 
-      {selectedDay && (
-        <ul className="calendar-activities">
-          {activitiesForDay(selectedDay).map((a) => (
-            <li key={a.id}>
-              {a.title} 
-              <button onClick={() => deleteEvent(a.id)} style={{ marginLeft: '20px', color: 'red' }}>X</button>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="calendar-activities">
+        {selectedDay ? (
+          activitiesForDay(selectedDay).length > 0 ? (
+            activitiesForDay(selectedDay).map((a) => {
+              const energyLevel = a.energy_level || 3;
+              const bgColor = energyColorMap[energyLevel];
+              return (
+                <li key={a.id} style={{
+                  borderLeft: `4px solid ${bgColor}`,
+                  paddingLeft: '12px',
+                }}>
+                  <span style={{ fontWeight: 500 }}>{a.title}</span>
+                  <span style={{ marginLeft: '10px', fontSize: '0.85em', opacity: 0.7 }}>
+                    (Energy: {energyLevel})
+                  </span>
+                  <button 
+                    onClick={() => deleteEvent(a.id)} 
+                    style={{ marginLeft: '20px', color: bgColor, background: 'none', border: 'none', cursor: 'pointer' }}
+                  >
+                    ✕
+                  </button>
+                </li>
+              );
+            })
+          ) : (
+            <li style={{ opacity: 0.5, fontStyle: 'italic' }}>No activities this day</li>
+          )
+        ) : (
+          <li style={{ opacity: 0.5, fontStyle: 'italic' }}>Select a day to see activities</li>
+        )}
+      </ul>
       <form
         className="calendar-add-form"
         onSubmit={async (e) => {
@@ -176,7 +222,7 @@ function Calendar({ activities, setActivities }) {
             date: newDate,
             time: newTime || "00:00",
             description: newDescription || null,
-            color: newColor || null,
+            energy_level: newEnergyLevel,
           };
 
           try {
@@ -194,6 +240,7 @@ function Calendar({ activities, setActivities }) {
               ...added,
               activity_date: added.activity_date ?? added.date,
               activity_time: added.activity_time ?? added.time,
+              energy_level: added.energy_level ?? newEnergyLevel,
             };
 
             setActivities((prev) => [normalized, ...prev]);
@@ -201,7 +248,6 @@ function Calendar({ activities, setActivities }) {
             setNewDate("");
             setNewTime("");
             setNewDescription("");
-            setNewColor("blue");
           } catch (error) {
             console.error(error);
           }
@@ -210,7 +256,7 @@ function Calendar({ activities, setActivities }) {
         <div className="calendar-date-row">
           <input
             type="text"
-            placeholder="Ny aktivitet"
+            placeholder="New activity"
             value={newActivity}
             onChange={(e) => setNewActivity(e.target.value)}
             className="calendar-input"
@@ -231,23 +277,22 @@ function Calendar({ activities, setActivities }) {
 
         <input
           type="time"
-          placeholder="Tid"
+          placeholder="Time"
           value={newTime}
           onChange={(e) => setNewTime(e.target.value)}
           className="calendar-input"
         />
 
-        <select
-          value={newColor}
-          onChange={(e) => setNewColor(e.target.value)}
-          className="calendar-input"
-        >
-          <option value="blue">Blå</option>
-          <option value="purple">Lila</option>
-          <option value="orange">Orange</option>
-          <option value="red">Röd</option>
-          <option value="green">Grön</option>
-        </select>
+        <div style={{ 
+          padding: '10px 12px', 
+          backgroundColor: 'var(--card)', 
+          borderRadius: '8px',
+          border: '1px solid var(--border, #ddd)',
+          fontSize: '0.95rem',
+          color: 'var(--text)'
+        }}>
+          Energy Level: {newEnergyLevel || '-'} {newEnergyLevel ? ['🔴', '🟠', '🟡', '🟢', '🟢'][newEnergyLevel - 1] : '⚪'}
+        </div>
       </form>
     </div>
   );
