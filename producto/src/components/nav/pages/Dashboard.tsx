@@ -1,62 +1,3 @@
-// import { useEffect } from "react";
-// import { useAuthState } from "../contexts/AuthContext";
-// import { apiFetch } from "../lib/api";
-
-// function Dashboard() {
-//   const { token } = useAuthState();
-
-//   useEffect(() => {
-//     if (!token) return;
-
-//     (async () => {
-//       try {
-//         const data = await apiFetch("/api/me", token);
-//         console.log("API /api/me:", data);
-//       } catch (e) {
-//         console.error("API error:", e);
-//       }
-//     })();
-//   }, [token]);
-
-//   useEffect(() => {
-//     if (!token) return;
-
-//     (async () => {
-//       try {
-//         const data = await apiFetch("/api/sessions", token);
-//         console.log("GET /api/sessions:", data);
-//       } catch (e) {
-//         console.error("API error:", e);
-//       }
-//     })();
-//   }, [token]);
-
-//   useEffect(() => {
-//     if (!token) return;
-
-//     (async () => {
-//       try {
-//         const created = await apiFetch("/api/sessions", token, {
-//           method: "POST",
-//           body: JSON.stringify({
-//             title: "Testpass",
-//             category: "Deep Work",
-//             startAt: new Date().toISOString(),
-//             endAt: null,
-//           }),
-//         });
-
-//         console.log("POST /api/sessions:", created);
-//       } catch (e) {
-//         console.error("failed post", e);
-//       }
-//     })();
-//   }, [token]);
-
-//   return <h1>Youre on the dashboard page.</h1>;
-// }
-
-// export default Dashboard;
 
 
 import { useEffect } from "react";
@@ -78,7 +19,7 @@ function Dashboard() {
 
     (async () => {
       try {
-        const data = await apiFetch("/api/me", token);
+        const data = await apiFetch("/api/me");
         console.log("API /api/me:", data);
       } catch (e) {
         console.error("API error:", e);

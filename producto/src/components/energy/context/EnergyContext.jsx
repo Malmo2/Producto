@@ -8,11 +8,12 @@ const STORAGE_KEY = "energyLogs";
 export function EnergyProvider({ children }) {
   const [logs, setLogs] = useLocalStorage(STORAGE_KEY, []);
 
-  const addLog = (level) => {
+  const addLog = (level, meta = {}) => {
     const newLog = {
       id: crypto.randomUUID(),
       level,
       createdAt: Date.now(),
+      ...meta
     };
     setLogs((prev) => [newLog, ...prev]);
   };
@@ -21,7 +22,12 @@ export function EnergyProvider({ children }) {
     setLogs((prev) => prev.filter((log) => log.id !== id));
   };
 
-  const value = useMemo(() => ({ logs, addLog, deleteLog }), [logs]);
+  const deleteLogsBySessionId = (sessionId) => {
+    const sessionIdStr = String(sessionId);
+    setLogs((prev) => prev.filter((log) => String(log.sessionId) !== sessionIdStr));
+  }
+
+  const value = useMemo(() => ({ logs, addLog, deleteLog, deleteLogsBySessionId }), [logs]);
 
   return (
     <EnergyContext.Provider value={value}>{children}</EnergyContext.Provider>
@@ -30,6 +36,6 @@ export function EnergyProvider({ children }) {
 
 export function useEnergy() {
   const ctx = useContext(EnergyContext);
-  if (!ctx) throw new Error("useEnegery must be inside Energy Provider");
+  if (!ctx) throw new Error("useEnergy must be inside Energy Provider");
   return ctx;
 }

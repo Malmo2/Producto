@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useEnergy } from "../components/energy/context/EnergyContext";
 
 const SessionContext = createContext();
 
@@ -7,6 +8,8 @@ export function SessionProvider({ children }) {
     const saved = localStorage.getItem("timerSessions");
     return saved ? JSON.parse(saved) : [];
   });
+
+  const { deleteLogsBySessionId } = useEnergy();
 
   useEffect(() => {
     localStorage.setItem("timerSessions", JSON.stringify(sessions));
@@ -17,11 +20,13 @@ export function SessionProvider({ children }) {
   };
 
   const deleteSession = (sessionId) => {
-    const updatedSessions = sessions.filter((s) => s.id !== sessionId);
+    const updatedSessions = sessions.filter((s) => String(s.id) !== String(sessionId));
+    deleteLogsBySessionId?.(String(sessionId));
     setSessions(updatedSessions);
   };
 
   const clearSessions = () => {
+    sessions.forEach((s) => deleteLogsBySessionId?.(String(s.id)));
     setSessions([]);
     localStorage.removeItem("timerSessions");
   };
