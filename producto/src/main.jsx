@@ -13,13 +13,13 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <SessionProvider>
-          <ThemeProvider>
-            <EnergyProvider>
+        <EnergyProvider>
+          <SessionProvider>
+            <ThemeProvider>
               <App />
-            </EnergyProvider>
-          </ThemeProvider>
-        </SessionProvider>
+            </ThemeProvider>
+          </SessionProvider>
+        </EnergyProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
