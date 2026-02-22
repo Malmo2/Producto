@@ -1,4 +1,7 @@
 import Button from "../button/button";
+import EnergyLevelPicker from "../energy/EnergyLevelPicker";
+import { useState } from "react";
+import { useEnergy } from "../energy/context/EnergyContext";
 
 export default function SessionPopup({
   show,
@@ -10,6 +13,9 @@ export default function SessionPopup({
   onSave,
   onCancel,
 }) {
+  const [energy, setEnergy] = useState(3);
+  const { addLog } = useEnergy();
+
   if (!show) return null;
 
   return (
@@ -39,8 +45,20 @@ export default function SessionPopup({
           </select>
         </div>
 
+        <div>
+          <p>Rate your energy level</p>
+          <EnergyLevelPicker value={energy} onChange={setEnergy} />
+        </div>
+
         <div className="popup-buttons">
-          <Button onClick={onSave}>Save</Button>
+          <Button
+            onClick={() => {
+              onSave?.();
+              addLog(energy);
+            }}
+          >
+            Save
+          </Button>
           <Button onClick={onCancel}>Cancel</Button>
         </div>
       </div>
