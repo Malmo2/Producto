@@ -53,8 +53,7 @@ export default function SessionPopup({
         <div className="popup-buttons">
           <Button
             onClick={() => {
-              onSave?.();
-              addLog(energy);
+              onSave?.(energy);
             }}
           >
             Save
