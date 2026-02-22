@@ -3,31 +3,30 @@ import { useSessions } from "../../../contexts/SessionContext";
 import formatTime from "../../../utils/formatTime";
 import Card from "../../cards/Card";
 import Button from "../../button/button";
-import { useEnergy } from "../../energy/context/EnergyContext";
 import styles from "./Sessions.module.css";
 
 type WorkSession = {
-    id: string;
+    id: string | number;
     user_id?: string;
     title: string;
     category: string;
     startTime: string;
     endTime: string | null;
     created_at?: string;
-    duration: string;
+    duration: number; // seconds
     date: string;
-    energy: number;
+    energy?: number; // 1-5 (optional for older sessions)
 };
 
 function Sessions() {
     const { sessions, deleteSession, clearSessions } = useSessions();
-    const { logs } = useEnergy();
-    const [energy, setEnergy] = useState(3);
     const [categoryFilter, setCategoryFilter] = useState<string>("All");
     const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
     const categories = useMemo(() => {
-        const unique = new Set<string>(sessions.map((s: WorkSession) => s.category));
+        const unique = new Set<string>(
+            sessions.map((s: WorkSession) => s.category)
+        );
         return ["All", ...Array.from(unique).sort()];
     }, [sessions]);
 
@@ -48,7 +47,9 @@ function Sessions() {
             <div className={styles.header}>
                 <div>
                     <h1 className={styles.title}>Sessions</h1>
-                    <p className={styles.subtitle}>Review and manage your saved work sessions.</p>
+                    <p className={styles.subtitle}>
+                        Review and manage your saved work sessions.
+                    </p>
                 </div>
 
                 <Button
@@ -105,12 +106,11 @@ function Sessions() {
             ) : (
                 <ul className={styles.list}>
                     {filteredSessions.map((s: WorkSession) => (
-                        <li key={s.id} className={styles.listItem}>
+                        <li key={String(s.id)} className={styles.listItem}>
                             <Card
                                 className={styles.sessionCard}
                                 title={s.title}
                                 titleClassName={styles.sessionTitle}
-
                             >
                                 <div className={styles.sessionMetaRow}>
                                     <span className={styles.categoryPill}>{s.category}</span>
@@ -142,6 +142,13 @@ function Sessions() {
                                                     minute: "2-digit",
                                                 })
                                                 : "Running"}
+                                        </span>
+                                    </div>
+
+                                    <div className={styles.sessionField}>
+                                        <span className={styles.sessionKey}>Energy</span>
+                                        <span className={styles.sessionValue}>
+                                            {typeof s.energy === "number" ? s.energy : "-"}
                                         </span>
                                     </div>
                                 </div>
