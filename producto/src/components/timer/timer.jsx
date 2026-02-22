@@ -10,6 +10,7 @@ import TimerControls from "./TimerControls";
 import SessionPopup from "./SessionPopup";
 import SessionsList from "./SessionsList";
 import TotalFocus from "./TotalFocus";
+import { useEnergy } from "../energy/context/EnergyContext";
 
 function initTimerState() {
   const saved = localStorage.getItem("customMinutes");
@@ -25,9 +26,12 @@ function initTimerState() {
 export default function Timer() {
   const [state, dispatch] = useReducer(timerReducer, null, initTimerState);
 
-  const intervalRef = useRef(null);
+  const { addLog } = useEnergy();
   const { sessions, addSession, deleteSession, clearSessions } = useSessions();
+
+  const intervalRef = useRef(null);
   const { theme } = useTheme();
+
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionCategory, setSessionCategory] = useState("Working");
@@ -42,12 +46,14 @@ export default function Timer() {
     } else if (state.timeLeft === 0) {
       dispatch({ type: "PAUSE_TIMER" });
     }
+
     return () => clearInterval(intervalRef.current);
   }, [state.isRunning, state.timeLeft]);
 
   const handleStart = () => {
     dispatch({ type: "START_TIMER" });
   };
+
   const handleModeChange = (selectedMode) => {
     dispatch({ type: "CHANGE_MODE", payload: selectedMode });
 
@@ -66,7 +72,7 @@ export default function Timer() {
     }
   };
 
-  const handleSaveSession = () => {
+  const handleSaveSession = (energyLevel) => {
     if (!sessionTitle.trim()) {
       alert("You have to fill in a title");
       return;
@@ -75,16 +81,25 @@ export default function Timer() {
     const endTime = new Date();
     const durationInSeconds = Math.floor((endTime - state.startTime) / 1000);
 
+    // Create a stable session id we can also use to link the energy log
+    const sessionId = crypto.randomUUID?.() ?? String(Date.now());
+
     const newSession = {
-      id: Date.now(),
+      id: sessionId,
       title: sessionTitle,
       category: sessionCategory,
       startTime: state.startTime,
       endTime: endTime,
       duration: durationInSeconds,
       date: new Date().toLocaleDateString("sv-SE"),
+      energy: energyLevel,
     };
+
     addSession(newSession);
+
+    // Create a dashboard energy log linked to this session
+    addLog?.(energyLevel, { id: sessionId, sessionId });
+
     setShowPopup(false);
     setSessionTitle("");
     setSessionCategory("Working");
