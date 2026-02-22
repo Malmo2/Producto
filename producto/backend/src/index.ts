@@ -11,6 +11,7 @@ app.use(express.json());
 
 app.use((req, _res, next) => {
   console.log("INCOMING:", req.method, req.url);
+  console.log("BODY:", req.body);
   next();
 });
 
@@ -246,7 +247,7 @@ app.listen(port, () => {
   console.log(`Backend running on http://localhost:${port}`);
 });
 
-app.delete("/api/activities/:id", requireAuth, async (req,res) => {
+app.delete("/api/activities/:id", requireAuth, async (req, res) => {
   const user = (req as AuthedRequest).user
   const { id } = req.params
 
@@ -254,11 +255,11 @@ app.delete("/api/activities/:id", requireAuth, async (req,res) => {
   const db = supabaseWithToken(token)
 
   const { error } = await db
-  .from ("activities")
-  .delete()
-  .eq("id", id)
-  .eq("user_id", user.id)
+    .from("activities")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id)
 
-  if (error) return res.status(500).json({ error: error.message})
-    return res.status(204).send()
+  if (error) return res.status(500).json({ error: error.message })
+  return res.status(204).send()
 })

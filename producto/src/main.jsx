@@ -11,16 +11,16 @@ import { EnergyProvider } from "./components/energy/context/EnergyContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <SessionProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <SessionProvider>
           <ThemeProvider>
             <EnergyProvider>
               <App />
             </EnergyProvider>
           </ThemeProvider>
-        </BrowserRouter>
-      </SessionProvider>
-    </AuthProvider>
+        </SessionProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </StrictMode>,
 );

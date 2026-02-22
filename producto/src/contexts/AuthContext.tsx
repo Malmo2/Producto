@@ -11,27 +11,23 @@ import { supabase } from '../lib/supabaseClient';
 
 type AuthStatus = "anonymous" | "loading" | "authenticated" | "error";
 
-type User = {
+interface User {
     id: string;
     name: string;
     email: string;
-};
+}
 
-type Session = {
+interface Session {
     user: User;
     token: string;
-};
+}
 
-type AuthState = {
+interface AuthState {
     status: AuthStatus;
     user: User | null;
     token: string | null;
     errorMessage: string | null;
-};
-
-// type RestoreSession = {
-//      type: "restore_session"; payload: Session | null 
-// };
+}
 
 type AuthAction =
     | { type: "restore_session"; payload: Session | null }
@@ -39,6 +35,7 @@ type AuthAction =
     | { type: "login_success"; payload: Session }
     | { type: "login_error"; payload: string }
     | { type: "logout" };
+
 
 const initialState: AuthState = {
     status: "anonymous",
@@ -107,11 +104,11 @@ function clearSession() {
 
 
 
-type AuthActions = {
+interface AuthActions {
     login: (input: { email: string; password: string }) => Promise<{ ok: boolean }>;
     signup: (input: { email: string; password: string; name?: string }) => Promise<{ ok: boolean }>;
     logout: () => Promise<void>;
-};
+}
 
 const AuthStateContext = createContext<AuthState | undefined>(undefined);
 const AuthActionsContext = createContext<AuthActions | undefined>(undefined);
@@ -217,7 +214,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearSession();
         dispatch({ type: "logout" });
     }, [])
-    
+
 
     const actions = useMemo<AuthActions>(() => ({ login, signup, logout }), [login, signup, logout]);
 
