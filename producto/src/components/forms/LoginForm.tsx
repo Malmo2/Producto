@@ -1,9 +1,7 @@
 import { useReducer, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./LoginForm.module.css"
-import Button from "../button/button";
-import { Link } from "react-router-dom";
-
+import { useNavigate, Link } from "react-router-dom";
+import { AuthLayout } from "../auth/AuthLayout";
+import styles from "../auth/AuthLayout.module.css";
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
 type Values = {
@@ -177,11 +175,18 @@ function LoginForm() {
     const { values, touched, errors, status, submitError } = state;
 
     return (
-        <div className={styles.page}>
-            <form
-                className={styles.form}
-                onSubmit={onSubmit}>
-                <h2 className={styles.title}>Log in</h2>
+        <AuthLayout
+            title="Log in"
+            subtitle="Welcome back"
+            welcomeText={
+                <>
+                    Sign in to access your{" "}
+                    <span className={styles.welcomeAccent}>Producto</span>{" "}
+                    workspace
+                </>
+            }
+        >
+            <form onSubmit={onSubmit}>
                 <div className={styles.field}>
                     <label className={styles.label} htmlFor="email">
                         Email
@@ -208,10 +213,11 @@ function LoginForm() {
                                 payload: e.currentTarget.name as FieldName,
                             })
                         }
+                        placeholder="Enter your email"
                         autoComplete="email"
                     />
                     {touched.email && errors.email && (
-                        <p className={styles.errorText}>{errors.email}</p>
+                        <p className={styles.helperText}>{errors.email}</p>
                     )}
                 </div>
 
@@ -241,36 +247,34 @@ function LoginForm() {
                                 payload: e.currentTarget.name as FieldName,
                             })
                         }
+                        placeholder="Enter your password"
                         autoComplete="current-password"
                     />
 
                     {touched.password && errors.password && (
-                        <p className={styles.errorText}>{errors.password}</p>
+                        <p className={styles.helperText}>{errors.password}</p>
                     )}
                 </div>
-                <Button variant="login"
+                <button
+                    type="submit"
+                    className={styles.submitBtn}
                     disabled={status === "submitting"}
-                    type="submit">{status === "submitting" ? "Logging in..." : "Log in"}
-                </Button>
-                <div className={styles.statusArea}>
+                >
+                    {status === "submitting" ? "Logging in..." : "Log in"}
+                </button>
+                <div className={styles.footer}>
                     {status === "error" && submitError && (
-                        <p className={`${styles.statusText} ${styles.statusError}`}>
-                            {submitError}
-                        </p>
+                        <p className={styles.helperText} style={{ marginBottom: 8 }}>{submitError}</p>
                     )}
-
-                    <p className={styles.signupText}>
+                    {status === "success" && (
+                        <p style={{ color: "#22c55e", marginBottom: 8 }}>Login success!</p>
+                    )}
+                    <p>
                         No account? <Link to="/signup">Sign up</Link>
                     </p>
-
-                    {status === "success" && (
-                        <p className={`${styles.statusText} ${styles.statusSuccess}`}>
-                            Login success!
-                        </p>
-                    )}
                 </div>
             </form>
-        </div>
+        </AuthLayout>
     );
 }
 

@@ -1,5 +1,7 @@
 import { useReducer, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { AuthLayout } from "../../auth/AuthLayout";
+import styles from "../../auth/AuthLayout.module.css";
 import { useAuthActions, useAuthState } from "../../../contexts/AuthContext"
 
 type Values = {
@@ -124,78 +126,98 @@ function Signup() {
     const { values, touched, errors, status, submitError } = state;
 
     return (
-        <div style={{ padding: 24 }}>
-            <form onSubmit={onSubmit} style={{ maxWidth: 420 }}>
-                <h2>Sign up</h2>
-
-                <div style={{ marginBottom: 12 }}>
-                    <label htmlFor="name">Name (optional)</label>
-                    <input
-                        id="name"
-                        name="name"
-                        value={values.name}
-                        onChange={(e) =>
-                            dispatch({
-                                type: "change_field",
-                                payload: { name: "name", value: e.currentTarget.value },
-                            })
-                        }
-                        onBlur={() => dispatch({ type: "blur_field", payload: "name" })}
-                        autoComplete="name"
-                    />
-                </div>
-
-                <div style={{ marginBottom: 12 }}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={values.email}
-                        onChange={(e) =>
-                            dispatch({
-                                type: "change_field",
-                                payload: { name: "email", value: e.currentTarget.value },
-                            })
-                        }
-                        onBlur={() => dispatch({ type: "blur_field", payload: "email" })}
-                        autoComplete="email"
-                    />
-                    {touched.email && errors.email && <p>{errors.email}</p>}
-                </div>
-
-                <div style={{ marginBottom: 12 }}>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={values.password}
-                        onChange={(e) =>
-                            dispatch({
-                                type: "change_field",
-                                payload: { name: "password", value: e.currentTarget.value },
-                            })
-                        }
-                        onBlur={() => dispatch({ type: "blur_field", payload: "password" })}
-                        autoComplete="new-password"
-                    />
-                    {touched.password && errors.password && <p>{errors.password}</p>}
-                </div>
-
-                <button disabled={status === "submitting"} type="submit">
-                    {status === "submitting" ? "Signing up..." : "Sign up"}
-                </button>
-
-                <div style={{ marginTop: 12 }}>
-                    <Link to="/login">Back to login</Link>
-                </div>
-
-                {status === "error" && submitError && <p>{submitError}</p>}
-                {status === "success" && <p>Signup success!</p>}
-            </form>
-        </div>
-    );
-}
-
+        <AuthLayout
+          title="Sign up"
+          subtitle="Get started for free"
+          welcomeText={
+            <>
+              Create your account and get started with{" "}
+              <span className={styles.welcomeAccent}>Producto</span>
+            </>
+          }
+        >
+          <form onSubmit={onSubmit}>
+            <div className={styles.field}>
+              <label htmlFor="signup-name" className={styles.label}>
+                Name (optional)
+              </label>
+              <input
+                id="signup-name"
+                type="text"
+                name="name"
+                value={values.name}
+                onChange={(e) =>
+                  dispatch({ type: "change_field", payload: { name: "name", value: e.target.value } })
+                }
+                onBlur={() => dispatch({ type: "blur_field", payload: "name" })}
+                className={styles.input}
+                placeholder="Enter your name"
+                autoComplete="name"
+              />
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="signup-email" className={styles.label}>
+                Email
+              </label>
+              <input
+                id="signup-email"
+                type="email"
+                name="email"
+                value={values.email}
+                onChange={(e) =>
+                  dispatch({ type: "change_field", payload: { name: "email", value: e.target.value } })
+                }
+                onBlur={() => dispatch({ type: "blur_field", payload: "email" })}
+                className={`${styles.input} ${touched.email && errors.email ? styles.inputError : ""}`}
+                placeholder="Enter your email"
+                autoComplete="email"
+              />
+              {touched.email && errors.email && (
+                <p className={styles.helperText}>{errors.email}</p>
+              )}
+            </div>
+            <div className={styles.field}>
+              <label htmlFor="signup-password" className={styles.label}>
+                Password
+              </label>
+              <input
+                id="signup-password"
+                type="password"
+                name="password"
+                value={values.password}
+                onChange={(e) =>
+                  dispatch({ type: "change_field", payload: { name: "password", value: e.target.value } })
+                }
+                onBlur={() => dispatch({ type: "blur_field", payload: "password" })}
+                className={`${styles.input} ${touched.password && errors.password ? styles.inputError : ""}`}
+                placeholder="Enter your password"
+                autoComplete="new-password"
+              />
+              {touched.password && errors.password && (
+                <p className={styles.helperText}>{errors.password}</p>
+              )}
+            </div>
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={status === "submitting"}
+            >
+              {status === "submitting" ? "Signing up..." : "Sign up"}
+            </button>
+            <div className={styles.footer}>
+              {status === "error" && submitError && (
+                <p className={styles.helperText} style={{ marginBottom: 8 }}>{submitError}</p>
+              )}
+              {status === "success" && (
+                <p style={{ color: "#22c55e", marginBottom: 8 }}>Signup success!</p>
+              )}
+              <p>
+                Already have an account? <Link to="/login">Log in</Link>
+              </p>
+            </div>
+          </form>
+        </AuthLayout>
+      );
+    }
+  
 export default Signup;

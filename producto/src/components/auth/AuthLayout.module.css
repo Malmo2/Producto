@@ -1,0 +1,209 @@
+.authPage {
+  min-height: 100dvh;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.leftPanel {
+  flex: 0 0 42%;
+  background: #0d0f1d;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.formArea {
+  width: 100%;
+  max-width: 400px;
+}
+
+.logo {
+  margin-bottom: 48px;
+  display: block;
+  height: 40px;
+  width: auto;
+}
+
+.title {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  text-align: left;
+}
+
+.subtitle {
+  margin: 0 0 32px 0;
+  font-size: 15px;
+  color: #9aa6b2;
+  text-align: left;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-size: 14px;
+  color: #9aa6b2;
+  margin-bottom: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #1e293b;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.input:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.inputError {
+  border-color: #ef4444;
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+}
+
+.helperText {
+  font-size: 13px;
+  color: #ef4444;
+  margin-top: 6px;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  color: #9aa6b2;
+  cursor: pointer;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #9aa6b2;
+}
+
+.footer a {
+  color: #7dd3fc;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footerLinks {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.rightPanel {
+  flex: 1;
+  background: #2563eb;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.welcome {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.35;
+  margin-bottom: 16px;
+}
+
+.welcomeAccent {
+  color: #7dd3fc;
+}
+
+.date {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 40px;
+}
+
+@media (max-width: 900px) {
+  .authPage {
+    flex-direction: column;
+  }
+
+  .leftPanel {
+    flex: none;
+    min-height: auto;
+    padding: 40px 24px;
+  }
+
+  .rightPanel {
+    flex: none;
+    padding: 40px 24px;
+  }
+
+  .logo {
+    margin-bottom: 32px;
+  }
+}
