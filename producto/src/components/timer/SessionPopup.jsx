@@ -1,7 +1,7 @@
 import Button from "../button/button";
 import EnergyLevelPicker from "../energy/EnergyLevelPicker";
-import { useState } from "react";
-import { useEnergy } from "../energy/context/EnergyContext";
+import { useState, useEffect } from "react";
+
 
 export default function SessionPopup({
   show,
@@ -14,7 +14,11 @@ export default function SessionPopup({
   onCancel,
 }) {
   const [energy, setEnergy] = useState(3);
-  const { addLog } = useEnergy();
+
+
+  useEffect(() => {
+    if (show) setEnergy(3);
+  }, [show]);
 
   if (!show) return null;
 
