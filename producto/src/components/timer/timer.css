@@ -71,6 +71,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  font-size: 0.5rem;
 }
 
 .time-input label {
@@ -80,7 +81,7 @@
 }
 
 .time-input input {
-  width: clamp(60px, 15vw, 80px);
+  width: clamp(110px, 15vw, 80px);
   padding: 0.6rem;
   border: 2px solid #2a3142;
   border-radius: 5px;
@@ -89,6 +90,11 @@
   font-size: clamp(1rem, 3vw, 1.2rem);
   text-align: center;
   order: 1;
+}
+
+.time-input input::placeholder {
+  font-size: clamp(0.7rem, 2vw, 0.8rem);
+  color: #888;
 }
 
 .time-input input:focus {

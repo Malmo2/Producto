@@ -1,3 +1,5 @@
+//Only for practice..
+
 type TotalFocusProp = {
   sessions: { duration: number }[];
   dailyGoal?: number;
