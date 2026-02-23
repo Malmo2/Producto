@@ -7,6 +7,7 @@
     padding: 24px;
     background: #0b1220;
     box-sizing: border-box;
+    
 }
 
 .form {
@@ -18,6 +19,10 @@
     border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
     backdrop-filter: blur(10px);
+    margin-left: 140px;
+    margin-bottom: 20px;
+    position-anchor: initial;
+    
 }
 
 .title {
@@ -34,6 +39,7 @@
     flex-direction: column;
     gap: 8px;
     margin-bottom: 14px;
+    
 }
 
 .label {
@@ -95,7 +101,6 @@
     color: rgba(140, 255, 180, 0.98);
 }
 
-/* Optional: respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
     .input {
         transition: none;
