@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './Settings.css';
 import { useContext } from 'react'
 import { ThemeContext } from '../Darkmode/ThemeContext';
+import { ChangePasswordForm } from '../forms/ChangePasswordForm';
 
 
 function Settings() {
@@ -17,6 +18,15 @@ function Settings() {
     return (
         <div>
             <div className="settings-content">
+                <div className="settings-box password-box">
+                    <div className="settings-box-header">
+                        <h3 style={{ marginLeft: '180px' }}>Change Password</h3>
+                    </div>
+                    <div className="settings-box-body">
+                        <ChangePasswordForm />
+                    </div>
+                </div>
+
                 <div className="settings-box appearance-box">
                     <div className="settings-box-header">
                         <div className="settings-box-title">Appearance</div>
@@ -24,7 +34,7 @@ function Settings() {
                     <div className="settings-box-body">
                         <div className="settings-theme-row">
                             <div>
-                                <div className="settings-theme-label">Theme</div>
+                                <div className="settings-theme-label">Dark Mode</div>
                                 <div className="settings-theme-desc">Switch between light and dark mode</div>
                             </div>
                             <label className="switch">
@@ -36,10 +46,10 @@ function Settings() {
                                 <span className="slider round"></span>
                                 <span className="theme-icon" role="img" aria-label="theme">{settings.theme === 'dark' ? '🌙' : '☀️'}</span>
                             </label>
-
                         </div>
                     </div>
                 </div>
+
                 <div className="settings-box timer-box">
                     <div className="settings-box-header">
                         <span className="settings-box-title">Timer defaults</span>
