@@ -27,6 +27,7 @@ interface AuthState {
     user: User | null;
     token: string | null;
     errorMessage: string | null;
+    message: string | null;
 }
 
 type AuthAction =
@@ -34,6 +35,8 @@ type AuthAction =
     | { type: "login_start" }
     | { type: "login_success"; payload: Session }
     | { type: "login_error"; payload: string }
+    | { type: "set_message"; payload: string }
+    | { type: "clear_message" }
     | { type: "logout" };
 
 
@@ -42,6 +45,7 @@ const initialState: AuthState = {
     user: null,
     token: null,
     errorMessage: null,
+    message: null,
 };
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -53,9 +57,10 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
                 user: action.payload?.user ?? null,
                 token: action.payload?.token ?? null,
                 errorMessage: null,
+                message: null,
             };
         case "login_start":
-            return { ...state, status: "loading", errorMessage: null };
+            return { ...state, status: "loading", errorMessage: null, message: null };
 
         case "login_success":
             return {
@@ -63,7 +68,8 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
                 status: "authenticated",
                 user: action.payload.user,
                 token: action.payload.token,
-                errorMessage: null
+                errorMessage: null,
+                message: null,
             };
 
         case "login_error": {
@@ -71,11 +77,18 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
                 ...state,
                 status: "error",
                 errorMessage: action.payload,
+                message: null,
             }
         }
 
         case "logout":
             return { ...initialState, status: "anonymous" };
+
+        case "set_message":
+            return { ...state, status: "anonymous", message: action.payload, errorMessage: null };
+
+        case "clear_message":
+            return { ...state, message: null }
 
         default:
             return state
@@ -168,6 +181,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [])
 
     const signup = useCallback(async (input: { email: string; password: string; name?: string; }) => {
+        dispatch({ type: "clear_message" });
         try {
             const { data, error } = await supabase.auth.signUp({
                 email: input.email,
@@ -185,8 +199,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (!user) throw new Error("Signup failed: no user returned");
 
             if (!session) {
-                dispatch({ type: "login_error", payload: "Account created. Please verify your email, then log in." });
-                return { ok: true };
+                dispatch({
+                    type: "set_message",
+                    payload: "Account created. Please verify your email, then log in.",
+                });
+                return { ok: false };
             }
 
             const mappedSession: Session = {

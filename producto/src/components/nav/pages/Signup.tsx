@@ -89,13 +89,15 @@ function Signup() {
   const [state, dispatch] = useReducer(reducer, initialFormState);
   const navigate = useNavigate();
   const { signup } = useAuthActions();
-  const { status: authStatus, errorMessage } = useAuthState();
+  const { status: authStatus, errorMessage, message } = useAuthState();
 
   useEffect(() => {
     if (authStatus === "error" && errorMessage) {
       dispatch({ type: "submit_error", payload: errorMessage });
     }
   }, [authStatus, errorMessage]);
+
+
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -205,6 +207,9 @@ function Signup() {
           {status === "submitting" ? "Signing up..." : "Sign up"}
         </button>
         <div className={styles.footer}>
+          {message && (
+            <p style={{ marginBottom: 8 }}>{message}</p>
+          )}
           {status === "error" && submitError && (
             <p className={styles.helperText} style={{ marginBottom: 8 }}>{submitError}</p>
           )}
