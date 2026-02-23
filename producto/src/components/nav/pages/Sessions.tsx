@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useSessions } from "../../../contexts/SessionContext";
 import type { WorkSessions } from "../../sessions/types";
 import styles from "./Sessions.module.css";
@@ -8,27 +8,16 @@ import SessionsToolbar from "../../sessions/SessionsToolbar";
 import SessionsEmptyState from "../../sessions/SessionsEmptyState";
 import SessionsList from "../../sessions/SessionsList";
 
+import { useFilteredSessions } from "../../../hooks/useFilteredSessions";
+import { useCategories } from "../../../hooks/useCategories";
+
 function Sessions() {
     const { sessions, deleteSession, clearSessions } = useSessions();
     const [categoryFilter, setCategoryFilter] = useState<string>("All");
     const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
-    const categories = useMemo(() => {
-        const unique = new Set<string>(sessions.map((s: WorkSessions) => s.category));
-        return ["All", ...Array.from(unique).sort()];
-    }, [sessions]);
-
-    const filteredSessions = useMemo(() => {
-        return sessions
-            .filter((s: WorkSessions) =>
-                categoryFilter === "All" ? true : s.category === categoryFilter
-            )
-            .sort((a: WorkSessions, b: WorkSessions) => {
-                const aTime = new Date(a.startTime).getTime();
-                const bTime = new Date(b.startTime).getTime();
-                return sortOrder === "desc" ? bTime - aTime : aTime - bTime;
-            });
-    }, [sessions, categoryFilter, sortOrder]);
+    const categories = useCategories(sessions);
+    const filteredSessions = useFilteredSessions(sessions, categoryFilter, sortOrder);
 
     return (
         <div className={styles.page}>
