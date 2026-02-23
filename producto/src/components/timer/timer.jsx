@@ -11,6 +11,7 @@ import SessionPopup from "./SessionPopup";
 import SessionsList from "./SessionsList";
 import TotalFocus from "./TotalFocus";
 import { useEnergy } from "../energy/context/EnergyContext";
+import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
 
 function initTimerState() {
   const saved = localStorage.getItem("customMinutes");
@@ -28,6 +29,7 @@ export default function Timer() {
 
   const { addLog } = useEnergy();
   const { sessions, addSession, deleteSession, clearSessions } = useSessions();
+  const { plan, clearPlan } = useRecommendationPlan();
 
   const intervalRef = useRef(null);
   const { theme } = useTheme();
@@ -50,6 +52,8 @@ export default function Timer() {
     return () => clearInterval(intervalRef.current);
   }, [state.isRunning, state.timeLeft]);
 
+
+
   const handleStart = () => {
     dispatch({ type: "START_TIMER" });
   };
@@ -64,6 +68,22 @@ export default function Timer() {
     }
   };
 
+  useEffect(() => {
+    if (!plan) return;
+
+    dispatch({ type: "CHANGE_MODE", payload: plan.timerMode });
+    dispatch({ type: "SET_CUSTOM_MINUTES", payload: plan.minutes });
+
+
+    localStorage.setItem("customMinutes", String(plan.minutes));
+
+    window.dispatchEvent(new Event("customMinutesChanged"));
+
+    clearPlan();
+
+
+  }, [plan, clearPlan]);
+
   const handlePause = () => {
     dispatch({ type: "PAUSE_TIMER" });
 
@@ -77,6 +97,12 @@ export default function Timer() {
       alert("You have to fill in a title");
       return;
     }
+
+    if (energyLevel == null) {
+      alert("Pick an energy level before saving.")
+      return;
+    }
+
 
     const endTime = new Date();
     const durationInSeconds = Math.floor((endTime - state.startTime) / 1000);
@@ -136,6 +162,14 @@ export default function Timer() {
           onChange={(e) => {
             const val = e.target.value === "" ? "" : Number(e.target.value);
             dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
+
+            if (val === "") {
+              localStorage.removeItem("customMinutes");
+            } else {
+              localStorage.setItem("customMinutes", String(val));
+            }
+
+            window.dispatchEvent(new Event("customMinutesChanged"));
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !state.isRunning) {
