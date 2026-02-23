@@ -1,65 +1,95 @@
-import Button from "../button/button";
+import { useMemo, useEffect, useState, useRef } from "react";
 import { useEnergy } from "../energy/context/EnergyContext";
-import  styles  from "./smartRecommendation.module.css";
-import { useTheme } from '../Darkmode/ThemeContext'
+import { useTheme } from "../Darkmode/ThemeContext";
+import styles from "./smartRecommendation.module.css";
+import { EnergyChart } from "../energy/EnergyChart";
+import { getEnergyTrend } from "../../utils/getEnergyTrend";
+import { GetWorkRecommendations } from "../../utils/getWorkRecommendations";
+import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
 
 function SmartRecommendation() {
-const { theme }= useTheme()
-
+  const { theme } = useTheme();
   const { logs } = useEnergy();
+  const { setPlan } = useRecommendationPlan();
 
-  const latest = logs[0]?.level;
-  const previous = logs[1]?.level;
+  const [availableMinutes, setAvailableMinutes] = useState(() => {
+    const raw = localStorage.getItem("customMinutes");
+    const parsed = raw ? Number(raw) : 30;
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 30;
+  });
 
-  let trend = "no data";
-  if (latest != null && previous != null) {
-    if (latest > previous) trend = "up";
-    else if (latest < previous) trend = "down";
-    else trend = "same";
-  }
+  useEffect(() => {
+    const handler = () => {
+      const raw = localStorage.getItem("customMinutes");
+      const parsed = raw ? Number(raw) : 30;
+      setAvailableMinutes(Number.isFinite(parsed) && parsed > 0 ? parsed : 30);
+    };
 
-  let title = "Smart Recommendation";
-  let heading = "Log your energy to get recommendations";
-  let text = "Go to Energy page and save at least 1–2 energy logs.";
+    window.addEventListener("customMinutesChanged", handler);
+    return () => window.removeEventListener("customMinutesChanged", handler);
+  }, []);
 
-  if (latest != null) {
-    if (latest <= 2) {
-      heading = "Low Energy: Take a Break";
-      text = "Your energy is low. Take a short break, drink water, or stretch.";
-    } else if (latest === 3) {
-      heading = "Medium Energy: Light Work";
-      text = "Good time for admin tasks, planning, or easy coding.";
-    } else {
-      heading = "High Energy: Deep Work";
-      text = "Perfect moment for focused work. Start a deep work session.";
-    }
+  const latestEnergy = logs[0]?.level ?? null;
 
-    if (trend === "down") {
-      text += " (Energy is dropping — plan a break soon.)";
-    } else if (trend === "up") {
-      text += " (Energy is rising — push a focused block now.)";
-    }
-  }
+  const trend = useMemo(() => {
+    return getEnergyTrend(logs, 6);
+  }, [logs]);
+
+  const best = useMemo(() => {
+    const recommendations = GetWorkRecommendations(latestEnergy, trend, availableMinutes);
+    return recommendations[0] ?? null;
+  }, [latestEnergy, trend, availableMinutes]);
+
+  const title = "Smart Recommendations";
+
+  const heading = best ? best.title : "Log your energy to get recommendations";
+  const text = best
+    ? `${best.description} (Trend: ${trend})`
+    : "Go to Energy page and save at least 1–2 energy logs.";
+
+
+
+  const lastKeyRef = useRef("");
+
+
+  // AUTOMATIC SEND TO TIMER
+  useEffect(() => {
+    if (!best) return;
+
+    const key = `${latestEnergy ?? "null"}-${trend}`;
+
+    if (lastKeyRef.current === key) return;
+    lastKeyRef.current = key;
+
+    setPlan((prev) => {
+      if (
+        prev &&
+        prev.timerMode === best.timerMode &&
+        prev.minutes === best.minutes &&
+        prev.label === best.title
+      ) {
+        return prev;
+      }
+
+      return {
+        timerMode: best.timerMode,
+        minutes: best.minutes,
+        label: best.title,
+      };
+    });
+  }, [best, latestEnergy, trend, setPlan]);
 
   return (
     <div className={styles.smartContainer} data-theme={theme}>
       <div className={styles.titleRow}>
-        <img  alt="icon" className={styles.titleIcon} />
+        <img alt="icon" className={styles.titleIcon} />
         <h4>{title}</h4>
-
       </div>
+
       <h2>{heading}</h2>
       <p>{text}</p>
 
-      <div className={styles.middleIcon}>
-        <img alt="middle icon" />
-      </div>
-
-      <div className={styles.buttons}>
-        <Button variant={{}}>Start Focus Session</Button>
-        <Button>Snooze</Button>
-        
-      </div>
+      {logs.length > 0 ? <EnergyChart logs={logs} maxPoints={14} /> : null}
     </div>
   );
 }
