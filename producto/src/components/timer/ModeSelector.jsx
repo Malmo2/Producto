@@ -5,14 +5,21 @@ export default function ModeSelector({ mode, onModeChange }) {
         className={mode === "work" ? "mode-btn active" : "mode-btn"}
         onClick={() => onModeChange("work")}
       >
-        Work (50min)
+        Work
       </button>
 
       <button
         className={mode === "break" ? "mode-btn active" : "mode-btn"}
         onClick={() => onModeChange("break")}
       >
-        Break (15min)
+        Break
+      </button>
+
+      <button
+        className={mode === "meeting" ? "mode-btn active" : "mode-btn"}
+        onClick={() => onModeChange("meeting")}
+      >
+        Meeting
       </button>
     </div>
   );
