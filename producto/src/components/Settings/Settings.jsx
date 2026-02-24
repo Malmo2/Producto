@@ -1,80 +1,67 @@
 import { useState } from 'react';
 import './Settings.css';
-import { useContext } from 'react'
+import { useContext } from 'react';
 import { ThemeContext } from '../Darkmode/ThemeContext';
 import { ChangePasswordForm } from '../forms/ChangePasswordForm';
-
+import { Card, CardContent, Typography, TextField, Switch, Box } from '../ui';
 
 function Settings() {
-    const { theme, toggleTheme} = useContext(ThemeContext)
-    const [settings] = useState({
-        notifications: true,
-        theme: 'light',
-    });
-
-
-  
+    const { theme, toggleTheme } = useContext(ThemeContext);
+    const [settings] = useState({ notifications: true, theme: 'light' });
 
     return (
-        <div>
-            <div className="settings-content">
-                <div className="settings-box password-box">
-                    <div className="settings-box-header">
-                        <h3 style={{ marginLeft: '180px' }}>Change Password</h3>
-                    </div>
-                    <div className="settings-box-body">
-                        <ChangePasswordForm />
-                    </div>
-                </div>
+        <Box className="settings-content" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+            <Card className="settings-box password-box">
+                <CardContent>
+                    <Typography variant="h6" component="h3" style={{ marginBottom: 16 }}>
+                        Change Password
+                    </Typography>
+                    <ChangePasswordForm />
+                </CardContent>
+            </Card>
 
-                <div className="settings-box appearance-box">
-                    <div className="settings-box-header">
-                        <div className="settings-box-title">Appearance</div>
-                    </div>
-                    <div className="settings-box-body">
-                        <div className="settings-theme-row">
-                            <div>
-                                <div className="settings-theme-label">Dark Mode</div>
-                                <div className="settings-theme-desc">Switch between light and dark mode</div>
-                            </div>
-                            <label className="switch">
-                                <input
-                                    type="checkbox"
-                                    checked={theme === 'dark'}
-                                    onChange={toggleTheme}
-                                />
-                                <span className="slider round"></span>
-                                <span className="theme-icon" role="img" aria-label="theme">{settings.theme === 'dark' ? '🌙' : '☀️'}</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+            <Card className="settings-box appearance-box">
+                <CardContent>
+                    <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
+                        Appearance
+                    </Typography>
+                    <Box className="settings-theme-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+                        <Box>
+                            <Typography variant="subtitle1" className="settings-theme-label">Dark Mode</Typography>
+                            <Typography variant="body2" color="muted" className="settings-theme-desc">
+                                Switch between light and dark mode
+                            </Typography>
+                        </Box>
+                        <Switch
+                            checked={theme === 'dark'}
+                            onChange={() => toggleTheme()}
+                        />
+                    </Box>
+                </CardContent>
+            </Card>
 
-                <div className="settings-box timer-box">
-                    <div className="settings-box-header">
-                        <span className="settings-box-title">Timer defaults</span>
-                    </div>
-                    <div className="settings-box-body">
-                        <div className="settings-timer-durations">
-                            <label className="timer-row">
-                                <div className="settings-theme-label">Deep work duration</div>
-                                <input type="text" className="timer-input" defaultValue="25" />
-                            </label>
-
-                            <label className="timer-row">
-                                <div className="settings-theme-label">Meeting duration</div>
-                                <input type="text" className="timer-input" defaultValue="45" />
-                            </label>
-
-                            <label className="timer-row">
-                                <div className="settings-theme-label">Break duration</div>
-                                <input type="text" className="timer-input" defaultValue="5" />
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <Card className="settings-box timer-box">
+                <CardContent>
+                    <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
+                        Timer defaults
+                    </Typography>
+                    <Box className="settings-timer-durations" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                        <Box className="timer-row" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            <Typography variant="body2" className="settings-theme-label">Deep work duration</Typography>
+                            <TextField defaultValue="25" size="small" />
+                        </Box>
+                        <Box className="timer-row" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            <Typography variant="body2" className="settings-theme-label">Meeting duration</Typography>
+                            <TextField defaultValue="45" size="small" />
+                        </Box>
+                        <Box className="timer-row" style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            <Typography variant="body2" className="settings-theme-label">Break duration</Typography>
+                            <TextField defaultValue="5" size="small" />
+                        </Box>
+                    </Box>
+                </CardContent>
+            </Card>
+        </Box>
     );
 }
 

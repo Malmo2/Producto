@@ -1,14 +1,20 @@
+import { List, ListItem, ListItemText, Button } from "../ui";
+
 export default function EnergyLogList({ logs, onDelete }) {
   return (
-    <ul>
+    <List>
       {logs.map((log) => (
-        <li key={log.id}>
-          Energy: {log.level} — {new Date(log.createdAt).toLocaleTimeString()}
-          <button onClick={() => onDelete(log.id)} style={{ marginLeft: 8 }}>
+        <ListItem key={log.id} secondaryAction={
+          <Button variant="outlined" size="small" onClick={() => onDelete(log.id)}>
             Ta bort
-          </button>
-        </li>
+          </Button>
+        }>
+          <ListItemText
+            primary={`Energy: ${log.level}`}
+            secondary={new Date(log.createdAt).toLocaleTimeString()}
+          />
+        </ListItem>
       ))}
-    </ul>
+    </List>
   );
 }

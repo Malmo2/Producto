@@ -1,17 +1,20 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { ThemeContext, ThemeContextType } from "./ThemeContext";
+import { Button } from "../ui";
 import "./ThemeToggleButton.css";
 
-const ThemeToggleButton: React.FC = () => {
-    const {theme, toggleTheme} = useContext(ThemeContext) as ThemeContextType;
+const ThemeToggleButton = () => {
+    const { theme, toggleTheme } = useContext(ThemeContext) as ThemeContextType;
 
-    return React.createElement(
-        'button',
-        { onClick: toggleTheme, className: `button ${theme}` },
-        `Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`
+    return (
+        <Button
+            variant="outlined"
+            onClick={toggleTheme}
+            className={theme === 'light' ? 'theme-toggle-light' : 'theme-toggle-dark'}
+        >
+            Switch to {theme === 'light' ? 'Dark' : 'Light'} Mode
+        </Button>
     );
+};
 
-}
-
-
-export default ThemeToggleButton
+export default ThemeToggleButton;

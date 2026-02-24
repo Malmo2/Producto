@@ -1,7 +1,6 @@
 import styles from "./DashboardLayout.module.css";
 import RightPanel from "../panels/Rightpanel";
 import ActivityLog from "../Activitylog/Activitylog";
-import Header from "../panels/Header";
 
 export default function DashboardLayout({ children }) {
   return (

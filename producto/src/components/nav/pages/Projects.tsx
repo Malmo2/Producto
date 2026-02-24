@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuthState } from "../../../contexts/AuthContext";
 import { apiFetch } from "../../../lib/api";
+import { Button, Typography, Box } from "../../ui";
 
 type WorkSession = {
   id: string;
@@ -84,34 +85,32 @@ function Projects() {
   }
 
   return (
-    <>
-      <h1>Youre on the Projects page.</h1>
+    <Box style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+      <Typography variant="h5" component="h1">Youre on the Projects page.</Typography>
 
-      {!token && <p>No token yet (log in first).</p>}
+      {!token && <Typography color="muted">No token yet (log in first).</Typography>}
 
       {token && (
-        <div style={{ marginTop: 12 }}>
-          <button onClick={createTestSession}>Create test session</button>
-        </div>
+        <Box style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <Button onClick={createTestSession}>Create test session</Button>
+          <Button variant="outlined" onClick={closeFirstSession} disabled={!token || sessions.length === 0}>
+            Close first session (set endAt)
+          </Button>
+        </Box>
       )}
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <Typography color="error">{error}</Typography>}
 
-      <button onClick={closeFirstSession} disabled={!token || sessions.length === 0}>
-        Close first session (set endAt)
-      </button>
-
-
-      <div style={{ marginTop: 16 }}>
-        <h3>/api/me</h3>
+      <Box style={{ marginTop: 16 }}>
+        <Typography variant="h6" component="h3">/api/me</Typography>
         <pre>{JSON.stringify(me, null, 2)}</pre>
-      </div>
+      </Box>
 
-      <div style={{ marginTop: 16 }}>
-        <h3>/api/sessions</h3>
+      <Box style={{ marginTop: 16 }}>
+        <Typography variant="h6" component="h3">/api/sessions</Typography>
         <pre>{JSON.stringify(sessions, null, 2)}</pre>
-      </div>
-    </>
+      </Box>
+    </Box>
   );
 }
 

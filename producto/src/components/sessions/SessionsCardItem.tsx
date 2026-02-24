@@ -1,6 +1,5 @@
 import formatTime from "../../utils/formatTime";
-import Card from "../cards/Card";
-import Button from "../button/button";
+import { CardWithTitle, Button } from "../ui";
 import styles from '../nav/pages/Sessions.module.css';
 import type { SessionCardItemProps } from './types';
 
@@ -10,7 +9,7 @@ export default function SessionCardItem({ session, onDelete }: SessionCardItemPr
 
     return (
         <li className={styles.listItem}>
-            <Card className={styles.sessionCard} title={s.title} titleClassName={styles.sessionTitle}>
+            <CardWithTitle className={styles.sessionCard} title={s.title} titleClassName={styles.sessionTitle}>
                 <div className={styles.sessionMetaRow}>
                     <span className={styles.categoryPill}>{s.category}</span>
                     <span className={styles.duration}>{formatTime(s.duration)}</span>
@@ -62,7 +61,7 @@ export default function SessionCardItem({ session, onDelete }: SessionCardItemPr
                         Delete
                     </Button>
                 </div>
-            </Card>
+            </CardWithTitle>
         </li>
     );
 }

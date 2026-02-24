@@ -2,7 +2,8 @@ import { useReducer, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { AuthLayout } from "../../auth/AuthLayout";
 import styles from "../../auth/AuthLayout.module.css";
-import { useAuthActions, useAuthState } from "../../../contexts/AuthContext"
+import { useAuthActions, useAuthState } from "../../../contexts/AuthContext";
+import { TextField, Button, Typography, Box } from "../../ui";
 
 type Values = {
     email: string;
@@ -137,11 +138,9 @@ function Signup() {
           }
         >
           <form onSubmit={onSubmit}>
-            <div className={styles.field}>
-              <label htmlFor="signup-name" className={styles.label}>
-                Name (optional)
-              </label>
-              <input
+            <Box className={styles.field} style={{ marginBottom: 16 }}>
+              <TextField
+                label="Name (optional)"
                 id="signup-name"
                 type="text"
                 name="name"
@@ -150,16 +149,13 @@ function Signup() {
                   dispatch({ type: "change_field", payload: { name: "name", value: e.target.value } })
                 }
                 onBlur={() => dispatch({ type: "blur_field", payload: "name" })}
-                className={styles.input}
                 placeholder="Enter your name"
                 autoComplete="name"
               />
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="signup-email" className={styles.label}>
-                Email
-              </label>
-              <input
+            </Box>
+            <Box className={styles.field} style={{ marginBottom: 16 }}>
+              <TextField
+                label="Email"
                 id="signup-email"
                 type="email"
                 name="email"
@@ -168,19 +164,15 @@ function Signup() {
                   dispatch({ type: "change_field", payload: { name: "email", value: e.target.value } })
                 }
                 onBlur={() => dispatch({ type: "blur_field", payload: "email" })}
-                className={`${styles.input} ${touched.email && errors.email ? styles.inputError : ""}`}
                 placeholder="Enter your email"
                 autoComplete="email"
+                error={!!(touched.email && errors.email)}
+                helperText={touched.email && errors.email ? errors.email : undefined}
               />
-              {touched.email && errors.email && (
-                <p className={styles.helperText}>{errors.email}</p>
-              )}
-            </div>
-            <div className={styles.field}>
-              <label htmlFor="signup-password" className={styles.label}>
-                Password
-              </label>
-              <input
+            </Box>
+            <Box className={styles.field} style={{ marginBottom: 16 }}>
+              <TextField
+                label="Password"
                 id="signup-password"
                 type="password"
                 name="password"
@@ -189,32 +181,31 @@ function Signup() {
                   dispatch({ type: "change_field", payload: { name: "password", value: e.target.value } })
                 }
                 onBlur={() => dispatch({ type: "blur_field", payload: "password" })}
-                className={`${styles.input} ${touched.password && errors.password ? styles.inputError : ""}`}
                 placeholder="Enter your password"
                 autoComplete="new-password"
+                error={!!(touched.password && errors.password)}
+                helperText={touched.password && errors.password ? errors.password : undefined}
               />
-              {touched.password && errors.password && (
-                <p className={styles.helperText}>{errors.password}</p>
-              )}
-            </div>
-            <button
+            </Box>
+            <Button
               type="submit"
-              className={styles.submitBtn}
+              variant="login"
               disabled={status === "submitting"}
+              style={{ marginBottom: 16 }}
             >
               {status === "submitting" ? "Signing up..." : "Sign up"}
-            </button>
-            <div className={styles.footer}>
+            </Button>
+            <Box className={styles.footer}>
               {status === "error" && submitError && (
-                <p className={styles.helperText} style={{ marginBottom: 8 }}>{submitError}</p>
+                <Typography color="error" style={{ marginBottom: 8 }}>{submitError}</Typography>
               )}
               {status === "success" && (
-                <p style={{ color: "#22c55e", marginBottom: 8 }}>Signup success!</p>
+                <Typography color="success" style={{ marginBottom: 8 }}>Signup success!</Typography>
               )}
-              <p>
+              <Typography variant="body2">
                 Already have an account? <Link to="/login">Log in</Link>
-              </p>
-            </div>
+              </Typography>
+            </Box>
           </form>
         </AuthLayout>
       );

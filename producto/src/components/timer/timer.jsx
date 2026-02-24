@@ -3,13 +3,14 @@ import { timerReducer, initialTimerState } from "./timerReducer";
 import "./timer.css";
 import { useSessions } from "../../contexts/SessionContext";
 import { useTheme } from "../Darkmode/ThemeContext";
+import { useAuthState } from "../../contexts/AuthContext";
 import ModeSelector from "./ModeSelector";
 import TimeInput from "./TimeInput";
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
 import SessionPopup from "./SessionPopup";
-import SessionsList from "./SessionsList";
-import TotalFocus from "./TotalFocus";
+import ActivitySessionSidebar from "./ActivitySessionSidebar";
+import RecentSessions from "./RecentSessions";
 import { useEnergy } from "../energy/context/EnergyContext";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
 
@@ -28,8 +29,9 @@ export default function Timer() {
   const [state, dispatch] = useReducer(timerReducer, null, initTimerState);
 
   const { addLog } = useEnergy();
-  const { sessions, addSession, deleteSession, clearSessions } = useSessions();
+  const { addSession } = useSessions();
   const { plan, clearPlan } = useRecommendationPlan();
+  const { user } = useAuthState();
 
   const intervalRef = useRef(null);
   const { theme } = useTheme();
@@ -63,6 +65,8 @@ export default function Timer() {
 
     if (selectedMode === "work") {
       dispatch({ type: "SET_CUSTOM_MINUTES", payload: 50 });
+    } else if (selectedMode === "meeting") {
+      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 25 });
     } else if (selectedMode === "break") {
       dispatch({ type: "SET_CUSTOM_MINUTES", payload: 15 });
     }
@@ -151,49 +155,67 @@ export default function Timer() {
         }}
       />
 
-      <div className={`timer-container ${theme}`}>
-        <h1>Timer</h1>
+      <div className={`timer-container timer-page-layout ${theme}`}>
+        <div className="timer-page-main">
+          <h1>Timer</h1>
 
-        <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
+          <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
 
-        <TimeInput
-          customMinutes={state.customMinutes}
-          isRunning={state.isRunning}
-          onChange={(e) => {
-            const val = e.target.value === "" ? "" : Number(e.target.value);
-            dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
+          <TimeInput
+            customMinutes={state.customMinutes}
+            isRunning={state.isRunning}
+            onChange={(e) => {
+              const val = e.target.value === "" ? "" : Number(e.target.value);
+              dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
 
-            if (val === "") {
-              localStorage.removeItem("customMinutes");
-            } else {
-              localStorage.setItem("customMinutes", String(val));
-            }
+              if (val === "") {
+                localStorage.removeItem("customMinutes");
+              } else {
+                localStorage.setItem("customMinutes", String(val));
+              }
 
-            window.dispatchEvent(new Event("customMinutesChanged"));
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !state.isRunning) {
-              handleStart();
-            }
-          }}
-        />
+              window.dispatchEvent(new Event("customMinutesChanged"));
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !state.isRunning) {
+                handleStart();
+              }
+            }}
+          />
 
-        <TimerDisplay timeLeft={state.timeLeft} isRunning={state.isRunning} />
+          <TimerDisplay
+            timeLeft={state.timeLeft}
+            isRunning={state.isRunning}
+            totalTime={state.customMinutes * 60}
+          />
 
-        <TimerControls
-          isRunning={state.isRunning}
-          onStart={handleStart}
-          onPause={handlePause}
-          onReset={handleReset}
-        />
+          {state.isRunning && state.startTime && (
+            <p className="timer-tracking-text">
+              Tracking focus for {user?.name || "User"}
+            </p>
+          )}
 
-        <SessionsList
-          sessions={sessions}
-          onDelete={deleteSession}
-          onClearAll={clearSessions}
-        />
+          <TimerControls
+            isRunning={state.isRunning}
+            onStart={handleStart}
+            onPause={handlePause}
+            onReset={handleReset}
+          />
+        </div>
 
-        <TotalFocus sessions={sessions} dailyGoal={480} />
+        <div className="timer-page-sidebar">
+          <ActivitySessionSidebar
+            isRunning={state.isRunning}
+            startTime={state.startTime}
+            totalMinutes={state.customMinutes}
+            timeLeft={state.timeLeft}
+            userName={user?.name}
+            onEndSession={handlePause}
+          />
+          <div className="timer-recent-sessions">
+            <RecentSessions maxItems={5} />
+          </div>
+        </div>
       </div>
     </>
   );

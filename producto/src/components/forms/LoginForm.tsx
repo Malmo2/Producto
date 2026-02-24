@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { AuthLayout } from "../auth/AuthLayout";
 import styles from "../auth/AuthLayout.module.css";
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
+import { TextField, Button, Typography, Box } from "../ui";
 
 type Values = {
     email: string,
@@ -187,18 +188,13 @@ function LoginForm() {
             }
         >
             <form onSubmit={onSubmit}>
-                <div className={styles.field}>
-                    <label className={styles.label} htmlFor="email">
-                        Email
-                    </label>
-                    <input
-                        id="email"
-                        className={`${styles.input} ${touched.email && errors.email ? styles.inputError : ""
-                            }`}
+                <Box className={styles.field} style={{ marginBottom: 16 }}>
+                    <TextField
+                        label="Email"
                         type="email"
                         name="email"
                         value={values.email}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e) =>
                             dispatch({
                                 type: "change_field",
                                 payload: {
@@ -207,7 +203,7 @@ function LoginForm() {
                                 },
                             })
                         }
-                        onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+                        onBlur={(e) =>
                             dispatch({
                                 type: "blur_field",
                                 payload: e.currentTarget.name as FieldName,
@@ -215,24 +211,18 @@ function LoginForm() {
                         }
                         placeholder="Enter your email"
                         autoComplete="email"
+                        error={!!(touched.email && errors.email)}
+                        helperText={touched.email && errors.email ? errors.email : undefined}
                     />
-                    {touched.email && errors.email && (
-                        <p className={styles.helperText}>{errors.email}</p>
-                    )}
-                </div>
+                </Box>
 
-                <div className={styles.field}>
-                    <label className={styles.label} htmlFor="password">
-                        Password
-                    </label>
-                    <input
-                        id="password"
-                        className={`${styles.input} ${touched.password && errors.password ? styles.inputError : ""
-                            }`}
+                <Box className={styles.field} style={{ marginBottom: 16 }}>
+                    <TextField
+                        label="Password"
                         type="password"
                         name="password"
                         value={values.password}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        onChange={(e) =>
                             dispatch({
                                 type: "change_field",
                                 payload: {
@@ -241,7 +231,7 @@ function LoginForm() {
                                 },
                             })
                         }
-                        onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+                        onBlur={(e) =>
                             dispatch({
                                 type: "blur_field",
                                 payload: e.currentTarget.name as FieldName,
@@ -249,30 +239,29 @@ function LoginForm() {
                         }
                         placeholder="Enter your password"
                         autoComplete="current-password"
+                        error={!!(touched.password && errors.password)}
+                        helperText={touched.password && errors.password ? errors.password : undefined}
                     />
-
-                    {touched.password && errors.password && (
-                        <p className={styles.helperText}>{errors.password}</p>
-                    )}
-                </div>
-                <button
+                </Box>
+                <Button
                     type="submit"
-                    className={styles.submitBtn}
+                    variant="login"
                     disabled={status === "submitting"}
+                    style={{ marginBottom: 16 }}
                 >
                     {status === "submitting" ? "Logging in..." : "Log in"}
-                </button>
-                <div className={styles.footer}>
+                </Button>
+                <Box className={styles.footer}>
                     {status === "error" && submitError && (
-                        <p className={styles.helperText} style={{ marginBottom: 8 }}>{submitError}</p>
+                        <Typography color="error" style={{ marginBottom: 8 }}>{submitError}</Typography>
                     )}
                     {status === "success" && (
-                        <p style={{ color: "#22c55e", marginBottom: 8 }}>Login success!</p>
+                        <Typography color="success" style={{ marginBottom: 8 }}>Login success!</Typography>
                     )}
-                    <p>
+                    <Typography variant="body2">
                         No account? <Link to="/signup">Sign up</Link>
-                    </p>
-                </div>
+                    </Typography>
+                </Box>
             </form>
         </AuthLayout>
     );

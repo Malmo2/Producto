@@ -1,24 +1,25 @@
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
+import { Typography, Button, Box } from "../ui";
 
 export function AccountPanel() {
   const { status, user } = useAuthState();
   const { logout } = useAuthActions();
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <Typography>Loading...</Typography>;
   }
 
   if (status !== "authenticated") {
-    return <p>Not logged in</p>;
+    return <Typography>Not logged in</Typography>;
   }
 
   return (
-    <section>
-      <h2>Account</h2>
-      <p>
+    <Box component="section" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <Typography variant="h5" component="h2">Account</Typography>
+      <Typography variant="body1">
         Logged in as {user.name} ({user.email})
-      </p>
-      <button onClick={logout}>Logout</button>
-    </section>
+      </Typography>
+      <Button variant="outlined" onClick={logout}>Logout</Button>
+    </Box>
   );
 }

@@ -1,4 +1,4 @@
-import Button from "../button/button";
+import { Button } from "../ui";
 import styles from "../nav/pages/Sessions.module.css";
 import type { SessionsHeaderProps } from "./types";
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSessions } from "../../../contexts/SessionContext";
 import type { WorkSessions } from "../../sessions/types";
 import styles from "./Sessions.module.css";
+import { Box } from "../../ui";
 
 import SessionsHeader from "../../sessions/SessionsHeader";
 import SessionsToolbar from "../../sessions/SessionsToolbar";
@@ -20,7 +21,7 @@ function Sessions() {
     const filteredSessions = useFilteredSessions(sessions, categoryFilter, sortOrder);
 
     return (
-        <div className={styles.page}>
+        <Box className={styles.page}>
             <SessionsHeader onClearAll={clearSessions} disableClearAll={sessions.length === 0} />
 
             <SessionsToolbar
@@ -37,7 +38,7 @@ function Sessions() {
             ) : (
                 <SessionsList sessions={filteredSessions as WorkSessions[]} onDelete={deleteSession} />
             )}
-        </div>
+        </Box>
     );
 }
 

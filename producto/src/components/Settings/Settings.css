@@ -126,7 +126,7 @@
 }
 
 input:checked + .slider {
-    background-color: var(--accent, #2ec4b6);
+    background-color: var(--accent, #2663eb);
 }
 
 input:checked + .slider:before {
@@ -199,8 +199,8 @@ input:checked + .slider:before {
 
 .settings-box .input:focus {
     outline: none;
-    border-color: var(--accent, #2ec4b6);
-    box-shadow: 0 0 0 3px rgba(46, 196, 182, 0.1);
+    border-color: var(--accent, #2663eb);
+    box-shadow: 0 0 0 3px rgba(38, 99, 235, 0.1);
 }
 
 .settings-box .inputError {

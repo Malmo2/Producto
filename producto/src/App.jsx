@@ -5,8 +5,10 @@ import Navbar from "./components/nav/Navbar";
 import navLinks from "./components/nav/navLinks";
 
 import Insights from "./components/nav/pages/Insights";
+import Energy from "./components/nav/pages/Energy";
 import Projects from "./components/nav/pages/Projects";
 import Sessions from "./components/nav/pages/Sessions";
+import TimerPage from "./components/nav/pages/Timer";
 import LoginForm from "./components/forms/LoginForm";
 import Signup from "./components/nav/pages/Signup";
 import Dashboard from "./components/nav/pages/Dashboard";
@@ -54,6 +56,13 @@ function App() {
           />
 
           <Route
+            path="/energy"
+            element={
+              isLoggedIn ? <Energy /> : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
             path="/projects"
             element={
               isLoggedIn ? <Projects /> : <Navigate to="/login" replace />
@@ -64,6 +73,13 @@ function App() {
             path="/sessions"
             element={
               isLoggedIn ? <Sessions /> : <Navigate to="/login" replace />
+            }
+          />
+
+          <Route
+            path="/timer"
+            element={
+              isLoggedIn ? <TimerPage /> : <Navigate to="/login" replace />
             }
           />
 

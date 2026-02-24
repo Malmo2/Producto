@@ -1,5 +1,6 @@
 import styles from "../nav/pages/Sessions.module.css";
 import type { SessionsToolbarProps } from "./types";
+import { Select, SelectOption, Typography, Box } from "../ui";
 
 export default function SessionsToolbar({
     categories,
@@ -11,36 +12,34 @@ export default function SessionsToolbar({
 }: SessionsToolbarProps) {
     return (
         <div className={styles.toolbar}>
-            <label className={styles.field}>
-                <span className={styles.labelText}>Category</span>
-                <select
-                    className={styles.select}
+            <div className={styles.field}>
+                <Select
+                    label="Category"
                     value={categoryFilter}
                     onChange={(e) => onCategoryChange(e.currentTarget.value)}
+                    className={styles.select}
                 >
                     {categories.map((c) => (
-                        <option key={c} value={c}>
-                            {c}
-                        </option>
+                        <SelectOption key={c} value={c}>{c}</SelectOption>
                     ))}
-                </select>
-            </label>
+                </Select>
+            </div>
 
-            <label className={styles.field}>
-                <span className={styles.labelText}>Sort</span>
-                <select
-                    className={styles.select}
+            <div className={styles.field}>
+                <Select
+                    label="Sort"
                     value={sortOrder}
                     onChange={(e) => onSortChange(e.currentTarget.value as "asc" | "desc")}
+                    className={styles.select}
                 >
-                    <option value="desc">Newest first</option>
-                    <option value="asc">Oldest first</option>
-                </select>
-            </label>
-
-            <div className={styles.count}>
-                {count} session{count === 1 ? "" : "s"}
+                    <SelectOption value="desc">Newest first</SelectOption>
+                    <SelectOption value="asc">Oldest first</SelectOption>
+                </Select>
             </div>
+
+            <Typography variant="body2" className={styles.count}>
+                {count} session{count === 1 ? "" : "s"}
+            </Typography>
         </div>
     );
 }

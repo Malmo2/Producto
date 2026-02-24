@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import logo from "../../assets/producto-logo.svg";
 import logoDark from "../../assets/producto-logo-dark.svg";
 import styles from "./navbar.module.css"
-import Button from "../button/button";
+import { Button } from "../ui";
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
 type NavItem = {

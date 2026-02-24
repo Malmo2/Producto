@@ -1,8 +1,8 @@
 import { useReducer, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./LoginForm.module.css";
-import Button from "../button/button";
-import Card from "../cards/Card";
+import { Button } from "../ui";
+import { Card } from "../ui";
 import { useAuthActions, useAuthState } from "../../contexts/AuthContext";
 
 const initialFormState = {

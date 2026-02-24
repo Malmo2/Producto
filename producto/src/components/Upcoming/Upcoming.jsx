@@ -1,18 +1,44 @@
 import { useMemo } from "react";
+import { FaCalendarAlt } from "react-icons/fa";
 import "../Upcoming/Upcoming.css";
+
+const COLOR_MAP = {
+  blue: "#3b82f6",
+  green: "#22c55e",
+  purple: "#a855f7",
+  orange: "#f97316",
+  red: "#ef4444",
+};
 
 const formatTime = (time) => {
   if (!time || time === "TBA") return "TBA";
   return time.split(':').slice(0, 2).join(':');
 };
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  } catch {
+    return dateStr;
+  }
+};
+
 const UpcomingEvent = ({ time, date, title, description, color = "blue" }) => {
+  const iconColor = COLOR_MAP[color] || COLOR_MAP.blue;
+  const dateTime = `${formatDate(date)} • ${formatTime(time)}`;
+  const text = description ? `${dateTime} — ${description}` : dateTime;
+
   return (
     <div className={`upcoming-event upcoming-event--${color}`}>
-      <span className="upcoming-event-date">{date}</span>
-      <span className="upcoming-event-time">{formatTime(time)}</span>
-      <h4 className="upcoming-event-title">{title}</h4>
-      <p className="upcoming-event-description">{description}</p>
+      <span className="upcoming-event-icon" style={{ color: iconColor }}>
+        <FaCalendarAlt size={22} />
+      </span>
+      <div className="upcoming-event-content">
+        <div className="upcoming-event-title">{title}</div>
+        <div className="upcoming-event-text">{text}</div>
+      </div>
     </div>
   );
 };

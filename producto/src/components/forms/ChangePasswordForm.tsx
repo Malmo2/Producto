@@ -1,7 +1,7 @@
 import {useReducer} from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import styles from './LoginForm.module.css'
-import Button from '../button/button'
+import { Button, TextField, Typography, Box } from "../ui";
 
 export const ChangePasswordForm = () => {
     const [state, dispatch] = useReducer(passwordFormReducer, initialState)
@@ -77,73 +77,59 @@ export const ChangePasswordForm = () => {
 
     return(
             <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="currentPassword" className={styles.label}>
-                        Current Password
-                    </label>
-                    <input type="password"
-                    id='currentPassword'
-                    name='currentPassword'
-                    value={state.values.currentPassword}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`${styles.input} ${state.touched.currentPassword &&
-                        state.errors.currentPassword ? styles.inputError : ''
-                    }`}  
-                    disabled={state.status === 'submitting'}
+                <Box className={styles.formGroup} style={{ marginBottom: 16 }}>
+                    <TextField
+                        label="Current Password"
+                        type="password"
+                        id="currentPassword"
+                        name="currentPassword"
+                        value={state.values.currentPassword}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={!!(state.touched.currentPassword && state.errors.currentPassword)}
+                        helperText={state.touched.currentPassword && state.errors.currentPassword ? state.errors.currentPassword : undefined}
+                        disabled={state.status === 'submitting'}
                     />
-                    {state.touched.currentPassword && state.errors.currentPassword && (
-                        <p className={styles.errorText}>{state.errors.currentPassword}</p>
-                    )}
-                </div>
+                </Box>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor='newPassword' className={styles.label}>
-                        New Password
-                    </label>
-                    <input
-                    type="password"
-                    id="newPassword"
-                    name='newPassword'
-                    value={state.values.newPassword}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className={`${styles.input} ${state.touched.newPassword && state.errors.newPassword ? styles.inputError : ''}`}
-                    disabled={state.status === 'submitting'}
-                    
+                <Box className={styles.formGroup} style={{ marginBottom: 16 }}>
+                    <TextField
+                        label="New Password"
+                        type="password"
+                        id="newPassword"
+                        name="newPassword"
+                        value={state.values.newPassword}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={!!(state.touched.newPassword && state.errors.newPassword)}
+                        helperText={state.touched.newPassword && state.errors.newPassword ? state.errors.newPassword : undefined}
+                        disabled={state.status === 'submitting'}
                     />
-            {state.touched.newPassword && state.errors.newPassword && (
-                <p className={styles.errorText}>{state.errors.newPassword}</p>
-            )}
-        </div>
+                </Box>
 
-        <div className={styles.formGroup}>
-            <label htmlFor='confirmPassword' className={styles.label}>
-                Confirm Password
-            </label>
-            <input
-            type="password"
-            id="confirmPassword"
-            name='confirmPassword'
-            value={state.values.confirmPassword}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`${styles.input} ${state.touched.confirmPassword && state.errors.confirmPassword ? styles.inputError : ''}`}
-            disabled={state.status === 'submitting'}
-            />
-            {state.touched.confirmPassword && state.errors.confirmPassword && (
-                <p className={styles.errorText}>{state.errors.confirmPassword}</p>
-            )}
-        </div>
+                <Box className={styles.formGroup} style={{ marginBottom: 16 }}>
+                    <TextField
+                        label="Confirm Password"
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        value={state.values.confirmPassword}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={!!(state.touched.confirmPassword && state.errors.confirmPassword)}
+                        helperText={state.touched.confirmPassword && state.errors.confirmPassword ? state.errors.confirmPassword : undefined}
+                        disabled={state.status === 'submitting'}
+                    />
+                </Box>
 
-        <Button type="submit" disabled={state.status === 'submitting'}>
+                <Button type="submit" disabled={state.status === 'submitting'}>
             {state.status === 'submitting' ? 'Changing...' : 'Change Password'}
         </Button>
 
         {state.statusMessage && (
-            <p className={state.status === 'error' ? styles.errorText : styles.successText}>
+            <Typography color={state.status === 'error' ? 'error' : 'success'} style={{ marginTop: 16 }}>
                 {state.statusMessage}
-            </p>
+            </Typography>
         )}
 
 

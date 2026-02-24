@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaCalendarAlt, FaBell } from "react-icons/fa";
 import Calendar from "../Calendar/Calendar";
 import Upcoming from "../Upcoming/Upcoming";
+import { IconButton, Typography } from "../ui";
 
 const activities = [
   {
@@ -42,8 +43,8 @@ const ActivityItem = ({ icon, title, timestamp }) => {
     <div className="activity-item">
       <span className={`activity-icon activity-icon--${icon}`}></span>
       <div className="activity-content">
-        <p className="activity-title">{title}</p>
-        <span className="activity-timestamp">{timestamp}</span>
+        <Typography variant="body1" className="activity-title">{title}</Typography>
+        <Typography variant="caption" color="muted" className="activity-timestamp">{timestamp}</Typography>
       </div>
     </div>
   );
@@ -68,27 +69,16 @@ function ActivityLog({ items = activities }) {
   return (
     <>
       <div className="calendar-icon-row">
-        <button
-          type="button"
-          className="icon-btn"
-          aria-label="Calendar"
-          onClick={handleCalendarClick}
-        >
+        <IconButton aria-label="Calendar" onClick={handleCalendarClick}>
           <FaCalendarAlt />
-        </button>
-        <button
-          type="button"
-          className="icon-btn"
-          aria-label="Notifications"
-          onClick={handleBellClick}
-        >
+        </IconButton>
+        <IconButton aria-label="Notifications" onClick={handleBellClick}>
           <FaBell />
-        </button>
-
+        </IconButton>
       </div>
       {view === "activitylog" ? (
         <div className="activity-log">
-          <h3 className="activity-log-title">Activity Log</h3>
+          <Typography variant="h6" component="h3" className="activity-log-title">Activity Log</Typography>
           <div className="activity-log-items">
             {items.map((item) => (
               <ActivityItem

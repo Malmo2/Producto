@@ -4,9 +4,12 @@
   --card: rgba(255,255,255,0.04);
   --panel: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
   --muted: #9aa6b2;
-  --accent: #2ec4b6;
+  --accent: #2663eb;
   --hover-bg: rgba(255, 255, 255, 0.05);
   --border: rgba(255, 255, 255, 0.06);
+  --error: #ef4444;
+  --success: #22c55e;
+  --selected-bg: rgba(38, 99, 235, 0.12);
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -29,6 +32,9 @@
   --muted: #6b7786;
   --hover-bg: rgba(0,0,0,0.04);
   --border: rgba(0,0,0,0.06);
+  --error: #ef4444;
+  --success: #22c55e;
+  --selected-bg: rgba(38, 99, 235, 0.12);
   color-scheme: light;
 }
 
@@ -39,5 +45,8 @@
   --panel: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
   --muted: #9aa6b2;
   --border: rgba(255, 255, 255, 0.06);
+  --error: #ef4444;
+  --success: #22c55e;
+  --selected-bg: rgba(38, 99, 235, 0.12);
   color-scheme: dark;
 }

@@ -1,3 +1,5 @@
+import { Typography } from "../ui";
+
 export default function EnergyStats({ average }) {
-  return <p>Average energy: {average.toFixed(2)}</p>;
+  return <Typography variant="body1">Average energy: {average.toFixed(2)}</Typography>;
 }
