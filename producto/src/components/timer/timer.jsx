@@ -4,19 +4,20 @@ import "./timer.css";
 import { useSessions } from "../../contexts/SessionContext";
 import { useTheme } from "../Darkmode/ThemeContext";
 import { useAuthState } from "../../contexts/AuthContext";
+import { useEnergy } from "../energy/context/EnergyContext";
+import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
+
 import ModeSelector from "./ModeSelector";
+import TimeInput from "./TimeInput";
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
 import SessionPopup from "./SessionPopup";
 import ActivitySessionSidebar from "./ActivitySessionSidebar";
 import RecentSessions from "./RecentSessions";
-import { useEnergy } from "../energy/context/EnergyContext";
-import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
 
 function initTimerState() {
   const saved = localStorage.getItem("customMinutes");
   const customMinutes = saved ? Number(saved) : "";
-
   return {
     ...initialTimerState,
     customMinutes,
@@ -31,15 +32,15 @@ export default function Timer() {
   const { addSession } = useSessions();
   const { plan, clearPlan } = useRecommendationPlan();
   const { user } = useAuthState();
+  const { theme } = useTheme();
 
   const intervalRef = useRef(null);
-  const { theme } = useTheme();
 
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionCategory, setSessionCategory] = useState("Working");
 
-  const Categories = ["Coding", "Meeting", "Testing", "On break", "Other"];
+  const categories = ["Coding", "Meeting", "Testing", "On break", "Other"];
 
   useEffect(() => {
     if (state.isRunning && state.timeLeft > 0) {
@@ -50,26 +51,10 @@ export default function Timer() {
       dispatch({ type: "PAUSE_TIMER" });
     }
 
-    return () => clearInterval(intervalRef.current);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, [state.isRunning, state.timeLeft]);
-
-  const handleStart = () => {
-    dispatch({ type: "START_TIMER" });
-  };
-
-  const handleModeChange = (selectedMode) => {
-    dispatch({ type: "CHANGE_MODE", payload: selectedMode });
-
-    if (selectedMode === "work") {
-      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 50 });
-    } else if (selectedMode === "meeting") {
-      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 25 });
-    } else if (selectedMode === "break") {
-      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 15 });
-    } else if (selectedMode === "meeting") {
-      dispatch({ type: "SET_COSTUM_MINUTES", payload: 45 });
-    }
-  };
 
   useEffect(() => {
     if (!plan) return;
@@ -78,18 +63,50 @@ export default function Timer() {
     dispatch({ type: "SET_CUSTOM_MINUTES", payload: plan.minutes });
 
     localStorage.setItem("customMinutes", String(plan.minutes));
-
     window.dispatchEvent(new Event("customMinutesChanged"));
 
     clearPlan();
   }, [plan, clearPlan]);
 
+  const handleStart = () => {
+    dispatch({ type: "START_TIMER" });
+  };
+
   const handlePause = () => {
     dispatch({ type: "PAUSE_TIMER" });
+    if (state.startTime) setShowPopup(true);
+  };
 
-    if (state.startTime) {
-      setShowPopup(true);
+  const handleReset = () => {
+    dispatch({ type: "RESET_TIMER" });
+  };
+
+  const handleModeChange = (selectedMode) => {
+    dispatch({ type: "CHANGE_MODE", payload: selectedMode });
+
+    if (selectedMode === "work") {
+      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 50 });
+      localStorage.setItem("customMinutes", "50");
+    } else if (selectedMode === "meeting") {
+      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 25 });
+      localStorage.setItem("customMinutes", "25");
+    } else if (selectedMode === "break") {
+      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 15 });
+      localStorage.setItem("customMinutes", "15");
     }
+
+    window.dispatchEvent(new Event("customMinutesChanged"));
+  };
+
+  const handleMinutesChange = (e) => {
+    const val = e.target.value === "" ? "" : Number(e.target.value);
+
+    dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
+
+    if (val === "") localStorage.removeItem("customMinutes");
+    else localStorage.setItem("customMinutes", String(val));
+
+    window.dispatchEvent(new Event("customMinutesChanged"));
   };
 
   const handleSaveSession = (energyLevel) => {
@@ -104,9 +121,10 @@ export default function Timer() {
     }
 
     const endTime = new Date();
-    const durationInSeconds = Math.floor((endTime - state.startTime) / 1000);
+    const durationInSeconds = state.startTime
+      ? Math.max(0, Math.floor((endTime - state.startTime) / 1000))
+      : 0;
 
-    // Create a stable session id we can also use to link the energy log
     const sessionId = crypto.randomUUID?.() ?? String(Date.now());
 
     const newSession = {
@@ -114,15 +132,13 @@ export default function Timer() {
       title: sessionTitle,
       category: sessionCategory,
       startTime: state.startTime,
-      endTime: endTime,
+      endTime,
       duration: durationInSeconds,
       date: new Date().toLocaleDateString("sv-SE"),
       energy: energyLevel,
     };
 
     addSession(newSession);
-
-    // Create a dashboard energy log linked to this session
     addLog?.(energyLevel, { id: sessionId, sessionId });
 
     setShowPopup(false);
@@ -130,8 +146,10 @@ export default function Timer() {
     setSessionCategory("Working");
   };
 
-  const handleReset = () => {
-    dispatch({ type: "RESET_TIMER" });
+  const handleCancelPopup = () => {
+    setShowPopup(false);
+    setSessionTitle("");
+    setSessionCategory("Working");
   };
 
   return (
@@ -140,14 +158,11 @@ export default function Timer() {
         show={showPopup}
         sessionTitle={sessionTitle}
         sessionCategory={sessionCategory}
-        categories={Categories}
+        categories={categories}
         onTitleChange={(e) => setSessionTitle(e.target.value)}
         onCategoryChange={(e) => setSessionCategory(e.target.value)}
         onSave={handleSaveSession}
-        onCancel={() => {
-          setShowPopup(false);
-          setSessionTitle("");
-        }}
+        onCancel={handleCancelPopup}
       />
 
       <div className={`timer-container timer-page-layout ${theme}`}>
@@ -159,29 +174,16 @@ export default function Timer() {
           <TimeInput
             customMinutes={state.customMinutes}
             isRunning={state.isRunning}
-            onChange={(e) => {
-              const val = e.target.value === "" ? "" : Number(e.target.value);
-              dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
-
-              if (val === "") {
-                localStorage.removeItem("customMinutes");
-              } else {
-                localStorage.setItem("customMinutes", String(val));
-              }
-
-              window.dispatchEvent(new Event("customMinutesChanged"));
-            }}
+            onChange={handleMinutesChange}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !state.isRunning) {
-                handleStart();
-              }
+              if (e.key === "Enter" && !state.isRunning) handleStart();
             }}
           />
 
           <TimerDisplay
             timeLeft={state.timeLeft}
             isRunning={state.isRunning}
-            totalTime={state.customMinutes * 60}
+            totalTime={(Number(state.customMinutes) || 0) * 60}
           />
 
           {state.isRunning && state.startTime && (
@@ -202,11 +204,12 @@ export default function Timer() {
           <ActivitySessionSidebar
             isRunning={state.isRunning}
             startTime={state.startTime}
-            totalMinutes={state.customMinutes}
+            totalMinutes={Number(state.customMinutes) || 0}
             timeLeft={state.timeLeft}
             userName={user?.name}
             onEndSession={handlePause}
           />
+
           <div className="timer-recent-sessions">
             <RecentSessions maxItems={5} />
           </div>

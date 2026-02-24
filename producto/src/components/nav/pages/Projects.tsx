@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuthState } from "../../../contexts/AuthContext";
 import { apiFetch } from "../../../lib/api";
-import { Button, Typography, Box } from "../../ui";
 
 type WorkSession = {
   id: string;
@@ -21,7 +20,7 @@ function Projects() {
 
   const loadSessions = async () => {
     if (!token) return;
-    const data = await apiFetch("/api/sessions", token);
+    const data = await apiFetch("/api/sessions");
     setSessions(data.sessions ?? []);
   };
 
@@ -32,7 +31,7 @@ function Projects() {
 
     (async () => {
       try {
-        const meData = await apiFetch("/api/me", token);
+        const meData = await apiFetch("/api/me");
         setMe(meData);
         await loadSessions();
       } catch (e) {
@@ -45,7 +44,7 @@ function Projects() {
     if (!token) return;
 
     try {
-      await apiFetch("/api/sessions", token, {
+      await apiFetch("/api/sessions", {
         method: "POST",
         body: JSON.stringify({
           title: "Project test session",
@@ -71,7 +70,7 @@ function Projects() {
     try {
       console.log("PUT id:", first.id);
       console.log('First session from state:', sessions[0]);
-      await apiFetch(`/api/sessions/${first.id}`, token, {
+      await apiFetch(`/api/sessions/${first.id}`, {
         method: "PUT",
         body: JSON.stringify({
           endAt: new Date().toISOString(),
@@ -85,32 +84,34 @@ function Projects() {
   }
 
   return (
-    <Box style={{ padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
-      <Typography variant="h5" component="h1">Youre on the Projects page.</Typography>
+    <>
+      <h1>Youre on the Projects page.</h1>
 
-      {!token && <Typography color="muted">No token yet (log in first).</Typography>}
+      {!token && <p>No token yet (log in first).</p>}
 
       {token && (
-        <Box style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <Button onClick={createTestSession}>Create test session</Button>
-          <Button variant="outlined" onClick={closeFirstSession} disabled={!token || sessions.length === 0}>
-            Close first session (set endAt)
-          </Button>
-        </Box>
+        <div style={{ marginTop: 12 }}>
+          <button onClick={createTestSession}>Create test session</button>
+        </div>
       )}
 
-      {error && <Typography color="error">{error}</Typography>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <Box style={{ marginTop: 16 }}>
-        <Typography variant="h6" component="h3">/api/me</Typography>
+      <button onClick={closeFirstSession} disabled={!token || sessions.length === 0}>
+        Close first session (set endAt)
+      </button>
+
+
+      <div style={{ marginTop: 16 }}>
+        <h3>/api/me</h3>
         <pre>{JSON.stringify(me, null, 2)}</pre>
-      </Box>
+      </div>
 
-      <Box style={{ marginTop: 16 }}>
-        <Typography variant="h6" component="h3">/api/sessions</Typography>
+      <div style={{ marginTop: 16 }}>
+        <h3>/api/sessions</h3>
         <pre>{JSON.stringify(sessions, null, 2)}</pre>
-      </Box>
-    </Box>
+      </div>
+    </>
   );
 }
 
