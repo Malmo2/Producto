@@ -5,7 +5,6 @@ import { useSessions } from "../../contexts/SessionContext";
 import { useTheme } from "../Darkmode/ThemeContext";
 import { useAuthState } from "../../contexts/AuthContext";
 import ModeSelector from "./ModeSelector";
-import TimeInput from "./TimeInput";
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
 import SessionPopup from "./SessionPopup";
@@ -54,8 +53,6 @@ export default function Timer() {
     return () => clearInterval(intervalRef.current);
   }, [state.isRunning, state.timeLeft]);
 
-
-
   const handleStart = () => {
     dispatch({ type: "START_TIMER" });
   };
@@ -69,6 +66,8 @@ export default function Timer() {
       dispatch({ type: "SET_CUSTOM_MINUTES", payload: 25 });
     } else if (selectedMode === "break") {
       dispatch({ type: "SET_CUSTOM_MINUTES", payload: 15 });
+    } else if (selectedMode === "meeting") {
+      dispatch({ type: "SET_COSTUM_MINUTES", payload: 45 });
     }
   };
 
@@ -78,14 +77,11 @@ export default function Timer() {
     dispatch({ type: "CHANGE_MODE", payload: plan.timerMode });
     dispatch({ type: "SET_CUSTOM_MINUTES", payload: plan.minutes });
 
-
     localStorage.setItem("customMinutes", String(plan.minutes));
 
     window.dispatchEvent(new Event("customMinutesChanged"));
 
     clearPlan();
-
-
   }, [plan, clearPlan]);
 
   const handlePause = () => {
@@ -103,10 +99,9 @@ export default function Timer() {
     }
 
     if (energyLevel == null) {
-      alert("Pick an energy level before saving.")
+      alert("Pick an energy level before saving.");
       return;
     }
-
 
     const endTime = new Date();
     const durationInSeconds = Math.floor((endTime - state.startTime) / 1000);

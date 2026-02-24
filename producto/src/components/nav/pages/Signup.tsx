@@ -6,125 +6,127 @@ import { useAuthActions, useAuthState } from "../../../contexts/AuthContext";
 import { TextField, Button, Typography, Box } from "../../ui";
 
 type Values = {
-    email: string;
-    password: string;
-    name: string;
+  email: string;
+  password: string;
+  name: string;
 };
 
 type Errors = {
-    email: string | null;
-    password: string | null;
+  email: string | null;
+  password: string | null;
 };
 
 type Status = "idle" | "submitting" | "success" | "error";
 type FieldName = keyof Values;
 
 type FormState = {
-    values: Values;
-    touched: Record<FieldName, boolean>;
-    errors: Errors;
-    status: Status;
-    submitError: string | null;
+  values: Values;
+  touched: Record<FieldName, boolean>;
+  errors: Errors;
+  status: Status;
+  submitError: string | null;
 };
 
 type Action =
-    | { type: "change_field"; payload: { name: FieldName; value: string } }
-    | { type: "blur_field"; payload: FieldName }
-    | { type: "submit_start" }
-    | { type: "submit_success" }
-    | { type: "submit_error"; payload: string }
-    | { type: "reset" };
+  | { type: "change_field"; payload: { name: FieldName; value: string } }
+  | { type: "blur_field"; payload: FieldName }
+  | { type: "submit_start" }
+  | { type: "submit_success" }
+  | { type: "submit_error"; payload: string }
+  | { type: "reset" };
 
 const initialFormState: FormState = {
-    values: { email: "", password: "", name: "" },
-    touched: { email: false, password: false, name: false },
-    errors: { email: null, password: null },
-    status: "idle",
-    submitError: null,
+  values: { email: "", password: "", name: "" },
+  touched: { email: false, password: false, name: false },
+  errors: { email: null, password: null },
+  status: "idle",
+  submitError: null,
 };
 
 function validate(values: Values): Errors {
-    const errors: Errors = { email: null, password: null };
+  const errors: Errors = { email: null, password: null };
 
-    if (!values.email) errors.email = "Email required";
-    else if (!values.email.includes("@")) errors.email = "Invalid email address";
+  if (!values.email) errors.email = "Email required";
+  else if (!values.email.includes("@")) errors.email = "Invalid email address";
 
-    if (!values.password) errors.password = "Password required";
-    else if (values.password.length < 8) errors.password = "Need at least 8 characters";
+  if (!values.password) errors.password = "Password required";
+  else if (values.password.length < 8) errors.password = "Need at least 8 characters";
 
-    return errors;
+  return errors;
 }
 
 function reducer(state: FormState, action: Action): FormState {
-    switch (action.type) {
-        case "change_field": {
-            const { name, value } = action.payload;
-            const nextValues = { ...state.values, [name]: value };
-            const nextErrors = validate(nextValues);
-            return { ...state, values: nextValues, errors: nextErrors, submitError: null };
-        }
-
-        case "blur_field": {
-            const field = action.payload;
-            return { ...state, touched: { ...state.touched, [field]: true } };
-        }
-
-        case "submit_start":
-            return { ...state, status: "submitting", submitError: null };
-
-        case "submit_success":
-            return { ...state, status: "success" };
-
-        case "submit_error":
-            return { ...state, status: "error", submitError: action.payload };
-
-        case "reset":
-            return initialFormState;
-
-        default:
-            return state;
+  switch (action.type) {
+    case "change_field": {
+      const { name, value } = action.payload;
+      const nextValues = { ...state.values, [name]: value };
+      const nextErrors = validate(nextValues);
+      return { ...state, values: nextValues, errors: nextErrors, submitError: null };
     }
+
+    case "blur_field": {
+      const field = action.payload;
+      return { ...state, touched: { ...state.touched, [field]: true } };
+    }
+
+    case "submit_start":
+      return { ...state, status: "submitting", submitError: null };
+
+    case "submit_success":
+      return { ...state, status: "success" };
+
+    case "submit_error":
+      return { ...state, status: "error", submitError: action.payload };
+
+    case "reset":
+      return initialFormState;
+
+    default:
+      return state;
+  }
 }
 
 function Signup() {
-    const [state, dispatch] = useReducer(reducer, initialFormState);
-    const navigate = useNavigate();
-    const { signup } = useAuthActions();
-    const { status: authStatus, errorMessage } = useAuthState();
+  const [state, dispatch] = useReducer(reducer, initialFormState);
+  const navigate = useNavigate();
+  const { signup } = useAuthActions();
+  const { status: authStatus, errorMessage, message } = useAuthState();
 
-    useEffect(() => {
-        if (authStatus === "error" && errorMessage) {
-            dispatch({ type: "submit_error", payload: errorMessage });
-        }
-    }, [authStatus, errorMessage]);
+  useEffect(() => {
+    if (authStatus === "error" && errorMessage) {
+      dispatch({ type: "submit_error", payload: errorMessage });
+    }
+  }, [authStatus, errorMessage]);
 
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
 
-        dispatch({ type: "blur_field", payload: "email" });
-        dispatch({ type: "blur_field", payload: "password" });
 
-        const currentErrors = validate(state.values);
-        const hasErrors = Object.values(currentErrors).some(Boolean);
-        if (hasErrors) return;
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-        dispatch({ type: "submit_start" });
+    dispatch({ type: "blur_field", payload: "email" });
+    dispatch({ type: "blur_field", payload: "password" });
 
-        const result = await signup({
-            email: state.values.email,
-            password: state.values.password,
-            name: state.values.name || undefined,
-        });
+    const currentErrors = validate(state.values);
+    const hasErrors = Object.values(currentErrors).some(Boolean);
+    if (hasErrors) return;
 
-        if (result.ok) {
-            dispatch({ type: "submit_success" });
-            navigate("/dashboard", { replace: true });
-        } else {
-            return;
-        }
-    };
+    dispatch({ type: "submit_start" });
 
-    const { values, touched, errors, status, submitError } = state;
+    const result = await signup({
+      email: state.values.email,
+      password: state.values.password,
+      ...(state.values.name.trim() ? { name: state.values.name.trim() } : {}),
+    });
+
+    if (result.ok) {
+      dispatch({ type: "submit_success" });
+      navigate("/dashboard", { replace: true });
+    } else {
+      return;
+    }
+  };
+
+  const { values, touched, errors, status, submitError } = state;
 
     return (
         <AuthLayout
