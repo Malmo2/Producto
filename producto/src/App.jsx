@@ -6,7 +6,6 @@ import navLinks from "./components/nav/navLinks";
 
 import Insights from "./components/nav/pages/Insights";
 import Energy from "./components/nav/pages/Energy";
-import Sessions from "./components/nav/pages/Sessions";
 import TimerPage from "./components/nav/pages/Timer";
 import LoginForm from "./components/forms/LoginForm";
 import Signup from "./components/nav/pages/Signup";
@@ -60,14 +59,8 @@ function App() {
               isLoggedIn ? <Energy /> : <Navigate to="/login" replace />
             }
           />
+          +
 
-
-          <Route
-            path="/sessions"
-            element={
-              isLoggedIn ? <Sessions /> : <Navigate to="/login" replace />
-            }
-          />
 
           <Route
             path="/timer"
