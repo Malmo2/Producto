@@ -8,7 +8,7 @@ import { useEnergy } from "../energy/context/EnergyContext";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
 
 import ModeSelector from "./ModeSelector";
-// import TimeInput from "./TimeInput";
+
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
 import SessionPopup from "./SessionPopup";
@@ -31,10 +31,7 @@ function readTimerDefaults() {
     const parsed = JSON.parse(savedDefaults);
     return {
       work: Number(parsed?.work) > 0 ? Number(parsed.work) : TIMER_DEFAULTS_FALLBACK.work,
-      meeting:
-        Number(parsed?.meeting) > 0
-          ? Number(parsed.meeting)
-          : TIMER_DEFAULTS_FALLBACK.meeting,
+      meeting: Number(parsed?.meeting) > 0 ? Number(parsed.meeting) : TIMER_DEFAULTS_FALLBACK.meeting,
       break: Number(parsed?.break) > 0 ? Number(parsed.break) : TIMER_DEFAULTS_FALLBACK.break,
     };
   } catch {
@@ -70,7 +67,7 @@ export default function Timer() {
 
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
-  const [sessionCategory, setSessionCategory] = useState("Working");
+  const [sessionCategory, setSessionCategory] = useState("Deep Work");
 
   const categories = ["Deep Work", "Meeting", "Testing", "On break", "Other"];
 
@@ -135,11 +132,10 @@ export default function Timer() {
   };
 
   const handleEndSession = () => {
-    dispatch({ type: "PAUSE_TIMER " });
+    dispatch({ type: "PAUSE_TIMER" });
     if (state.startTime) {
-      setShowPopup(true)
-      dispatch({ type: "RESET_TIMER" });
-    };
+      setShowPopup(true);
+    }
   };
 
   const handleReset = () => {
@@ -156,17 +152,6 @@ export default function Timer() {
     window.dispatchEvent(new Event("customMinutesChanged"));
   };
 
-  // const handleMinutesChange = (e) => {
-  //   const val = e.target.value === "" ? "" : Number(e.target.value);
-
-  //   dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
-
-  //   if (val === "") localStorage.removeItem("customMinutes");
-  //   else localStorage.setItem("customMinutes", String(val));
-
-  //   window.dispatchEvent(new Event("customMinutesChanged"));
-  // };
-
   const handleSaveSession = (energyLevel) => {
     if (!sessionTitle.trim()) {
       alert("You have to fill in a title");
@@ -179,9 +164,9 @@ export default function Timer() {
     }
 
     const endTime = new Date();
-    const durationInSeconds = state.startTime
-      ? Math.max(0, Math.floor((endTime - state.startTime) / 1000))
-      : 0;
+    const startMs = state.startTime ? new Date(state.startTime).getTime() : null;
+    const durationInSeconds =
+      startMs != null ? Math.max(0, Math.floor((endTime.getTime() - startMs) / 1000)) : 0;
 
     const sessionId = crypto.randomUUID?.() ?? String(Date.now());
 
@@ -199,15 +184,19 @@ export default function Timer() {
     addSession(newSession);
     addLog?.(energyLevel, { id: sessionId, sessionId });
 
+    dispatch({ type: "RESET_TIMER" });
+
     setShowPopup(false);
     setSessionTitle("");
-    setSessionCategory("Working");
+    setSessionCategory("Deep Work");
   };
 
   const handleCancelPopup = () => {
+    dispatch({ type: "RESET_TIMER" });
+
     setShowPopup(false);
     setSessionTitle("");
-    setSessionCategory("Working");
+    setSessionCategory("Deep Work");
   };
 
   return (
@@ -229,15 +218,6 @@ export default function Timer() {
 
           <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
 
-          {/* <TimeInput
-            customMinutes={state.customMinutes}
-            isRunning={state.isRunning}
-            onChange={handleMinutesChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !state.isRunning) handleStart();
-            }}
-          /> */}
-
           <TimerDisplay
             timeLeft={state.timeLeft}
             isRunning={state.isRunning}
@@ -245,9 +225,7 @@ export default function Timer() {
           />
 
           {state.isRunning && state.startTime && (
-            <p className="timer-tracking-text">
-              Tracking focus for {user?.name || "User"}
-            </p>
+            <p className="timer-tracking-text">Tracking focus for {user?.name || "User"}</p>
           )}
 
           <TimerControls
