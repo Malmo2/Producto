@@ -15,6 +15,38 @@ import SessionPopup from "./SessionPopup";
 import ActivitySessionSidebar from "./ActivitySessionSidebar";
 import RecentSessions from "./RecentSessions";
 
+const TIMER_DEFAULTS_KEY = "timerDefaults";
+const TIMER_START_INTENT_KEY = "timerStartIntent";
+const TIMER_DEFAULTS_FALLBACK = {
+  work: 25,
+  meeting: 45,
+  break: 5,
+};
+
+function readTimerDefaults() {
+  const savedDefaults = localStorage.getItem(TIMER_DEFAULTS_KEY);
+  if (!savedDefaults) return TIMER_DEFAULTS_FALLBACK;
+
+  try {
+    const parsed = JSON.parse(savedDefaults);
+    return {
+      work: Number(parsed?.work) > 0 ? Number(parsed.work) : TIMER_DEFAULTS_FALLBACK.work,
+      meeting:
+        Number(parsed?.meeting) > 0
+          ? Number(parsed.meeting)
+          : TIMER_DEFAULTS_FALLBACK.meeting,
+      break: Number(parsed?.break) > 0 ? Number(parsed.break) : TIMER_DEFAULTS_FALLBACK.break,
+    };
+  } catch {
+    return TIMER_DEFAULTS_FALLBACK;
+  }
+}
+
+function getMinutesForMode(mode) {
+  const defaults = readTimerDefaults();
+  return Number(defaults[mode]) > 0 ? Number(defaults[mode]) : TIMER_DEFAULTS_FALLBACK.work;
+}
+
 function initTimerState() {
   const saved = localStorage.getItem("customMinutes");
   const customMinutes = saved ? Number(saved) : "";
@@ -68,6 +100,31 @@ export default function Timer() {
     clearPlan();
   }, [plan, clearPlan]);
 
+  useEffect(() => {
+    const startIntentRaw = localStorage.getItem(TIMER_START_INTENT_KEY);
+    if (!startIntentRaw) return;
+
+    try {
+      const startIntent = JSON.parse(startIntentRaw);
+      const mode = startIntent?.mode;
+      const minutes = Number(startIntent?.minutes);
+
+      if (!["work", "meeting", "break"].includes(mode) || !(minutes > 0)) {
+        return;
+      }
+
+      dispatch({ type: "CHANGE_MODE", payload: mode });
+      dispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
+      dispatch({ type: "START_TIMER" });
+
+      localStorage.setItem("customMinutes", String(minutes));
+      window.dispatchEvent(new Event("customMinutesChanged"));
+    } catch {
+    } finally {
+      localStorage.removeItem(TIMER_START_INTENT_KEY);
+    }
+  }, []);
+
   const handleStart = () => {
     dispatch({ type: "START_TIMER" });
   };
@@ -92,16 +149,9 @@ export default function Timer() {
   const handleModeChange = (selectedMode) => {
     dispatch({ type: "CHANGE_MODE", payload: selectedMode });
 
-    if (selectedMode === "work") {
-      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 50 });
-      localStorage.setItem("customMinutes", "50");
-    } else if (selectedMode === "meeting") {
-      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 25 });
-      localStorage.setItem("customMinutes", "25");
-    } else if (selectedMode === "break") {
-      dispatch({ type: "SET_CUSTOM_MINUTES", payload: 15 });
-      localStorage.setItem("customMinutes", "15");
-    }
+    const minutes = getMinutesForMode(selectedMode);
+    dispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
+    localStorage.setItem("customMinutes", String(minutes));
 
     window.dispatchEvent(new Event("customMinutesChanged"));
   };

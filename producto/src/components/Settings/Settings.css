@@ -1,6 +1,7 @@
 .settings-content {
     display: grid;
     grid-template-columns: 50% 50%;
+    align-items: stretch;
     gap: 12px;
     position-anchor: initial;
 
@@ -12,6 +13,7 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     padding: 6px;
     margin-bottom: 0;
+    height: 100%;
     
 }
 
@@ -23,9 +25,6 @@
 
 .appearance-box {
     grid-column: 2;
-    padding: 8px;
-    width: auto;
-    height: auto;
     margin: 0;
 }
 

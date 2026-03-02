@@ -1,4 +1,12 @@
 {
+  "name": "producto-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix producto run dev",
+    "dev:frontend": "npm --prefix producto run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "build": "npm --prefix producto run build"
+  },
   "devDependencies": {
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
