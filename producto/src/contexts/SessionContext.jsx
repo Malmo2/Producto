@@ -1,12 +1,19 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useEnergy } from "../components/energy/context/EnergyContext";
 
-const SessionContext = createContext();
+const SessionContext = createContext(null);
 
 export function SessionProvider({ children }) {
   const [sessions, setSessions] = useState(() => {
-    const saved = localStorage.getItem("timerSessions");
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem("timerSessions");
+      if (!saved || saved === "undefined" || saved === "null") return [];
+      const parsed = JSON.parse(saved);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      localStorage.removeItem("timerSessions");
+      return [];
+    }
   });
 
   const { deleteLogsBySessionId } = useEnergy();
@@ -16,13 +23,12 @@ export function SessionProvider({ children }) {
   }, [sessions]);
 
   const addSession = (session) => {
-    setSessions([...sessions, session]);
+    setSessions((prev) => [...prev, session]);
   };
 
   const deleteSession = (sessionId) => {
-    const updatedSessions = sessions.filter((s) => String(s.id) !== String(sessionId));
+    setSessions((prev) => prev.filter((s) => String(s.id) !== String(sessionId)));
     deleteLogsBySessionId?.(String(sessionId));
-    setSessions(updatedSessions);
   };
 
   const clearSessions = () => {
@@ -31,22 +37,15 @@ export function SessionProvider({ children }) {
     localStorage.removeItem("timerSessions");
   };
 
-  const value = {
-    sessions,
-    addSession,
-    deleteSession,
-    clearSessions,
-  };
-
   return (
-    <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
+    <SessionContext.Provider value={{ sessions, addSession, deleteSession, clearSessions }}>
+      {children}
+    </SessionContext.Provider>
   );
 }
 
 export function useSessions() {
   const context = useContext(SessionContext);
-  if (!context) {
-    throw new Error("useSessions must be used within SessionProvider");
-  }
+  if (!context) throw new Error("useSessions must be used within SessionProvider");
   return context;
 }
