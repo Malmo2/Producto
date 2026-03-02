@@ -8,7 +8,7 @@ import { useEnergy } from "../energy/context/EnergyContext";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
 
 import ModeSelector from "./ModeSelector";
-import TimeInput from "./TimeInput";
+// import TimeInput from "./TimeInput";
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
 import SessionPopup from "./SessionPopup";
@@ -74,7 +74,15 @@ export default function Timer() {
 
   const handlePause = () => {
     dispatch({ type: "PAUSE_TIMER" });
-    if (state.startTime) setShowPopup(true);
+    if (state.startTime) setShowPopup(false);
+  };
+
+  const handleEndSession = () => {
+    dispatch({ type: "PAUSE_TIMER " });
+    if (state.startTime) {
+      setShowPopup(true)
+      dispatch({ type: "RESET_TIMER" });
+    };
   };
 
   const handleReset = () => {
@@ -98,16 +106,16 @@ export default function Timer() {
     window.dispatchEvent(new Event("customMinutesChanged"));
   };
 
-  const handleMinutesChange = (e) => {
-    const val = e.target.value === "" ? "" : Number(e.target.value);
+  // const handleMinutesChange = (e) => {
+  //   const val = e.target.value === "" ? "" : Number(e.target.value);
 
-    dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
+  //   dispatch({ type: "SET_CUSTOM_MINUTES", payload: val });
 
-    if (val === "") localStorage.removeItem("customMinutes");
-    else localStorage.setItem("customMinutes", String(val));
+  //   if (val === "") localStorage.removeItem("customMinutes");
+  //   else localStorage.setItem("customMinutes", String(val));
 
-    window.dispatchEvent(new Event("customMinutesChanged"));
-  };
+  //   window.dispatchEvent(new Event("customMinutesChanged"));
+  // };
 
   const handleSaveSession = (energyLevel) => {
     if (!sessionTitle.trim()) {
@@ -171,14 +179,14 @@ export default function Timer() {
 
           <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
 
-          <TimeInput
+          {/* <TimeInput
             customMinutes={state.customMinutes}
             isRunning={state.isRunning}
             onChange={handleMinutesChange}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !state.isRunning) handleStart();
             }}
-          />
+          /> */}
 
           <TimerDisplay
             timeLeft={state.timeLeft}
@@ -207,7 +215,7 @@ export default function Timer() {
             totalMinutes={Number(state.customMinutes) || 0}
             timeLeft={state.timeLeft}
             userName={user?.name}
-            onEndSession={handlePause}
+            onEndSession={handleEndSession}
           />
 
           <div className="timer-recent-sessions">
