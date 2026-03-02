@@ -40,7 +40,7 @@ export default function Timer() {
   const [sessionTitle, setSessionTitle] = useState("");
   const [sessionCategory, setSessionCategory] = useState("Working");
 
-  const categories = ["Coding", "Meeting", "Testing", "On break", "Other"];
+  const categories = ["Deep Work", "Meeting", "Testing", "On break", "Other"];
 
   useEffect(() => {
     if (state.isRunning && state.timeLeft > 0) {

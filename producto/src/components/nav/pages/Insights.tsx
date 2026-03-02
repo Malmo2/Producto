@@ -1,24 +1,27 @@
-import { useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { FaClock, FaChartBar } from "react-icons/fa";
+import { useMemo, useState } from "react";
 import { Box, Typography } from "../../ui";
-import { useAuthState } from "../../../contexts/AuthContext";
 import { useSessions } from "../../../contexts/SessionContext";
 import { useEnergy } from "../../energy/context/EnergyContext";
-import { apiFetch } from "../../../lib/api";
 import { formatDurationMinutes, getTodayDateString } from "../../../utils/formatTime";
-import DashboardLayout from "../../layout/DashboardLayout";
 import Header from "../../panels/Header";
-import SmartRecommendation from "../../smartRecommendation/SmartRecommendation";
-
+import { TabButton } from "../../ui/TabButton";
 import StatCard from "../../ui/StatCard";
-import QuickActionCard from '../../ui/QuickCardAction';
-import { FaBolt } from "react-icons/fa";
 
-function Dashboard() {
-  const { token } = useAuthState();
-  const navigate = useNavigate();
-  const { sessions } = useSessions();
+import type { WorkSessions } from "../../sessions/types";
+import styles from "./Sessions.module.css";
+
+import SessionsHeader from "../../sessions/SessionsHeader";
+import SessionsToolbar from "../../sessions/SessionsToolbar";
+import SessionsEmptyState from "../../sessions/SessionsEmptyState";
+import SessionsList from "../../sessions/SessionsList";
+
+import { useFilteredSessions } from "../../../hooks/useFilteredSessions";
+import { useCategories } from "../../../hooks/useCategories";
+
+function Insights() {
+  const [tab, setTab] = useState<"snapshot" | "sessions">("snapshot");
+
+  const { sessions, deleteSession, clearSessions } = useSessions();
   const { logs } = useEnergy();
   const today = getTodayDateString();
 
@@ -59,16 +62,23 @@ function Dashboard() {
     return { timeTracked, sessionCount, avgEnergy, deepWorkSeconds };
   }, [sessions, logs, today]);
 
-  useEffect(() => {
-    if (!token) return;
-    apiFetch("/api/me").catch((e) => console.error("API error:", e));
-  }, [token]);
+  const [categoryFilter, setCategoryFilter] = useState<string>("All");
+  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
+
+  const categories = useCategories(sessions);
+  const filteredSessions = useFilteredSessions(sessions, categoryFilter, sortOrder);
 
   return (
     <Box style={{ display: "flex", flexDirection: "column", gap: 0 }}>
       <Header />
-      <DashboardLayout>
-        <Box style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+
+      <Box style={{ display: "flex", flexDirection: "column", gap: 20, padding: 20 }}>
+        <Box style={{ display: "flex", gap: 10 }}>
+          <TabButton active={tab === "snapshot"} label="Snapshot" onClick={() => setTab("snapshot")} />
+          <TabButton active={tab === "sessions"} label="Sessions" onClick={() => setTab("sessions")} />
+        </Box>
+
+        {tab === "snapshot" ? (
           <Box>
             <Typography variant="h6" style={{ fontWeight: 700, marginBottom: 16 }}>
               Productivity Snapshot
@@ -91,49 +101,29 @@ function Dashboard() {
               <StatCard label="Deep Work" value={formatDurationMinutes(deepWorkSeconds)} />
             </Box>
           </Box>
+        ) : (
+          <Box className={styles.page}>
+            <SessionsHeader onClearAll={clearSessions} disableClearAll={sessions.length === 0} />
 
-          <Box>
-            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: 16 }}>
-              Quick Actions
-            </Typography>
+            <SessionsToolbar
+              categories={categories}
+              categoryFilter={categoryFilter}
+              onCategoryChange={setCategoryFilter}
+              sortOrder={sortOrder}
+              onSortChange={setSortOrder}
+              count={filteredSessions.length}
+            />
 
-            <Box
-              className="quick-actions-container"
-              style={{
-                backgroundColor: "#0d0f1d",
-                borderRadius: 12,
-                padding: 20,
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 20,
-              }}
-            >
-              <QuickActionCard
-                icon={FaClock}
-                title="Start Timer"
-                subtitle="Begin a focus session"
-                onClick={() => navigate("/timer")}
-              />
-              <QuickActionCard
-                icon={FaBolt}
-                title="Log Energy"
-                subtitle="Record how you feel"
-                onClick={() => navigate("/energy")}
-              />
-              <QuickActionCard
-                icon={FaChartBar}
-                title="View Insights"
-                subtitle="Check your analytics"
-                onClick={() => navigate("/insights")}
-              />
-            </Box>
+            {sessions.length === 0 ? (
+              <SessionsEmptyState />
+            ) : (
+              <SessionsList sessions={filteredSessions as WorkSessions[]} onDelete={deleteSession} />
+            )}
           </Box>
-
-          <SmartRecommendation />
-        </Box>
-      </DashboardLayout>
+        )}
+      </Box>
     </Box>
   );
 }
 
-export default Dashboard;
+export default Insights;
