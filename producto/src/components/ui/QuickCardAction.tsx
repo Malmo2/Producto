@@ -37,7 +37,7 @@ function QuickActionCard({ icon: Icon, title, subtitle, onClick }: QuickActionCa
                 </Box>
 
                 <Box style={{ flex: 1, minWidth: 0 }}>
-                    <Typography variant="subtitle1" style={{ color: "#FFFFFF", marginBottom: 4 }}>
+                    <Typography variant="subtitle1" style={{ color: "var(--contrast-text)", marginBottom: 4 }}>
                         {title}
                     </Typography>
                     <Typography variant="body2" color="muted">

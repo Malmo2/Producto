@@ -26,7 +26,7 @@
 
 .timer-tracking-text {
   text-align: center;
-  color: #ffffff;
+  color: var(--contrast-text);
   font-size: 0.95rem;
   margin: 0.6rem 0 0 0;
 }
@@ -49,7 +49,7 @@
 .activity-session-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--contrast-text);
   margin: 0;
 }
 
@@ -72,7 +72,7 @@
 .activity-session-value {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--contrast-text);
 }
 
 .activity-session-tip {
@@ -104,7 +104,7 @@
   border: none;
   border-radius: 10px;
   background: #2563eb;
-  color: #ffffff;
+  color: var(--contrast-text);
   font-size: 15px;
   font-weight: 600;
   font-family: inherit;
@@ -158,7 +158,7 @@
 
 .mode-btn.active {
   background: rgba(255, 255, 255, 0.12);
-  color: #ffffff;
+  color: var(--contrast-text);
 }
 
 /* Timer controls - icon + text buttons */
@@ -190,7 +190,7 @@
 
 .timer-btn-primary {
   background: #2563eb;
-  color: #ffffff;
+  color: var(--contrast-text);
 }
 
 .timer-btn-primary:hover:not(:disabled) {
@@ -199,7 +199,7 @@
 
 .timer-btn-secondary {
   background: #2a3142;
-  color: #ffffff;
+  color: var(--contrast-text);
 }
 
 .timer-btn-secondary:hover:not(:disabled) {
@@ -245,7 +245,7 @@
 .time-text {
   font-size: 3.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--contrast-text);
   margin: 0;
 }
 

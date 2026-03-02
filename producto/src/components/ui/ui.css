@@ -48,7 +48,7 @@
 }
 .ui-btn-contained {
   background: var(--accent);
-  color: #ffffff;
+  color: var(--contrast-text);
 }
 .ui-btn-contained:hover:not(:disabled) { filter: brightness(1.08); }
 .ui-btn-outlined {

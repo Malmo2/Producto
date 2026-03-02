@@ -8,7 +8,7 @@
 
 .button.light {
   background-color: #222;
-  color: #fff;
+  color: var(--contrast-text);
 }
 
 .button.dark {

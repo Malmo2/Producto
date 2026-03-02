@@ -24,7 +24,7 @@
     margin: 0 0 18px 0;
     font-size: 24px;
     font-weight: 700;
-    color: #ffffff;
+    color: var(--contrast-text);
     text-align: center;
     letter-spacing: 0.2px;
 }
@@ -47,7 +47,7 @@
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.35);
     background: rgba(0, 0, 0, 0.35);
-    color: #ffffff;
+    color: var(--contrast-text);
     outline: none;
     transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }

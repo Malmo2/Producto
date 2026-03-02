@@ -18,7 +18,7 @@ import RecentSessions from "./RecentSessions";
 const TIMER_DEFAULTS_KEY = "timerDefaults";
 const TIMER_START_INTENT_KEY = "timerStartIntent";
 const TIMER_DEFAULTS_FALLBACK = {
-  work: 25,
+  work: 15,
   meeting: 45,
   break: 5,
 };

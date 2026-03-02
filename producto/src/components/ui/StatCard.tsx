@@ -31,7 +31,7 @@ function StatCard({ label, value, highlighted = false }: StatCardProps) {
       <Typography
         variant="h2"
         style={{
-          color: highlighted ? "#000" : "#FFFFFF",
+          color: highlighted ? "#000" : "var(--contrast-text)",
           lineHeight: 1.2,
         }}
       >

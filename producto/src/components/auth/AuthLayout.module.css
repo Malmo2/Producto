@@ -30,7 +30,7 @@
   margin: 0 0 8px 0;
   font-size: 28px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--contrast-text);
   text-align: left;
 }
 
@@ -58,7 +58,7 @@
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   background: #1e293b;
-  color: #ffffff;
+  color: var(--contrast-text);
   font-size: 15px;
   font-family: inherit;
   box-sizing: border-box;
@@ -119,7 +119,7 @@
   border: none;
   border-radius: 10px;
   background: #2563eb;
-  color: #ffffff;
+  color: var(--contrast-text);
   font-size: 16px;
   font-weight: 600;
   font-family: inherit;
@@ -172,7 +172,7 @@
 .welcome {
   font-size: 28px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--contrast-text);
   line-height: 1.35;
   margin-bottom: 16px;
 }

@@ -7,7 +7,7 @@
 }
 
 .activity-log-title {
-  color: #ffffff;
+  color: var(--contrast-text);
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 1rem 0;
@@ -84,7 +84,7 @@
 }
 
 .activity-title {
-  color: #ffffff;
+  color: var(--contrast-text);
   font-size: 0.9rem;
   margin: 0;
   line-height: 1.4;

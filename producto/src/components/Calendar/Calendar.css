@@ -68,7 +68,7 @@
 
 .calendar-day:hover {
   background: var(--accent);
-  color: #ffffff;
+  color: var(--contrast-text);
 }
 
 .calendar-day--has-activity {

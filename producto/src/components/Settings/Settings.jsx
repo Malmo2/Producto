@@ -8,7 +8,7 @@ import { Card, CardContent, Typography, TextField, Switch, Box, Button } from '.
 const TIMER_DEFAULTS_KEY = 'timerDefaults';
 const TIMER_START_INTENT_KEY = 'timerStartIntent';
 const TIMER_DEFAULTS_FALLBACK = {
-    work: 25,
+    work: 15,
     meeting: 45,
     break: 5,
 };
@@ -68,6 +68,14 @@ function Settings() {
             ...prev,
             [mode]: raw,
         }));
+
+        const minutes = Number(raw);
+        if (Number.isFinite(minutes) && minutes > 0) {
+            setTimerDefaults((prev) => ({
+                ...prev,
+                [mode]: Math.floor(minutes),
+            }));
+        }
     };
 
     const handleDurationBlur = (mode) => () => {
