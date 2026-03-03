@@ -189,7 +189,6 @@ function Insights() {
         {tab === "snapshot" ? (
           <Box className={styles.snapshotSection}>
             <Typography variant="h6" className={styles.snapshotTitle}>
-              Productivity Snapshot
             </Typography>
 
             <Box

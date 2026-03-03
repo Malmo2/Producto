@@ -8,6 +8,7 @@ import { ThemeProvider } from "./components/Darkmode/ThemeContext.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import { SessionProvider } from "./contexts/SessionContext";
 import { RecommendationPlanProvider } from "./contexts/RecommendationPlanContext";
+import { TimerProvider } from "./contexts/TimerContext";
 
 import { EnergyProvider } from "./components/energy/context/EnergyContext";
 
@@ -15,15 +16,17 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <EnergyProvider>
-          <RecommendationPlanProvider>
-            <SessionProvider>
-              <ThemeProvider>
-                <App />
-              </ThemeProvider>
-            </SessionProvider>
-          </RecommendationPlanProvider>
-        </EnergyProvider>
+        <TimerProvider>
+          <EnergyProvider>
+            <RecommendationPlanProvider>
+              <SessionProvider>
+                <ThemeProvider>
+                  <App />
+                </ThemeProvider>
+              </SessionProvider>
+            </RecommendationPlanProvider>
+          </EnergyProvider>
+        </TimerProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,

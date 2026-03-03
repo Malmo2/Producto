@@ -1,13 +1,15 @@
-import { useState, useEffect, useRef, useReducer } from "react";
-import { timerReducer, initialTimerState } from "./timerReducer";
+import { useState, useEffect, type ChangeEvent } from "react";
+import { useSessions, type TimerSession, type SessionCategory } from "../../contexts/SessionContext";
+
+
 import "./timer.css";
-import { useSessions } from "../../contexts/SessionContext";
 import { useTheme } from "../Darkmode/ThemeContext";
 import { useAuthState } from "../../contexts/AuthContext";
 import { useEnergy } from "../energy/context/EnergyContext";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
-
+import { useTimer } from "../../contexts/TimerContext";
 import ModeSelector from "./ModeSelector";
+
 
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
@@ -31,7 +33,8 @@ function readTimerDefaults() {
     const parsed = JSON.parse(savedDefaults);
     return {
       work: Number(parsed?.work) > 0 ? Number(parsed.work) : TIMER_DEFAULTS_FALLBACK.work,
-      meeting: Number(parsed?.meeting) > 0 ? Number(parsed.meeting) : TIMER_DEFAULTS_FALLBACK.meeting,
+      meeting:
+        Number(parsed?.meeting) > 0 ? Number(parsed.meeting) : TIMER_DEFAULTS_FALLBACK.meeting,
       break: Number(parsed?.break) > 0 ? Number(parsed.break) : TIMER_DEFAULTS_FALLBACK.break,
     };
   } catch {
@@ -39,23 +42,14 @@ function readTimerDefaults() {
   }
 }
 
-function getMinutesForMode(mode) {
+function getMinutesForMode(mode: "work" | "meeting" | "break") { // ADDED: type for mode
   const defaults = readTimerDefaults();
   return Number(defaults[mode]) > 0 ? Number(defaults[mode]) : TIMER_DEFAULTS_FALLBACK.work;
 }
 
-function initTimerState() {
-  const saved = localStorage.getItem("customMinutes");
-  const customMinutes = saved ? Number(saved) : "";
-  return {
-    ...initialTimerState,
-    customMinutes,
-    timeLeft: customMinutes !== "" ? customMinutes * 60 : 0,
-  };
-}
 
 export default function Timer() {
-  const [state, dispatch] = useReducer(timerReducer, null, initTimerState);
+  const { state, dispatch } = useTimer();
 
   const { addLog } = useEnergy();
   const { addSession } = useSessions();
@@ -63,27 +57,13 @@ export default function Timer() {
   const { user } = useAuthState();
   const { theme } = useTheme();
 
-  const intervalRef = useRef(null);
+  // const intervalRef = useRef(null); // DELETED: ticking now handled in TimerContext Provider
 
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
-  const [sessionCategory, setSessionCategory] = useState("Deep Work");
+  const [sessionCategory, setSessionCategory] = useState<SessionCategory>("Deep Work");
 
-  const categories = ["Deep Work", "Meeting", "Testing", "On break", "Other"];
-
-  useEffect(() => {
-    if (state.isRunning && state.timeLeft > 0) {
-      intervalRef.current = setInterval(() => {
-        dispatch({ type: "TIMER_TICK" });
-      }, 1000);
-    } else if (state.timeLeft === 0) {
-      dispatch({ type: "PAUSE_TIMER" });
-    }
-
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [state.isRunning, state.timeLeft]);
+  const categories: SessionCategory[] = ["Deep Work", "Meeting", "Testing", "On break", "Other"];
 
   useEffect(() => {
     if (!plan) return;
@@ -95,7 +75,7 @@ export default function Timer() {
     window.dispatchEvent(new Event("customMinutesChanged"));
 
     clearPlan();
-  }, [plan, clearPlan]);
+  }, [plan, clearPlan, dispatch]);
 
   useEffect(() => {
     const startIntentRaw = localStorage.getItem(TIMER_START_INTENT_KEY);
@@ -120,7 +100,7 @@ export default function Timer() {
     } finally {
       localStorage.removeItem(TIMER_START_INTENT_KEY);
     }
-  }, []);
+  }, [dispatch]); // ADDED: dispatch in deps
 
   const handleStart = () => {
     dispatch({ type: "START_TIMER" });
@@ -142,7 +122,7 @@ export default function Timer() {
     dispatch({ type: "RESET_TIMER" });
   };
 
-  const handleModeChange = (selectedMode) => {
+  const handleModeChange = (selectedMode: "work" | "meeting" | "break") => { // ADDED: type for selectedMode
     dispatch({ type: "CHANGE_MODE", payload: selectedMode });
 
     const minutes = getMinutesForMode(selectedMode);
@@ -152,11 +132,13 @@ export default function Timer() {
     window.dispatchEvent(new Event("customMinutesChanged"));
   };
 
-  const handleSaveSession = (energyLevel) => {
+  const handleSaveSession = (energyLevel: number | null) => {
     if (!sessionTitle.trim()) {
       alert("You have to fill in a title");
       return;
     }
+
+
 
     if (energyLevel == null) {
       alert("Pick an energy level before saving.");
@@ -170,11 +152,11 @@ export default function Timer() {
 
     const sessionId = crypto.randomUUID?.() ?? String(Date.now());
 
-    const newSession = {
+    const newSession: TimerSession = {
       id: sessionId,
       title: sessionTitle,
       category: sessionCategory,
-      startTime: state.startTime,
+      startTime: state.startTime as TimerSession["startTime"],
       endTime,
       duration: durationInSeconds,
       date: new Date().toLocaleDateString("sv-SE"),
@@ -199,6 +181,14 @@ export default function Timer() {
     setSessionCategory("Deep Work");
   };
 
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSessionTitle(e.target.value);
+  };
+
+  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setSessionCategory(e.target.value as SessionCategory);
+  };
+
   return (
     <>
       <SessionPopup
@@ -206,15 +196,14 @@ export default function Timer() {
         sessionTitle={sessionTitle}
         sessionCategory={sessionCategory}
         categories={categories}
-        onTitleChange={(e) => setSessionTitle(e.target.value)}
-        onCategoryChange={(e) => setSessionCategory(e.target.value)}
+        onTitleChange={handleTitleChange}
+        onCategoryChange={handleCategoryChange}
         onSave={handleSaveSession}
         onCancel={handleCancelPopup}
       />
 
       <div className={`timer-container timer-page-layout ${theme}`}>
         <div className="timer-page-main">
-
           <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
 
           <TimerDisplay
