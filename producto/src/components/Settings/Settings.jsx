@@ -118,6 +118,7 @@ function Settings() {
 
         timerDispatch({ type: "CHANGE_MODE", payload: mode });
         timerDispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
+        timerDispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes })
     };
 
     return (
