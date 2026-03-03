@@ -35,12 +35,16 @@ export function timerReducer(state, action) {
         timeLeft: state.timeLeft - 1,
       };
 
-    case "SET_CUSTOM_MINUTES":
+    case "SET_CUSTOM_MINUTES": {
+      const minutes = action.payload;
+      const nextTimeLeft = minutes === "" ? 0 : minutes * 60;
+
       return {
         ...state,
-        customMinutes: action.payload,
-        timeLeft: action.payload !== "" ? action.payload * 60 : 0,
+        customMinutes: minutes,
+        timeLeft: state.isRunning ? state.timeLeft : nextTimeLeft,
       };
+    }
 
     case "CHANGE_MODE":
       return {
