@@ -84,7 +84,6 @@ function SmartRecommendation() {
     <Card className={styles.smartContainer} data-theme={theme} style={{ padding: 20 }}>
       <Box style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <div className={styles.titleRow}>
-          <img alt="icon" className={styles.titleIcon} />
           <Typography variant="h6" component="h4">{title}</Typography>
         </div>
 

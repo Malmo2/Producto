@@ -50,3 +50,26 @@
   grid-row: 1 / span 2;
   justify-self: end;
 }
+
+@media (max-width: 900px) {
+  .headerContainer {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    justify-items: center;
+    text-align: center;
+    gap: 8px;
+    padding: 14px 64px 12px;
+  }
+
+  .headerContainer h2,
+  .headerContainer p {
+    text-align: center;
+  }
+
+  .headerContainer :global(button) {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: center;
+    margin-top: 4px;
+  }
+}
