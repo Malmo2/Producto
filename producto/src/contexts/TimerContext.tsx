@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useReducer, useRef } from "react";
 import { timerReducer, initialTimerState } from "../components/timer/timerReducer"
 
-type TimerMode = "work" | "meeting" | "break";
+export type TimerMode = "work" | "meeting" | "break";
 
-type TimerState = {
+export type TimerState = {
     mode: TimerMode;
     customMinutes: number | "";
     timeLeft: number;
@@ -12,7 +12,7 @@ type TimerState = {
     [key: string]: unknown;
 };
 
-type TimerAction =
+export type TimerAction =
     | { type: "TIMER_TICK" }
     | { type: "START_TIMER" }
     | { type: "PAUSE_TIMER" }
@@ -20,7 +20,7 @@ type TimerAction =
     | { type: "CHANGE_MODE"; payload: TimerMode }
     | { type: "SET_CUSTOM_MINUTES"; payload: number | "" };
 
-type TimerContextValue = {
+export type TimerContextValue = {
     state: TimerState;
     dispatch: React.Dispatch<TimerAction>;
 };

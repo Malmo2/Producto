@@ -1,15 +1,13 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import { useSessions, type TimerSession, type SessionCategory } from "../../contexts/SessionContext";
 
-
 import "./timer.css";
 import { useTheme } from "../Darkmode/ThemeContext";
 import { useAuthState } from "../../contexts/AuthContext";
 import { useEnergy } from "../energy/context/EnergyContext";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
-import { useTimer } from "../../contexts/TimerContext";
+import { useTimer, type TimerMode } from "../../contexts/TimerContext";
 import ModeSelector from "./ModeSelector";
-
 
 import TimerDisplay from "./TimerDisplay";
 import TimerControls from "./TimerControls";
@@ -19,34 +17,38 @@ import RecentSessions from "./RecentSessions";
 
 const TIMER_DEFAULTS_KEY = "timerDefaults";
 const TIMER_START_INTENT_KEY = "timerStartIntent";
-const TIMER_DEFAULTS_FALLBACK = {
-  work: 15,
-  meeting: 45,
-  break: 5,
-};
 
-function readTimerDefaults() {
+
+
+function readTimerDefaults(): Partial<Record<TimerMode, number>> {
   const savedDefaults = localStorage.getItem(TIMER_DEFAULTS_KEY);
-  if (!savedDefaults) return TIMER_DEFAULTS_FALLBACK;
+  if (!savedDefaults) return {};
 
   try {
-    const parsed = JSON.parse(savedDefaults);
-    return {
-      work: Number(parsed?.work) > 0 ? Number(parsed.work) : TIMER_DEFAULTS_FALLBACK.work,
-      meeting:
-        Number(parsed?.meeting) > 0 ? Number(parsed.meeting) : TIMER_DEFAULTS_FALLBACK.meeting,
-      break: Number(parsed?.break) > 0 ? Number(parsed.break) : TIMER_DEFAULTS_FALLBACK.break,
-    };
+    const parsed = JSON.parse(savedDefaults) as Partial<Record<TimerMode, unknown>>;
+
+    const result: Partial<Record<TimerMode, number>> = {};
+
+    const work = Number(parsed.work);
+    if (Number.isFinite(work) && work > 0) result.work = work;
+
+    const meeting = Number(parsed.meeting);
+    if (Number.isFinite(meeting) && meeting > 0) result.meeting = meeting;
+
+    const breakMinutes = Number(parsed.break);
+    if (Number.isFinite(breakMinutes) && breakMinutes > 0) result.break = breakMinutes;
+
+    return result;
   } catch {
-    return TIMER_DEFAULTS_FALLBACK;
+    return {};
   }
 }
 
-function getMinutesForMode(mode: "work" | "meeting" | "break") { // ADDED: type for mode
+function getMinutesForMode(mode: TimerMode): number | null {
   const defaults = readTimerDefaults();
-  return Number(defaults[mode]) > 0 ? Number(defaults[mode]) : TIMER_DEFAULTS_FALLBACK.work;
+  const minutes = defaults[mode];
+  return typeof minutes === "number" && minutes > 0 ? minutes : null;
 }
-
 
 export default function Timer() {
   const { state, dispatch } = useTimer();
@@ -56,8 +58,6 @@ export default function Timer() {
   const { plan, clearPlan } = useRecommendationPlan();
   const { user } = useAuthState();
   const { theme } = useTheme();
-
-  // const intervalRef = useRef(null); // DELETED: ticking now handled in TimerContext Provider
 
   const [showPopup, setShowPopup] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
@@ -100,7 +100,7 @@ export default function Timer() {
     } finally {
       localStorage.removeItem(TIMER_START_INTENT_KEY);
     }
-  }, [dispatch]); // ADDED: dispatch in deps
+  }, [dispatch]);
 
   const handleStart = () => {
     dispatch({ type: "START_TIMER" });
@@ -113,22 +113,21 @@ export default function Timer() {
 
   const handleEndSession = () => {
     dispatch({ type: "PAUSE_TIMER" });
-    if (state.startTime) {
-      setShowPopup(true);
-    }
+    if (state.startTime) setShowPopup(true);
   };
 
   const handleReset = () => {
     dispatch({ type: "RESET_TIMER" });
   };
 
-  const handleModeChange = (selectedMode: "work" | "meeting" | "break") => { // ADDED: type for selectedMode
+  const handleModeChange = (selectedMode: TimerMode) => {
     dispatch({ type: "CHANGE_MODE", payload: selectedMode });
 
     const minutes = getMinutesForMode(selectedMode);
+    if (minutes == null) return;
+
     dispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
     localStorage.setItem("customMinutes", String(minutes));
-
     window.dispatchEvent(new Event("customMinutesChanged"));
   };
 
@@ -137,8 +136,6 @@ export default function Timer() {
       alert("You have to fill in a title");
       return;
     }
-
-
 
     if (energyLevel == null) {
       alert("Pick an energy level before saving.");
