@@ -2,6 +2,7 @@ import { Button, Typography } from "../ui";
 import styles from "./Header.module.css";
 import Greeting from "../../utils/Greeting";
 import { useNavigate } from 'react-router-dom';
+import { useAuthState } from "../../contexts/AuthContext";
 
 function Header() {
   const today = new Date();
@@ -9,12 +10,13 @@ function Header() {
   const month = today.toLocaleDateString("en-US", { month: "long" });
   const day = today.getDate();
   const navigate = useNavigate();
+  const { user } = useAuthState();
 
-  const name = "John Doe";
+  const name = user?.name?.trim() || "User";
 
   return (
     <div className={styles.headerContainer}>
-      <Greeting>, {name} </Greeting>
+      <Greeting>, {name}</Greeting>
       <Typography variant="body1">
         Today is {weekDay}, {month} {day}
       </Typography>
