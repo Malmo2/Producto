@@ -214,7 +214,6 @@ export default function Timer() {
 
       <div className={`timer-container timer-page-layout ${theme}`}>
         <div className="timer-page-main">
-          <h1>Timer</h1>
 
           <ModeSelector mode={state.mode} onModeChange={handleModeChange} />
 
