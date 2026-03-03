@@ -84,7 +84,6 @@ function Dashboard() {
           <Box className={styles.dashboardSections}>
             <Box>
               <Typography variant="h6" className={styles.sectionTitle}>
-                Productivity Snapshot
               </Typography>
 
               <BaseStatCard>
@@ -103,7 +102,6 @@ function Dashboard() {
             <Box>
               <Box className={styles.smartRecommendationHeader}>
                 <Typography variant="h6" className={styles.sectionTitleNoMargin}>
-                  Smart Recommendation
                 </Typography>
               </Box>
               <SmartRecommendation />
@@ -111,7 +109,6 @@ function Dashboard() {
 
             <Box>
               <Typography variant="h6" className={styles.sectionTitle}>
-                Quick Actions
               </Typography>
 
               <BaseStatCard>
