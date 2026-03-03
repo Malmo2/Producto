@@ -5,11 +5,13 @@ import { Box } from "../../ui";
 
 export default function Energy() {
   return (
-    <Box style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+    <Box className="page-shell">
       <Header />
-      <DashboardLayout>
-        <EnergyPage />
-      </DashboardLayout>
+      <Box className="page-content">
+        <DashboardLayout>
+          <EnergyPage />
+        </DashboardLayout>
+      </Box>
     </Box>
   );
 }

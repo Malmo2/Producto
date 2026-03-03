@@ -14,38 +14,26 @@ function QuickActionCard({ icon: Icon, title, subtitle, onClick }: QuickActionCa
     return (
         <button
             type="button"
-            className="quick-action-card ui-card"
+            className="quick-action-card"
             onClick={onClick}
-            style={{
-                padding: 0,
-                border: "none",
-                background: "transparent",
-                cursor: "pointer",
-                textAlign: "left",
-            }}
         >
             <BaseStatCard
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 16,
-                    transition: "background-color 0.2s, color 0.2s, box-shadow 0.2s",
-                }}
+                className="quick-action-card-inner"
             >
-                <Box style={{ fontSize: 28, color: "#A0A0A0", flexShrink: 0 }}>
+                <Box className="quick-action-icon">
                     <Icon size={28} />
                 </Box>
 
-                <Box style={{ flex: 1, minWidth: 0 }}>
-                    <Typography variant="subtitle1" style={{ color: "var(--contrast-text)", marginBottom: 4 }}>
+                <Box className="quick-action-content">
+                    <Typography variant="subtitle1" className="quick-action-title">
                         {title}
                     </Typography>
-                    <Typography variant="body2" color="muted">
+                    <Typography variant="body2" color="muted" className="quick-action-subtitle">
                         {subtitle}
                     </Typography>
                 </Box>
 
-                <Box style={{ color: "#A0A0A0", flexShrink: 0 }}>
+                <Box className="quick-action-chevron">
                     <IoChevronForward size={20} />
                 </Box>
             </BaseStatCard>

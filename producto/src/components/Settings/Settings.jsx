@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../Darkmode/ThemeContext';
 import { ChangePasswordForm } from '../forms/ChangePasswordForm';
 import { Card, CardContent, Typography, TextField, Switch, Box, Button } from '../ui';
+import Header from '../panels/Header';
 
 const TIMER_DEFAULTS_KEY = 'timerDefaults';
 const TIMER_START_INTENT_KEY = 'timerStartIntent';
@@ -113,96 +114,99 @@ function Settings() {
     };
 
     return (
-        <Box className="settings-content">
-            <Card className="settings-box password-box">
-                <CardContent>
-                    <Typography variant="h6" component="h3" style={{ marginBottom: 16 }}>
-                        Change Password
-                    </Typography>
-                    <ChangePasswordForm />
-                </CardContent>
-            </Card>
+        <Box className="page-shell">
+            <Header />
+            <Box className="settings-content page-content">
+                <Card className="settings-box password-box">
+                    <CardContent>
+                        <Typography variant="h6" component="h3" style={{ marginBottom: 16 }}>
+                            Change Password
+                        </Typography>
+                        <ChangePasswordForm />
+                    </CardContent>
+                </Card>
 
-            <Card className="settings-box appearance-box">
-                <CardContent>
-                    <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
-                        Appearance
-                    </Typography>
-                    <Box className="settings-theme-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
-                        <Box>
-                            <Typography variant="subtitle1" className="settings-theme-label">Dark Mode</Typography>
-                            <Typography variant="body2" color="muted" className="settings-theme-desc">
-                                Switch between light and dark mode
-                            </Typography>
+                <Card className="settings-box appearance-box">
+                    <CardContent>
+                        <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
+                            Appearance
+                        </Typography>
+                        <Box className="settings-theme-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+                            <Box>
+                                <Typography variant="subtitle1" className="settings-theme-label">Dark Mode</Typography>
+                                <Typography variant="body2" color="muted" className="settings-theme-desc">
+                                    Switch between light and dark mode
+                                </Typography>
+                            </Box>
+                            <Switch
+                                checked={theme === 'dark'}
+                                onChange={() => toggleTheme()}
+                            />
                         </Box>
-                        <Switch
-                            checked={theme === 'dark'}
-                            onChange={() => toggleTheme()}
-                        />
-                    </Box>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
 
-            <Card className="settings-box timer-box">
-                <CardContent>
-                    <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
-                        Timer defaults
-                    </Typography>
-                    <Box className="settings-timer-durations" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                        <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                            <Typography variant="body2" className="settings-theme-label">Deep work duration</Typography>
-                            <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <TextField
-                                    type="number"
-                                    min={1}
-                                    size="small"
-                                    value={timerInputs.work}
-                                    onChange={handleDurationChange('work')}
-                                    onBlur={handleDurationBlur('work')}
-                                    style={{ width: 90 }}
-                                />
-                                <Button variant="contained" onClick={() => handleStartFromSettings('work')}>
-                                    Start
-                                </Button>
+                <Card className="settings-box timer-box">
+                    <CardContent>
+                        <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
+                            Timer defaults
+                        </Typography>
+                        <Box className="settings-timer-durations" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                            <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                                <Typography variant="body2" className="settings-theme-label">Deep work duration</Typography>
+                                <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                    <TextField
+                                        type="number"
+                                        min={1}
+                                        size="small"
+                                        value={timerInputs.work}
+                                        onChange={handleDurationChange('work')}
+                                        onBlur={handleDurationBlur('work')}
+                                        style={{ width: 90 }}
+                                    />
+                                    <Button variant="contained" onClick={() => handleStartFromSettings('work')}>
+                                        Start
+                                    </Button>
+                                </Box>
+                            </Box>
+                            <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                                <Typography variant="body2" className="settings-theme-label">Meeting duration</Typography>
+                                <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                    <TextField
+                                        type="number"
+                                        min={1}
+                                        size="small"
+                                        value={timerInputs.meeting}
+                                        onChange={handleDurationChange('meeting')}
+                                        onBlur={handleDurationBlur('meeting')}
+                                        style={{ width: 90 }}
+                                    />
+                                    <Button variant="contained" onClick={() => handleStartFromSettings('meeting')}>
+                                        Start
+                                    </Button>
+                                </Box>
+                            </Box>
+                            <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                                <Typography variant="body2" className="settings-theme-label">Break duration</Typography>
+                                <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                    <TextField
+                                        type="number"
+                                        min={1}
+                                        size="small"
+                                        value={timerInputs.break}
+                                        onChange={handleDurationChange('break')}
+                                        onBlur={handleDurationBlur('break')}
+                                        style={{ width: 90 }}
+                                    />
+                                    <Button variant="contained" onClick={() => handleStartFromSettings('break')}>
+                                        Start
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
-                        <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                            <Typography variant="body2" className="settings-theme-label">Meeting duration</Typography>
-                            <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <TextField
-                                    type="number"
-                                    min={1}
-                                    size="small"
-                                    value={timerInputs.meeting}
-                                    onChange={handleDurationChange('meeting')}
-                                    onBlur={handleDurationBlur('meeting')}
-                                    style={{ width: 90 }}
-                                />
-                                <Button variant="contained" onClick={() => handleStartFromSettings('meeting')}>
-                                    Start
-                                </Button>
-                            </Box>
-                        </Box>
-                        <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                            <Typography variant="body2" className="settings-theme-label">Break duration</Typography>
-                            <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                <TextField
-                                    type="number"
-                                    min={1}
-                                    size="small"
-                                    value={timerInputs.break}
-                                    onChange={handleDurationChange('break')}
-                                    onBlur={handleDurationBlur('break')}
-                                    style={{ width: 90 }}
-                                />
-                                <Button variant="contained" onClick={() => handleStartFromSettings('break')}>
-                                    Start
-                                </Button>
-                            </Box>
-                        </Box>
-                    </Box>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </Box>
         </Box>
     );
 }

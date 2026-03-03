@@ -32,6 +32,33 @@ body {
   overflow-x: hidden;
 }
 
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px;
+}
+
+@media (min-width: 768px) {
+  .page-content {
+    gap: 20px;
+    padding: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-content {
+    gap: 24px;
+    padding: 24px;
+  }
+}
+
 .appShell>* {
   min-width: 0;
 }

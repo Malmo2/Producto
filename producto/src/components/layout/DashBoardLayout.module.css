@@ -1,9 +1,11 @@
 .dashboardLayout {
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr;
     gap: 16px;
     align-items: start;
-    grid-template-areas: "main right";
+    grid-template-areas:
+        "main"
+        "right";
 }
 
 .dashboardMain {
@@ -16,18 +18,18 @@
 
 .rightColumn {
     grid-area: right;
+    display: flex;
+    justify-content: center;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 1024px) {
     .dashboardLayout {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "main"
-            "right";
+        grid-template-columns: 1fr 320px;
+        grid-template-areas: "main right";
+        gap: 24px;
     }
 
     .rightColumn {
-        display: flex;
-        justify-content: center;
+        display: block;
     }
 }

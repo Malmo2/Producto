@@ -1,8 +1,12 @@
 /* Timer page two-column layout */
+.timer-container {
+  width: 100%;
+}
+
 .timer-page-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 16px;
   align-items: start;
 }
 
@@ -14,13 +18,13 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 .timer-recent-sessions {
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -35,7 +39,7 @@
 .activity-session-sidebar {
   background: rgba(255, 255, 255, 0.04);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -121,9 +125,19 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 1024px) {
   .timer-page-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+  }
+
+  .timer-page-sidebar {
+    gap: 24px;
+  }
+
+  .timer-recent-sessions,
+  .activity-session-sidebar {
+    padding: 24px;
   }
 }
 

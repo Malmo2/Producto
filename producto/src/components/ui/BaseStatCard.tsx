@@ -14,9 +14,9 @@ function BaseStatCard({ highlighted = false, style, ...props }: BaseStatCardProp
                 padding: "20px",
                 height: "100%",
                 minHeight: 120,
-                backgroundColor: highlighted ? "#1E6FE3" : "#121A2B",
+                backgroundColor: highlighted ? "var(--accent)" : "var(--card)",
                 boxShadow: highlighted ? "0px 4px 10px rgba(0, 0, 0, 0.2)" : "none",
-                border: "none",
+                border: "1px solid var(--border)",
                 ...style,
             }}
         />

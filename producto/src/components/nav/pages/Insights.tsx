@@ -177,31 +177,23 @@ function Insights() {
   }, [sessions, logs]);
 
   return (
-    <Box style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+    <Box className="page-shell">
       <Header />
 
-      <Box style={{ display: "flex", flexDirection: "column", gap: 20, padding: 20 }}>
-        <Box style={{ display: "flex", gap: 10 }}>
+      <Box className={`page-content ${styles.insightsContent}`}>
+        <Box className={styles.tabRow}>
           <TabButton active={tab === "snapshot"} label="Snapshot" onClick={() => setTab("snapshot")} />
           <TabButton active={tab === "sessions"} label="Sessions" onClick={() => setTab("sessions")} />
         </Box>
 
         {tab === "snapshot" ? (
-          <Box>
-            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: 16 }}>
+          <Box className={styles.snapshotSection}>
+            <Typography variant="h6" className={styles.snapshotTitle}>
               Productivity Snapshot
             </Typography>
 
             <Box
-              className="productivity-snapshot"
-              style={{
-                backgroundColor: "#121A2B",
-                borderRadius: 12,
-                padding: 20,
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: 20,
-              }}
+              className={`productivity-snapshot ${styles.snapshotGridCard}`}
             >
               <StatCard label="Time Tracked" value={formatDurationMinutes(timeTracked)} />
               <StatCard label="Sessions" value={String(sessionCount)} />

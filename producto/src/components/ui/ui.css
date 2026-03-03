@@ -170,16 +170,34 @@
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   display: flex; align-items: center; justify-content: center;
   z-index: 1300; padding: 24px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 .ui-dialog {
-  background: var(--card);
+  background: rgba(11, 18, 32, 0.68);
   border: 1px solid var(--border);
   border-radius: 12px;
+  position: relative;
   max-width: 444px;
   width: 100%;
   max-height: 90vh;
   overflow: auto;
   box-shadow: 0 24px 38px rgba(0,0,0,0.3);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.ui-dialog::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+[data-theme="light"] .ui-dialog {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(148, 163, 184, 0.35);
+  box-shadow: 0 20px 34px rgba(2, 6, 23, 0.16);
 }
 .ui-dialog-title { padding: 20px 24px 0; font-size: 1.25rem; font-weight: 600; }
 .ui-dialog-content { padding: 20px 24px; }
@@ -262,14 +280,46 @@
 }
 
 /* Quick Action cards - highlight color on hover */
-.quick-action-card:hover {
-  background-color: #2663eb!important;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+.quick-action-card {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.quick-action-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.quick-action-icon,
+.quick-action-chevron {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.quick-action-icon {
+  font-size: 28px;
+}
+.quick-action-content {
+  flex: 1;
+  min-width: 0;
+}
+.quick-action-title {
+  color: var(--contrast-text);
+  margin-bottom: 4px;
+}
+.quick-action-card:hover .quick-action-card-inner {
+  background-color: var(--accent);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   border-radius: 18px;
 }
-.quick-action-card:hover span,
-.quick-action-card:hover div {
-  color: #000 !important;
+.quick-action-card:hover .quick-action-title,
+.quick-action-card:hover .quick-action-subtitle,
+.quick-action-card:hover .quick-action-icon,
+.quick-action-card:hover .quick-action-chevron {
+  color: var(--contrast-text);
 }
 @media (max-width: 768px) {
   .quick-actions-container { grid-template-columns: 1fr !important; }

@@ -6,7 +6,13 @@ export default function ModeSelector({ mode, onModeChange }) {
     <ToggleButtonGroup
       value={mode}
       onChange={(_, v) => v != null && onModeChange(v)}
-      style={{ flexWrap: "wrap" }}
+      ariaLabel="Timer mode"
+      style={{
+        flexWrap: "wrap",
+        justifyContent: "center",
+        width: "fit-content",
+        margin: "0 auto 1.5rem",
+      }}
     >
       <ToggleButton value="work">
         <FaBriefcase size={16} /> Work

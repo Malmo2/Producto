@@ -10,6 +10,7 @@ import { formatDurationMinutes, getTodayDateString } from "../../../utils/format
 import DashboardLayout from "../../layout/DashboardLayout";
 import Header from "../../panels/Header";
 import SmartRecommendation from "../../smartRecommendation/SmartRecommendation";
+import styles from "./Dashboard.module.css";
 
 import StatCard from "../../ui/StatCard";
 import BaseStatCard from "../../ui/BaseStatCard";
@@ -35,7 +36,8 @@ function Dashboard() {
   const today = getTodayDateString();
 
   const { timeTracked, sessionCount, avgEnergy, deepWorkSeconds } = useMemo(() => {
-    const todaySessions = sessions.filter((s: { date?: string; startTime: number | string }) => {
+    const sessionList = Array.isArray(sessions) ? sessions : [];
+    const todaySessions = sessionList.filter((s: { date?: string; startTime: number | string }) => {
       const d = s.date ?? new Date(s.startTime).toISOString().slice(0, 10);
       return d === today;
     });
@@ -75,75 +77,69 @@ function Dashboard() {
   }, [token]);
 
   return (
-    <Box style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+    <Box className={`${styles.dashboardRoot} page-shell`}>
       <Header />
+      <Box className="page-content">
+        <DashboardLayout>
+          <Box className={styles.dashboardSections}>
+            <Box>
+              <Typography variant="h6" className={styles.sectionTitle}>
+                Productivity Snapshot
+              </Typography>
 
-      <DashboardLayout>
-        <Box style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <Box>
-            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: 16 }}>
-              Productivity Snapshot
-            </Typography>
+              <BaseStatCard>
+                <Box className={`productivity-snapshot ${styles.productivitySnapshotGrid}`}>
+                  <StatCard label="Time Tracked" value={formatDurationMinutes(timeTracked)} />
+                  <StatCard label="Sessions" value={String(sessionCount)} />
+                  <StatCard
+                    label="Avg Energy"
+                    value={avgEnergy != null ? `${avgEnergy.toFixed(1)}` : "—"}
+                  />
+                  <StatCard label="Deep Work" value={formatDurationMinutes(deepWorkSeconds)} />
+                </Box>
+              </BaseStatCard>
+            </Box>
 
-            <BaseStatCard style={{ backgroundColor: "#121A2B", borderRadius: 12, padding: 20 }}>
-              <Box
-                className="productivity-snapshot"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4, 1fr)",
-                  gap: 20,
-                }}
-              >
-                <StatCard label="Time Tracked" value={formatDurationMinutes(timeTracked)} />
-                <StatCard label="Sessions" value={String(sessionCount)} />
-                <StatCard
-                  label="Avg Energy"
-                  value={avgEnergy != null ? `${avgEnergy.toFixed(1)}` : "—"}
-                />
-                <StatCard label="Deep Work" value={formatDurationMinutes(deepWorkSeconds)} />
+            <Box>
+              <Box className={styles.smartRecommendationHeader}>
+                <Typography variant="h6" className={styles.sectionTitleNoMargin}>
+                  Smart Recommendation
+                </Typography>
               </Box>
-            </BaseStatCard>
+              <SmartRecommendation />
+            </Box>
+
+            <Box>
+              <Typography variant="h6" className={styles.sectionTitle}>
+                Quick Actions
+              </Typography>
+
+              <BaseStatCard>
+                <Box className={`quick-actions-container ${styles.quickActionsGrid}`}>
+                  <QuickActionCard
+                    icon={FaClock}
+                    title="Start Timer"
+                    subtitle="Begin a focus session"
+                    onClick={() => navigate("/timer")}
+                  />
+                  <QuickActionCard
+                    icon={FaBolt}
+                    title="Log Energy"
+                    subtitle="Record how you feel"
+                    onClick={() => navigate("/energy")}
+                  />
+                  <QuickActionCard
+                    icon={FaChartBar}
+                    title="View Insights"
+                    subtitle="Check your analytics"
+                    onClick={() => navigate("/insights")}
+                  />
+                </Box>
+              </BaseStatCard>
+            </Box>
           </Box>
-
-          <Box>
-            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: 16 }}>
-              Quick Actions
-            </Typography>
-
-            <BaseStatCard style={{ backgroundColor: "#0d0f1d", borderRadius: 12, padding: 20 }}>
-              <Box
-                className="quick-actions-container"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  gap: 20,
-                }}
-              >
-                <QuickActionCard
-                  icon={FaClock}
-                  title="Start Timer"
-                  subtitle="Begin a focus session"
-                  onClick={() => navigate("/timer")}
-                />
-                <QuickActionCard
-                  icon={FaBolt}
-                  title="Log Energy"
-                  subtitle="Record how you feel"
-                  onClick={() => navigate("/energy")}
-                />
-                <QuickActionCard
-                  icon={FaChartBar}
-                  title="View Insights"
-                  subtitle="Check your analytics"
-                  onClick={() => navigate("/insights")}
-                />
-              </Box>
-            </BaseStatCard>
-          </Box>
-
-          <SmartRecommendation />
-        </Box>
-      </DashboardLayout>
+        </DashboardLayout>
+      </Box>
     </Box>
   );
 }
