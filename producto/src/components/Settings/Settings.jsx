@@ -1,13 +1,12 @@
-import './Settings.css';
-import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ThemeContext } from '../Darkmode/ThemeContext';
-import { ChangePasswordForm } from '../forms/ChangePasswordForm';
-import { Card, CardContent, Typography, TextField, Switch, Box, Button } from '../ui';
-import Header from '../panels/Header';
+import "./Settings.css";
+import { useContext, useEffect, useState } from "react";
+import { ThemeContext } from "../Darkmode/ThemeContext";
+import { ChangePasswordForm } from "../forms/ChangePasswordForm";
+import { Card, CardContent, Typography, TextField, Switch, Box, Button } from "../ui";
+import Header from "../panels/Header";
+import { useTimer } from "../../contexts/TimerContext";
 
-const TIMER_DEFAULTS_KEY = 'timerDefaults';
-const TIMER_START_INTENT_KEY = 'timerStartIntent';
+const TIMER_DEFAULTS_KEY = "timerDefaults";
 const TIMER_DEFAULTS_FALLBACK = {
     work: 15,
     meeting: 45,
@@ -22,7 +21,8 @@ function readTimerDefaults() {
         const parsed = JSON.parse(savedDefaults);
         return {
             work: Number(parsed?.work) > 0 ? Number(parsed.work) : TIMER_DEFAULTS_FALLBACK.work,
-            meeting: Number(parsed?.meeting) > 0 ? Number(parsed.meeting) : TIMER_DEFAULTS_FALLBACK.meeting,
+            meeting:
+                Number(parsed?.meeting) > 0 ? Number(parsed.meeting) : TIMER_DEFAULTS_FALLBACK.meeting,
             break: Number(parsed?.break) > 0 ? Number(parsed.break) : TIMER_DEFAULTS_FALLBACK.break,
         };
     } catch {
@@ -32,7 +32,8 @@ function readTimerDefaults() {
 
 function Settings() {
     const { theme, toggleTheme } = useContext(ThemeContext);
-    const navigate = useNavigate();
+    const { state: timerState, dispatch: timerDispatch } = useTimer();
+
     const [timerDefaults, setTimerDefaults] = useState(readTimerDefaults);
     const [timerInputs, setTimerInputs] = useState(() => {
         const defaults = readTimerDefaults();
@@ -92,8 +93,14 @@ function Settings() {
         }));
     };
 
-    const handleStartFromSettings = (mode) => {
+    const handleApplyToTimer = (mode) => {
+        if (timerState?.isRunning) {
+            alert("Pause the timer before applying new defaults.");
+            return;
+        }
+
         const minutes = normalizeMinutes(mode, timerInputs[mode]);
+
         const nextDefaults = {
             ...timerDefaults,
             [mode]: minutes,
@@ -106,11 +113,12 @@ function Settings() {
         }));
 
         localStorage.setItem(TIMER_DEFAULTS_KEY, JSON.stringify(nextDefaults));
-        localStorage.setItem('customMinutes', String(minutes));
-        localStorage.setItem(TIMER_START_INTENT_KEY, JSON.stringify({ mode, minutes }));
-        window.dispatchEvent(new Event('customMinutesChanged'));
+        localStorage.setItem("customMinutes", String(minutes));
+        window.dispatchEvent(new Event("customMinutesChanged"));
 
-        navigate('/timer');
+        timerDispatch({ type: "CHANGE_MODE", payload: mode });
+        timerDispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
+        timerDispatch({ type: "RESET_TIMER" });
     };
 
     return (
@@ -131,17 +139,24 @@ function Settings() {
                         <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
                             Appearance
                         </Typography>
-                        <Box className="settings-theme-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
+                        <Box
+                            className="settings-theme-row"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                gap: 16,
+                            }}
+                        >
                             <Box>
-                                <Typography variant="subtitle1" className="settings-theme-label">Dark Mode</Typography>
+                                <Typography variant="subtitle1" className="settings-theme-label">
+                                    Dark Mode
+                                </Typography>
                                 <Typography variant="body2" color="muted" className="settings-theme-desc">
                                     Switch between light and dark mode
                                 </Typography>
                             </Box>
-                            <Switch
-                                checked={theme === 'dark'}
-                                onChange={() => toggleTheme()}
-                            />
+                            <Switch checked={theme === "dark"} onChange={() => toggleTheme()} />
                         </Box>
                     </CardContent>
                 </Card>
@@ -151,55 +166,91 @@ function Settings() {
                         <Typography variant="h6" className="settings-box-title" style={{ marginBottom: 16 }}>
                             Timer defaults
                         </Typography>
-                        <Box className="settings-timer-durations" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                            <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                                <Typography variant="body2" className="settings-theme-label">Deep work duration</Typography>
+
+                        <Box
+                            className="settings-timer-durations"
+                            style={{ display: "flex", flexDirection: "column", gap: 12 }}
+                        >
+                            <Box
+                                className="timer-row"
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    gap: 12,
+                                }}
+                            >
+                                <Typography variant="body2" className="settings-theme-label">
+                                    Deep work duration
+                                </Typography>
                                 <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                     <TextField
                                         type="number"
                                         min={1}
                                         size="small"
                                         value={timerInputs.work}
-                                        onChange={handleDurationChange('work')}
-                                        onBlur={handleDurationBlur('work')}
+                                        onChange={handleDurationChange("work")}
+                                        onBlur={handleDurationBlur("work")}
                                         style={{ width: 90 }}
                                     />
-                                    <Button variant="contained" onClick={() => handleStartFromSettings('work')}>
-                                        Start
+                                    <Button variant="contained" onClick={() => handleApplyToTimer("work")}>
+                                        Apply
                                     </Button>
                                 </Box>
                             </Box>
-                            <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                                <Typography variant="body2" className="settings-theme-label">Meeting duration</Typography>
+
+                            <Box
+                                className="timer-row"
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    gap: 12,
+                                }}
+                            >
+                                <Typography variant="body2" className="settings-theme-label">
+                                    Meeting duration
+                                </Typography>
                                 <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                     <TextField
                                         type="number"
                                         min={1}
                                         size="small"
                                         value={timerInputs.meeting}
-                                        onChange={handleDurationChange('meeting')}
-                                        onBlur={handleDurationBlur('meeting')}
+                                        onChange={handleDurationChange("meeting")}
+                                        onBlur={handleDurationBlur("meeting")}
                                         style={{ width: 90 }}
                                     />
-                                    <Button variant="contained" onClick={() => handleStartFromSettings('meeting')}>
-                                        Start
+                                    <Button variant="contained" onClick={() => handleApplyToTimer("meeting")}>
+                                        Apply
                                     </Button>
                                 </Box>
                             </Box>
-                            <Box className="timer-row" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                                <Typography variant="body2" className="settings-theme-label">Break duration</Typography>
+
+                            <Box
+                                className="timer-row"
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    gap: 12,
+                                }}
+                            >
+                                <Typography variant="body2" className="settings-theme-label">
+                                    Break duration
+                                </Typography>
                                 <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
                                     <TextField
                                         type="number"
                                         min={1}
                                         size="small"
                                         value={timerInputs.break}
-                                        onChange={handleDurationChange('break')}
-                                        onBlur={handleDurationBlur('break')}
+                                        onChange={handleDurationChange("break")}
+                                        onBlur={handleDurationBlur("break")}
                                         style={{ width: 90 }}
                                     />
-                                    <Button variant="contained" onClick={() => handleStartFromSettings('break')}>
-                                        Start
+                                    <Button variant="contained" onClick={() => handleApplyToTimer("break")}>
+                                        Apply
                                     </Button>
                                 </Box>
                             </Box>
