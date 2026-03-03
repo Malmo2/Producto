@@ -1,6 +1,7 @@
 :root {
   --bg: #0b1220;
   --text: rgba(255, 255, 255, 0.87);
+  --contrast-text: #ffffff;
   --card: rgba(255,255,255,0.04);
   --panel: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
   --muted: #9aa6b2;
@@ -27,6 +28,7 @@
 [data-theme="light"] {
   --bg: #f7fafc;
   --text: #0b1220;
+  --contrast-text: #ffffff;
   --card: #ffffff;
   --panel: #f8fafb;
   --muted: #6b7786;
@@ -41,6 +43,7 @@
 [data-theme="dark"] {
   --bg: #0b1220;
   --text: rgba(255, 255, 255, 0.87);
+  --contrast-text: #ffffff;
   --card: rgba(255,255,255,0.04);
   --panel: linear-gradient(180deg, #0b1220 0%, #070a12 100%);
   --muted: #9aa6b2;

@@ -256,3 +256,7 @@
   text-transform: uppercase;
   margin-top: 0.5rem;
 }
+
+[data-theme="light"] .time-text {
+  color: #0b1220;
+}
