@@ -11,7 +11,7 @@ import LoginForm from "./components/forms/LoginForm";
 import Signup from "./components/nav/pages/Signup";
 import Dashboard from "./components/nav/pages/Dashboard";
 import Settings from "./components/Settings/Settings";
-
+import GlobalSessionPopupManager from "./components/timer/GlobalSessionPopupManager";
 
 import { useAuthState } from "../src/contexts/AuthContext";
 
@@ -26,67 +26,51 @@ function App() {
     <div className="appShell">
       <Navbar links={navLinks} />
 
+      <GlobalSessionPopupManager />
+
       <main className="appMain">
         <Routes>
           <Route
             path="/"
             element={
-              isLoggedIn ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginForm />
-              )
+              isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginForm />
             }
           />
-
           <Route
             path="/dashboard"
             element={
               isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />
             }
           />
-
           <Route
             path="/insights"
             element={
               isLoggedIn ? <Insights /> : <Navigate to="/login" replace />
             }
           />
-
           <Route
             path="/energy"
-            element={
-              isLoggedIn ? <Energy /> : <Navigate to="/login" replace />
-            }
+            element={isLoggedIn ? <Energy /> : <Navigate to="/login" replace />}
           />
           +
-
-
           <Route
             path="/timer"
             element={
               isLoggedIn ? <TimerPage /> : <Navigate to="/login" replace />
             }
           />
-
           <Route
             path="/settings"
             element={
               isLoggedIn ? <Settings /> : <Navigate to="/login" replace />
             }
           />
-
           <Route
             path="/login"
             element={
-              isLoggedIn ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LoginForm />
-              )
+              isLoggedIn ? <Navigate to="/dashboard" replace /> : <LoginForm />
             }
           />
-
           <Route
             path="/signup"
             element={
