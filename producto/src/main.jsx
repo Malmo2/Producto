@@ -14,8 +14,8 @@ import { EnergyProvider } from "./components/energy/context/EnergyContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
         <RecommendationPlanProvider>
           <EnergyProvider>
             <SessionProvider>
@@ -27,7 +27,7 @@ createRoot(document.getElementById("root")).render(
             </SessionProvider>
           </EnergyProvider>
         </RecommendationPlanProvider>
-      </AuthProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 );

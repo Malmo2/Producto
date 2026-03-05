@@ -1,4 +1,5 @@
-import { useMemo, useEffect, useRef } from "react";
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useEnergy } from "../energy/context/EnergyContext";
 import { useTheme } from "../Darkmode/ThemeContext";
 import styles from "./smartRecommendation.module.css";
@@ -6,12 +7,13 @@ import { EnergyChart } from "../energy/EnergyChart";
 import { getEnergyTrend } from "../../utils/getEnergyTrend";
 import { GetWorkRecommendations } from "../../utils/getWorkRecommendations";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
-import { Card, Typography, Box } from "../ui";
+import { Card, Typography, Box, Button } from "../ui";
 import { useTimer } from "../../contexts/TimerContext";
 
 function SmartRecommendation() {
   const { theme } = useTheme();
   const { logs } = useEnergy();
+  const navigate = useNavigate();
   const { setPlan } = useRecommendationPlan();
   const { state } = useTimer();
 
@@ -42,33 +44,17 @@ function SmartRecommendation() {
     ? `${best.description} (Trend: ${trend})`
     : "Go to Energy page and save at least 1–2 energy logs.";
 
-  const lastKeyRef = useRef("");
-
-  useEffect(() => {
+  const handleStartRecommended = () => {
     if (!best) return;
 
-    const key = `${latestEnergy ?? "null"}-${trend}`;
-
-    if (lastKeyRef.current === key) return;
-    lastKeyRef.current = key;
-
-    setPlan((prev) => {
-      if (
-        prev &&
-        prev.timerMode === best.timerMode &&
-        prev.minutes === best.minutes &&
-        prev.label === best.title
-      ) {
-        return prev;
-      }
-
-      return {
-        timerMode: best.timerMode,
-        minutes: best.minutes,
-        label: best.title,
-      };
+    setPlan({
+      timerMode: best.timerMode,
+      minutes: best.minutes,
+      label: best.title,
     });
-  }, [best, latestEnergy, trend, setPlan]);
+
+    navigate("/timer");
+  };
 
   return (
     <Card
@@ -86,9 +72,18 @@ function SmartRecommendation() {
         <Typography variant="h5" component="h2">
           {heading}
         </Typography>
+
         <Typography variant="body1" color="muted">
           {text}
         </Typography>
+
+        {best ? (
+          <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button variant="contained" onClick={handleStartRecommended}>
+              Start recommended session
+            </Button>
+          </Box>
+        ) : null}
 
         {logs.length > 0 ? <EnergyChart logs={logs} maxPoints={14} /> : null}
       </Box>
