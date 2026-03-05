@@ -14,20 +14,20 @@ import { EnergyProvider } from "./components/energy/context/EnergyContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <RecommendationPlanProvider>
-          <EnergyProvider>
-            <SessionProvider>
-              <TimerProvider>
-                <ThemeProvider>
+    <AuthProvider>
+      <RecommendationPlanProvider>
+        <EnergyProvider>
+          <SessionProvider>
+            <TimerProvider>
+              <ThemeProvider>
+                <BrowserRouter>
                   <App />
-                </ThemeProvider>
-              </TimerProvider>
-            </SessionProvider>
-          </EnergyProvider>
-        </RecommendationPlanProvider>
-      </AuthProvider>
-    </BrowserRouter>
+                </BrowserRouter>
+              </ThemeProvider>
+            </TimerProvider>
+          </SessionProvider>
+        </EnergyProvider>
+      </RecommendationPlanProvider>
+    </AuthProvider>
   </StrictMode>,
 );
