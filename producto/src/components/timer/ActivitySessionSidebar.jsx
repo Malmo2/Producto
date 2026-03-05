@@ -20,7 +20,8 @@ export default function ActivitySessionSidebar({
 
     const computeElapsed = () => {
       if (isRunning && startTime) {
-        const seconds = Math.floor((Date.now() - startTime) / 1000);
+        const startMs = new Date(startTime).getTime();
+        const seconds = Math.floor((Date.now() - startMs) / 1000);
         setElapsedMinutes(Math.floor(seconds / 60));
       } else {
         const totalSeconds = (totalMinutes || 0) * 60;
@@ -39,14 +40,22 @@ export default function ActivitySessionSidebar({
   return (
     <aside className="activity-session-sidebar">
       <Box className="activity-session-header">
-        <Typography variant="h6" component="h3" className="activity-session-title">
+        <Typography
+          variant="h6"
+          component="h3"
+          className="activity-session-title"
+        >
           Activity Session
         </Typography>
         <FaInfoCircle size={18} className="activity-session-info-icon" />
       </Box>
 
       <Box className="activity-session-elapsed">
-        <Typography variant="body2" color="muted" className="activity-session-label">
+        <Typography
+          variant="body2"
+          color="muted"
+          className="activity-session-label"
+        >
           Time elapsed
         </Typography>
         <Typography variant="subtitle1" className="activity-session-value">
