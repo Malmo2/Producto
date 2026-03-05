@@ -1,3 +1,6 @@
+import { toSafeMinutes } from "../../utils/toSafeMinutes";
+import { secondsUntil } from "../../utils/secondsUntil";
+
 export const initialTimerState = {
   timeLeft: 0,
   isRunning: false,
@@ -35,19 +38,21 @@ export function timerReducer(state, action) {
         timeLeft: state.timeLeft - 1,
       };
 
-    case "SET_CUSTOM_MINUTES":
+    case "SET_CUSTOM_MINUTES": {
+      const minutes = toSafeMinutes(action.payload);
+      const nextTimeLeft = state.isRunning ? state.timeLeft : minutes * 60;
+
       return {
         ...state,
         customMinutes: action.payload,
-        timeLeft: action.payload !== "" ? action.payload * 60 : 0,
+        timeLeft: nextTimeLeft,
       };
+    }
 
     case "CHANGE_MODE":
       return {
         ...state,
         mode: action.payload,
-        isRunning: false,
-        startTime: null,
       };
 
     default:
