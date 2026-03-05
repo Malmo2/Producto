@@ -50,7 +50,6 @@ export function timerReducer(state, action) {
         timeLeft: minutes > 0 ? minutes * 60 : 0,
       };
     }
-
     case "TIMER_TICK": {
       if (!state.isRunning) return state;
       const nextLeft = secondsUntil(state.endTime);
@@ -66,7 +65,7 @@ export function timerReducer(state, action) {
 
       return {
         ...state,
-        customMinutes: action.payload,
+        customMinutes: minutes,
         timeLeft: nextTimeLeft,
       };
     }
