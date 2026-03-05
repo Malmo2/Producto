@@ -12,6 +12,7 @@ import {
   initialTimerState,
 } from "../components/timer/timerReducer";
 import { useRecommendationPlan } from "./RecommendationPlanContext";
+import { useLocation } from "react-router-dom";
 
 const TimerContext = createContext(null);
 
@@ -82,13 +83,31 @@ function buildInitialState() {
   const isRunning = Boolean(snap.isRunning);
 
   const hasSession = Boolean(startTime);
+
+
   if (!isRunning && !hasSession) {
-    const minutes = minutesForMode(mode);
+    const defaultMinutes = minutesForMode(mode);
+
+    const snapMinutesCandidate = Number(snap.customMinutes);
+    const customMinutes =
+      Number.isFinite(snapMinutesCandidate) && snapMinutesCandidate > 0
+        ? snapMinutesCandidate
+        : defaultMinutes;
+
+    const snapTimeLeftCandidate = Number(snap.timeLeft);
+    const timeLeft =
+      Number.isFinite(snapTimeLeftCandidate) && snapTimeLeftCandidate >= 0
+        ? snapTimeLeftCandidate
+        : customMinutes * 60;
+
     return {
       ...initialTimerState,
       mode,
-      customMinutes: minutes,
-      timeLeft: minutes * 60,
+      customMinutes,
+      timeLeft,
+      isRunning: false,
+      startTime: null,
+      endTime: null,
     };
   }
 
@@ -141,7 +160,8 @@ function shouldOpenPopupOnLoad() {
 }
 
 export function TimerProvider({ children }) {
-  const { plan, clearPlan } = useRecommendationPlan();
+  const { plan, clearPlan, consumePlan } = useRecommendationPlan();
+  const location = useLocation();
 
   const [state, dispatch] = useReducer(
     timerReducer,
@@ -168,6 +188,11 @@ export function TimerProvider({ children }) {
       intervalRef.current = null;
     };
   }, [state.isRunning]);
+
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state])
 
   useEffect(() => {
     const prev = prevTimeLeftRef.current;
@@ -202,6 +227,39 @@ export function TimerProvider({ children }) {
     state.endTime,
   ]);
 
+  useEffect(() => {
+    function handleTimerDefaultsChanged(e) {
+      const detail = e?.detail;
+      const mode = detail?.mode;
+      const prevMinutes = Number(detail?.prevMinutes);
+      const nextMinutes = Number(detail?.nextMinutes);
+
+      if (!["work", "meeting", "break"].includes(mode) || !(nextMinutes > 0)) return;
+
+      const s = stateRef.current;
+
+      if (s.isRunning) return;
+      if (s.mode !== mode) return;
+
+
+
+      const isIdleLike =
+        s.timeLeft === s.customMinutes * 60 || s.timeLeft === 0;
+
+      const wasUsingOldDefault =
+        Number.isFinite(prevMinutes) && s.customMinutes === prevMinutes;
+
+      if (!isIdleLike && !wasUsingOldDefault) return;
+
+      dispatch({ type: "RESET_TIMER", payload: { mode, minutes: nextMinutes } });
+    }
+
+    window.addEventListener("timerDefaultsChanged", handleTimerDefaultsChanged);
+    return () => {
+      window.removeEventListener("timerDefaultsChanged", handleTimerDefaultsChanged);
+    }
+  }, [])
+
   function setModeAndMinutes(mode, minutes) {
     dispatch({ type: "CHANGE_MODE", payload: mode });
     dispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
@@ -217,20 +275,22 @@ export function TimerProvider({ children }) {
     dispatch({ type: "RESET_TIMER", payload: { mode, minutes } });
   }
 
+
+
   useEffect(() => {
-    if (!plan) return;
+    const onTimerRoute = location.pathname.startsWith("/timer");
+    if (!onTimerRoute) return;
 
-    const mode = plan.timerMode;
-    const minutes = Number(plan.minutes);
+    const p = consumePlan();
+    if (!p) return;
 
-    if (!["work", "meeting", "break"].includes(mode) || !(minutes > 0)) {
-      clearPlan();
-      return;
-    }
+    const mode = p.timerMode;
+    const minutes = Number(p.minutes);
+
+    if (!["work", "meeting", "break"].includes(mode) || !(minutes > 0)) return;
 
     setModeAndMinutes(mode, minutes);
-    clearPlan();
-  }, [plan, clearPlan]);
+  }, [location.pathname, consumePlan]);
 
   const api = useMemo(
     () => ({
