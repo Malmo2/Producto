@@ -1,5 +1,5 @@
 import "./Settings.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { ThemeContext } from "../Darkmode/ThemeContext";
 import { ChangePasswordForm } from "../forms/ChangePasswordForm";
 import { Card, CardContent, Typography, TextField, Switch, Box } from "../ui";
@@ -51,10 +51,10 @@ function Settings() {
     };
   });
 
-  useEffect(() => {
-    localStorage.setItem(TIMER_DEFAULTS_KEY, JSON.stringify(timerDefaults));
+  const persistDefaults = (nextDefaults) => {
+    localStorage.setItem(TIMER_DEFAULTS_KEY, JSON.stringify(nextDefaults));
     window.dispatchEvent(new Event("timerDefaultsChanged"));
-  }, [timerDefaults]);
+  };
 
   const normalizeMinutes = (mode, rawValue) => {
     const numeric = Number(rawValue);
@@ -74,24 +74,29 @@ function Settings() {
 
     if (!/^\d+$/.test(raw)) return;
 
-    setTimerInputs((prev) => ({ ...prev, [mode]: raw }));
+    setTimerInputs((prev) => ({
+      ...prev,
+      [mode]: raw,
+    }));
 
     const minutes = Number(raw);
     if (Number.isFinite(minutes) && minutes > 0) {
-      setTimerDefaults((prev) => ({
-        ...prev,
-        [mode]: Math.floor(minutes),
-      }));
+      setTimerDefaults((prev) => {
+        const next = { ...prev, [mode]: Math.floor(minutes) };
+        persistDefaults(next);
+        return next;
+      });
     }
   };
 
   const handleDurationBlur = (mode) => () => {
     const minutes = normalizeMinutes(mode, timerInputs[mode]);
 
-    setTimerDefaults((prev) => ({
-      ...prev,
-      [mode]: minutes,
-    }));
+    setTimerDefaults((prev) => {
+      const next = { ...prev, [mode]: minutes };
+      persistDefaults(next);
+      return next;
+    });
 
     setTimerInputs((prev) => ({
       ...prev,

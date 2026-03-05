@@ -16,7 +16,6 @@ import { useRecommendationPlan } from "./RecommendationPlanContext";
 const TimerContext = createContext(null);
 
 const TIMER_DEFAULTS_KEY = "timerDefaults";
-const TIMER_START_INTENT_KEY = "timerStartIntent";
 const TIMER_SNAPSHOT_KEY = "timerSnapshotV1";
 const TIMER_DEFAULTS_FALLBACK = { work: 15, meeting: 45, break: 5 };
 
@@ -63,42 +62,37 @@ function buildInitialState() {
   const snapRaw = localStorage.getItem(TIMER_SNAPSHOT_KEY);
   const snap = snapRaw ? safeParseJson(snapRaw) : null;
 
-  const snapModeCandidate = snap?.mode;
-  const modeCandidate = ["work", "meeting", "break"].includes(snapModeCandidate)
-    ? snapModeCandidate
-    : initialTimerState.mode;
-
-  const defaultMinutesForMode = minutesForMode(modeCandidate);
-
-  const snapMinutesCandidate = Number(snap?.customMinutes);
-  const snapMinutes =
-    Number.isFinite(snapMinutesCandidate) && snapMinutesCandidate > 0
-      ? snapMinutesCandidate
-      : defaultMinutesForMode;
-
-  const base = {
-    ...initialTimerState,
-    mode: modeCandidate,
-    customMinutes: defaultMinutesForMode,
-  };
-
   if (!snap) {
+    const mode = initialTimerState.mode;
+    const minutes = minutesForMode(mode);
     return {
-      ...base,
-      timeLeft: defaultMinutesForMode > 0 ? defaultMinutesForMode * 60 : 0,
+      ...initialTimerState,
+      mode,
+      customMinutes: minutes,
+      timeLeft: minutes * 60,
     };
   }
 
   const mode = ["work", "meeting", "break"].includes(snap.mode)
     ? snap.mode
-    : base.mode;
+    : initialTimerState.mode;
+
+  const defaultMinutes = minutesForMode(mode);
+  const snapMinutesCandidate = Number(snap.customMinutes);
+  const customMinutes =
+    Number.isFinite(snapMinutesCandidate) && snapMinutesCandidate > 0
+      ? snapMinutesCandidate
+      : defaultMinutes;
+
+  let timeLeftCandidate = Number(snap.timeLeft);
+  let timeLeft =
+    Number.isFinite(timeLeftCandidate) && timeLeftCandidate >= 0
+      ? timeLeftCandidate
+      : customMinutes * 60;
 
   const startTime = typeof snap.startTime === "string" ? snap.startTime : null;
   const endTime = typeof snap.endTime === "string" ? snap.endTime : null;
   const isRunning = Boolean(snap.isRunning);
-
-  let timeLeft = Number(snap.timeLeft);
-  if (!Number.isFinite(timeLeft) || timeLeft < 0) timeLeft = 0;
 
   if (isRunning && endTime) {
     const endMs = new Date(endTime).getTime();
@@ -108,18 +102,14 @@ function buildInitialState() {
 
   const reallyRunning = isRunning && timeLeft > 0;
 
-  const hasSession = Boolean(startTime);
-  const isIdle = !reallyRunning && !hasSession;
-  const idleMinutes = minutesForMode(mode);
-
   return {
-    ...base,
+    ...initialTimerState,
     mode,
-    customMinutes: isIdle ? idleMinutes : snapMinutes,
+    customMinutes,
+    timeLeft,
+    isRunning: reallyRunning,
     startTime,
     endTime: reallyRunning ? endTime : null,
-    isRunning: reallyRunning,
-    timeLeft: isIdle ? idleMinutes * 60 : timeLeft,
   };
 }
 
@@ -204,9 +194,6 @@ export function TimerProvider({ children }) {
   function setModeAndMinutes(mode, minutes) {
     dispatch({ type: "CHANGE_MODE", payload: mode });
     dispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
-
-    localStorage.setItem("customMinutes", String(minutes));
-    window.dispatchEvent(new Event("customMinutesChanged"));
   }
 
   function setModeWithDefaults(mode) {
@@ -230,23 +217,7 @@ export function TimerProvider({ children }) {
   }, [plan, clearPlan]);
 
   useEffect(() => {
-    const raw = localStorage.getItem(TIMER_START_INTENT_KEY);
-    if (!raw) return;
-
-    const intent = safeParseJson(raw);
-
-    try {
-      const mode = intent?.mode;
-      const minutes = Number(intent?.minutes);
-
-      if (!["work", "meeting", "break"].includes(mode) || !(minutes > 0))
-        return;
-
-      setModeAndMinutes(mode, minutes);
-      dispatch({ type: "START_TIMER" });
-    } finally {
-      localStorage.removeItem(TIMER_START_INTENT_KEY);
-    }
+    localStorage.removeItem("timerStartIntent");
   }, []);
 
   const api = useMemo(
