@@ -11,32 +11,50 @@ export const initialTimerState = {
 
 export function timerReducer(state, action) {
   switch (action.type) {
-    case "START_TIMER":
+    case "START_TIMER": {
+      const baseTimeLeft = state.timeLeft;
+      if (!(baseTimeLeft > 0)) return state;
+      const nowIso = new Date().toISOString();
+      const endIso = new Date(Date.now() + baseTimeLeft * 1000).toISOString();
+
       return {
         ...state,
         isRunning: true,
-        startTime: state.startTime ? state.startTime : new Date(), //if startTime excists, use state.startTime else New Date()
+        startTime: state.startTime ?? nowIso,
+        endTime: endIso,
       };
+    }
 
-    case "PAUSE_TIMER":
+    case "PAUSE_TIMER": {
+      if (!state.isRunning) return state;
+      const nextLeft = secondsUntil(state.endTime);
       return {
         ...state,
         isRunning: false,
+        timeLeft: nextLeft,
+        endTime: null,
       };
+    }
 
-    case "RESET_TIMER":
+    case "RESET_TIMER": {
+      const minutes = toSafeMinutes(state.customMinutes);
       return {
         ...state,
         isRunning: false,
         startTime: null,
-        timeLeft: state.customMinutes !== "" ? state.customMinutes * 60 : 0,
+        endTime: null,
+        timeLeft: minutes > 0 ? minutes * 60 : 0,
       };
+    }
 
-    case "TIMER_TICK":
+    case "TIMER_TICK": {
+      if (!state.isRunning) return state;
+      const nextLeft = secondsUntil(state.endTime);
       return {
         ...state,
-        timeLeft: state.timeLeft - 1,
+        timeLeft: nextLeft,
       };
+    }
 
     case "SET_CUSTOM_MINUTES": {
       const minutes = toSafeMinutes(action.payload);
