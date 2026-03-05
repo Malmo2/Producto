@@ -1,8 +1,9 @@
 import { Button, Typography } from "../ui";
 import styles from "./Header.module.css";
 import Greeting from "../../utils/Greeting";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useAuthState } from "../../contexts/AuthContext";
+import TimerMiniWidget from "../timer/TimerMiniWidget";
 
 function Header() {
   const today = new Date();
@@ -20,9 +21,12 @@ function Header() {
       <Typography variant="body1">
         Today is {weekDay}, {month} {day}
       </Typography>
+      <TimerMiniWidget />
       <Button
-        onClick={() => navigate('/timer')}
-        type="button" variant="primary">
+        onClick={() => navigate("/timer")}
+        type="button"
+        variant="primary"
+      >
         New session
       </Button>
     </div>
