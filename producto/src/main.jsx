@@ -15,19 +15,19 @@ import { EnergyProvider } from "./components/energy/context/EnergyContext";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <RecommendationPlanProvider>
-        <EnergyProvider>
-          <SessionProvider>
-            <TimerProvider>
-              <ThemeProvider>
-                <BrowserRouter>
+      <BrowserRouter>
+        <RecommendationPlanProvider>
+          <EnergyProvider>
+            <SessionProvider>
+              <TimerProvider>
+                <ThemeProvider>
                   <App />
-                </BrowserRouter>
-              </ThemeProvider>
-            </TimerProvider>
-          </SessionProvider>
-        </EnergyProvider>
-      </RecommendationPlanProvider>
+                </ThemeProvider>
+              </TimerProvider>
+            </SessionProvider>
+          </EnergyProvider>
+        </RecommendationPlanProvider>
+      </BrowserRouter>
     </AuthProvider>
   </StrictMode>,
 );
