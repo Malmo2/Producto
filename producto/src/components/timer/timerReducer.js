@@ -37,9 +37,13 @@ export function timerReducer(state, action) {
     }
 
     case "RESET_TIMER": {
-      const minutes = toSafeMinutes(state.customMinutes);
+      const nextMode = action?.payload.mode ?? state.mode;
+      const nextMinutesRaw = action?.payload?.minutes ?? state.customMinutes;
+      const minutes = toSafeMinutes(nextMinutesRaw);
       return {
         ...state,
+        mode: nextMode,
+        customMinutes: minutes,
         isRunning: false,
         startTime: null,
         endTime: null,
