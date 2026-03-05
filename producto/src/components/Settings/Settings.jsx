@@ -2,7 +2,15 @@ import "./Settings.css";
 import { useContext, useState } from "react";
 import { ThemeContext } from "../Darkmode/ThemeContext";
 import { ChangePasswordForm } from "../forms/ChangePasswordForm";
-import { Card, CardContent, Typography, TextField, Switch, Box } from "../ui";
+import {
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Switch,
+  Box,
+  Button,
+} from "../ui";
 import Header from "../panels/Header";
 
 const TIMER_DEFAULTS_KEY = "timerDefaults";
@@ -78,30 +86,25 @@ function Settings() {
       ...prev,
       [mode]: raw,
     }));
-
-    const minutes = Number(raw);
-    if (Number.isFinite(minutes) && minutes > 0) {
-      setTimerDefaults((prev) => {
-        const next = { ...prev, [mode]: Math.floor(minutes) };
-        persistDefaults(next);
-        return next;
-      });
-    }
   };
 
   const handleDurationBlur = (mode) => () => {
     const minutes = normalizeMinutes(mode, timerInputs[mode]);
 
-    setTimerDefaults((prev) => {
-      const next = { ...prev, [mode]: minutes };
-      persistDefaults(next);
-      return next;
-    });
-
     setTimerInputs((prev) => ({
       ...prev,
       [mode]: String(minutes),
     }));
+  };
+
+  const handleSaveDefaults = (mode) => () => {
+    const minutes = normalizeMinutes(mode, timerInputs[mode]);
+
+    const nextDefaults = { ...timerDefaults, [mode]: minutes };
+    setTimerDefaults(nextDefaults);
+    setTimerInputs((prev) => ({ ...prev, [mode]: String(minutes) }));
+
+    persistDefaults(nextDefaults);
   };
 
   return (
@@ -191,15 +194,24 @@ function Settings() {
                 <Typography variant="body2" className="settings-theme-label">
                   Deep work duration
                 </Typography>
-                <TextField
-                  type="number"
-                  min={1}
-                  size="small"
-                  value={timerInputs.work}
-                  onChange={handleDurationChange("work")}
-                  onBlur={handleDurationBlur("work")}
-                  style={{ width: 90 }}
-                />
+                <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <TextField
+                    type="number"
+                    min={1}
+                    size="small"
+                    value={timerInputs.work}
+                    onChange={handleDurationChange("work")}
+                    onBlur={handleDurationBlur("work")}
+                    style={{ width: 90 }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={handleSaveDefaults("work")}
+                  >
+                    {" "}
+                    Save
+                  </Button>
+                </Box>
               </Box>
 
               <Box
@@ -214,15 +226,24 @@ function Settings() {
                 <Typography variant="body2" className="settings-theme-label">
                   Meeting duration
                 </Typography>
-                <TextField
-                  type="number"
-                  min={1}
-                  size="small"
-                  value={timerInputs.meeting}
-                  onChange={handleDurationChange("meeting")}
-                  onBlur={handleDurationBlur("meeting")}
-                  style={{ width: 90 }}
-                />
+                <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <TextField
+                    type="number"
+                    min={1}
+                    size="small"
+                    value={timerInputs.meeting}
+                    onChange={handleDurationChange("meeting")}
+                    onBlur={handleDurationBlur("meeting")}
+                    style={{ width: 90 }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={handleSaveDefaults("meeting")}
+                  >
+                    {" "}
+                    Save
+                  </Button>
+                </Box>
               </Box>
 
               <Box
@@ -237,15 +258,24 @@ function Settings() {
                 <Typography variant="body2" className="settings-theme-label">
                   Break duration
                 </Typography>
-                <TextField
-                  type="number"
-                  min={1}
-                  size="small"
-                  value={timerInputs.break}
-                  onChange={handleDurationChange("break")}
-                  onBlur={handleDurationBlur("break")}
-                  style={{ width: 90 }}
-                />
+                <Box style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <TextField
+                    type="number"
+                    min={1}
+                    size="small"
+                    value={timerInputs.break}
+                    onChange={handleDurationChange("break")}
+                    onBlur={handleDurationBlur("break")}
+                    style={{ width: 90 }}
+                  />
+                  <Button
+                    variant="contained"
+                    onClick={handleSaveDefaults("break")}
+                  >
+                    {" "}
+                    Save
+                  </Button>
+                </Box>
               </Box>
             </Box>
           </CardContent>

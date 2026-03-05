@@ -77,6 +77,21 @@ function buildInitialState() {
     ? snap.mode
     : initialTimerState.mode;
 
+  const startTime = typeof snap.startTime === "string" ? snap.startTime : null;
+  const endTime = typeof snap.endTime === "string" ? snap.endTime : null;
+  const isRunning = Boolean(snap.isRunning);
+
+  const hasSession = Boolean(startTime);
+  if (!isRunning && !hasSession) {
+    const minutes = minutesForMode(mode);
+    return {
+      ...initialTimerState,
+      mode,
+      customMinutes: minutes,
+      timeLeft: minutes * 60,
+    };
+  }
+
   const defaultMinutes = minutesForMode(mode);
   const snapMinutesCandidate = Number(snap.customMinutes);
   const customMinutes =
@@ -89,10 +104,6 @@ function buildInitialState() {
     Number.isFinite(timeLeftCandidate) && timeLeftCandidate >= 0
       ? timeLeftCandidate
       : customMinutes * 60;
-
-  const startTime = typeof snap.startTime === "string" ? snap.startTime : null;
-  const endTime = typeof snap.endTime === "string" ? snap.endTime : null;
-  const isRunning = Boolean(snap.isRunning);
 
   if (isRunning && endTime) {
     const endMs = new Date(endTime).getTime();
@@ -201,6 +212,11 @@ export function TimerProvider({ children }) {
     setModeAndMinutes(mode, minutes);
   }
 
+  function resetToModeDefaults(mode) {
+    const minutes = minutesForMode(mode);
+    dispatch({ type: "RESET_TIMER", payload: { mode, minutes } });
+  }
+
   useEffect(() => {
     if (!plan) return;
 
@@ -216,17 +232,13 @@ export function TimerProvider({ children }) {
     clearPlan();
   }, [plan, clearPlan]);
 
-  useEffect(() => {
-    localStorage.removeItem("timerStartIntent");
-  }, []);
-
   const api = useMemo(
     () => ({
       state,
       isSessionPopupOpen,
       startTimer: () => dispatch({ type: "START_TIMER" }),
       pauseTimer: () => dispatch({ type: "PAUSE_TIMER" }),
-      resetTimer: () => dispatch({ type: "RESET_TIMER" }),
+      resetTimer: () => resetToModeDefaults("work"),
       setModeWithDefaults,
       setModeAndMinutes,
       endSession: () => {
