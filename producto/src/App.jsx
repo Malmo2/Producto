@@ -52,7 +52,7 @@ function App() {
             path="/energy"
             element={isLoggedIn ? <Energy /> : <Navigate to="/login" replace />}
           />
-          +
+
           <Route
             path="/timer"
             element={

@@ -18,7 +18,7 @@ const TimerContext = createContext(null);
 const TIMER_DEFAULTS_KEY = "timerDefaults";
 const TIMER_START_INTENT_KEY = "timerStartIntent";
 const TIMER_SNAPSHOT_KEY = "timerSnapshotV1";
-const TIMER_DEFAULTS_FALLBACK = { work: 1, meeting: 45, break: 5 };
+const TIMER_DEFAULTS_FALLBACK = { work: 15, meeting: 45, break: 5 };
 
 function readTimerDefaults() {
   const raw = localStorage.getItem(TIMER_DEFAULTS_KEY);
@@ -63,15 +63,29 @@ function buildInitialState() {
   const snapRaw = localStorage.getItem(TIMER_SNAPSHOT_KEY);
   const snap = snapRaw ? safeParseJson(snapRaw) : null;
 
-  const customMinutesRaw = localStorage.getItem("customMinutes");
-  const customMinutes = customMinutesRaw ? Number(customMinutesRaw) : "";
+  const snapModeCandidate = snap?.mode;
+  const modeCandidate = ["work", "meeting", "break"].includes(snapModeCandidate)
+    ? snapModeCandidate
+    : initialTimerState.mode;
 
-  const base = { ...initialTimerState, customMinutes };
+  const defaultMinutesForMode = minutesForMode(modeCandidate);
+
+  const snapMinutesCandidate = Number(snap?.customMinutes);
+  const snapMinutes =
+    Number.isFinite(snapMinutesCandidate) && snapMinutesCandidate > 0
+      ? snapMinutesCandidate
+      : defaultMinutesForMode;
+
+  const base = {
+    ...initialTimerState,
+    mode: modeCandidate,
+    customMinutes: defaultMinutesForMode,
+  };
 
   if (!snap) {
     return {
       ...base,
-      timeLeft: customMinutes !== "" ? Number(customMinutes) * 60 : 0,
+      timeLeft: defaultMinutesForMode > 0 ? defaultMinutesForMode * 60 : 0,
     };
   }
 
@@ -94,13 +108,18 @@ function buildInitialState() {
 
   const reallyRunning = isRunning && timeLeft > 0;
 
+  const hasSession = Boolean(startTime);
+  const isIdle = !reallyRunning && !hasSession;
+  const idleMinutes = minutesForMode(mode);
+
   return {
     ...base,
     mode,
+    customMinutes: isIdle ? idleMinutes : snapMinutes,
     startTime,
     endTime: reallyRunning ? endTime : null,
     isRunning: reallyRunning,
-    timeLeft,
+    timeLeft: isIdle ? idleMinutes * 60 : timeLeft,
   };
 }
 
