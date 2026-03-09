@@ -55,3 +55,29 @@ test("renders a password error when submitted without a password", async () => {
   expect(screen.getByText(/password required/i)).toBeInTheDocument();
   expect(loginMock).not.toHaveBeenCalled();
 });
+
+jest.mock("../../contexts/AuthContext", () => ({
+  useAuthState: () => ({
+    status: "anonymous",
+    errorMessage: null,
+  }),
+  useAuthActions: () => ({
+    login: loginMock,
+  }),
+}));
+
+test("renders an email error when submitted without an email", async () => {
+  const user = userEvent.setup();
+
+  render(
+    <MemoryRouter>
+      <LoginForm />
+    </MemoryRouter>,
+  );
+
+  await user.type(screen.getByLabelText(/password/i), "12345678");
+  await user.click(screen.getByRole("button", { name: /log in/i }));
+
+  expect(screen.getByText(/email required/i)).toBeInTheDocument();
+  expect(loginMock).not.toHaveBeenCalled();
+});
