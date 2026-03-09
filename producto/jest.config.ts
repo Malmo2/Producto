@@ -1,4 +1,6 @@
-export default {
+import type { Config } from "jest";
+
+const config: Config = {
   preset: "ts-jest/presets/default-esm",
   testEnvironment: "jsdom",
   transform: {
@@ -10,8 +12,10 @@ export default {
       },
     ],
   },
-  extensionToTreatAsEsm: [".ts", ".tsx"],
+  extensionsToTreatAsEsm: [".ts", ".tsx"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  setupFileAfterEnv: ["./src/test/setupTests.ts"],
+  setupFilesAfterEnv: ["./src/test/setupTests.ts"],
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 };
+
+export = config;
