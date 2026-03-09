@@ -14,7 +14,11 @@ const config: Config = {
   },
   extensionsToTreatAsEsm: [".ts", ".tsx"],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
-  setupFilesAfterEnv: ["./src/test/setupTests.ts"],
+  setupFilesAfterEnv: ["<rootDir>/src/test/setupTests.ts"],
+  moduleNameMapper: {
+    "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/__mocks__/fileMock.js",
+    "\\.(css|less|scss|sass)$": "<rootDir>/__mocks__/styleMock.js",
+  },
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
 };
 
