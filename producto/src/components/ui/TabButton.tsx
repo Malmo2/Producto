@@ -11,15 +11,7 @@ export function TabButton({
         <button
             type="button"
             onClick={onClick}
-            style={{
-                padding: "10px 14px",
-                borderRadius: 10,
-                border: "none",
-                cursor: "pointer",
-                backgroundColor: active ? "#1E6FE3" : "#121A2B",
-                color: active ? "#000" : "#FFFFFF",
-                fontWeight: 700,
-            }}
+            className={`ui-toggle-btn ${active ? "ui-toggle-btn-selected" : ""}`}
         >
             {label}
         </button>
