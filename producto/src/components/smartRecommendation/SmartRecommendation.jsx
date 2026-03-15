@@ -5,7 +5,7 @@ import { useTheme } from "../Darkmode/ThemeContext";
 import styles from "./smartRecommendation.module.css";
 import { EnergyChart } from "../energy/EnergyChart";
 import { getEnergyTrend } from "../../utils/getEnergyTrend";
-import { GetWorkRecommendations } from "../../utils/getWorkRecommendations";
+import { getScoredWorkRecommendations } from "../../utils/getWorkRecommendations";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
 import { Card, Typography, Box, Button } from "../ui";
 import { useTimer } from "../../contexts/TimerContext";
@@ -28,29 +28,17 @@ function SmartRecommendation() {
     return getEnergyTrend(logs, 6);
   }, [logs]);
 
-  const best = useMemo(() => {
-    const recommendations = GetWorkRecommendations(
-      latestEnergy,
-      trend,
-      availableMinutes,
-    );
-    return recommendations[0] ?? null;
+  const recommendations = useMemo(() => {
+    return getScoredWorkRecommendations(latestEnergy, trend, availableMinutes);
   }, [latestEnergy, trend, availableMinutes]);
 
-  const title = "Smart Recommendations";
+  const best = recommendations[0] ?? null;
 
-  const heading = best ? best.title : "Log your energy to get recommendations";
-  const text = best
-    ? `${best.description} (Trend: ${trend})`
-    : "Go to Energy page and save at least 1–2 energy logs.";
-
-  const handleStartRecommended = () => {
-    if (!best) return;
-
+  const handleStartRecommended = (item) => {
     setPlan({
-      timerMode: best.timerMode,
-      minutes: best.minutes,
-      label: best.title,
+      timerMode: item.mode.timerMode,
+      minutes: item.mode.minutes,
+      label: item.mode.title,
     });
 
     navigate("/timer");
@@ -62,28 +50,147 @@ function SmartRecommendation() {
       data-theme={theme}
       style={{ padding: 20 }}
     >
-      <Box style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <Box style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div className={styles.titleRow}>
           <Typography variant="h6" component="h4">
-            {title}
+            Smart Recommendations
           </Typography>
         </div>
 
-        <Typography variant="h5" component="h2">
-          {heading}
-        </Typography>
-
         <Typography variant="body1" color="muted">
-          {text}
+          Current energy: {latestEnergy ?? "No data"} | Trend: {trend} |
+          Available time: {availableMinutes} min
         </Typography>
 
-        {best ? (
-          <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="contained" onClick={handleStartRecommended}>
-              Start recommended session
-            </Button>
-          </Box>
-        ) : null}
+        {!best ? (
+          <>
+            <Typography variant="h5" component="h2">
+              Log your energy to get recommendations
+            </Typography>
+            <Typography variant="body1" color="muted">
+              Go to the Energy page and save at least 1–2 energy logs.
+            </Typography>
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                border: "1px solid var(--border-color, #d0d7de)",
+                borderRadius: 12,
+                padding: 16,
+              }}
+            >
+              <Typography variant="body1" color="muted">
+                Best match right now
+              </Typography>
+
+              <Typography variant="h5" component="h2">
+                {best.mode.title}
+              </Typography>
+
+              <Typography variant="body1" color="muted">
+                {best.mode.description}
+              </Typography>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  marginTop: 10,
+                  marginBottom: 10,
+                  fontSize: 14,
+                }}
+              >
+                <span>Mode: {best.mode.timerMode}</span>
+                <span>•</span>
+                <span>Timer: {best.mode.minutes} min</span>
+                <span>•</span>
+                <span>Score: {best.score}</span>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                {best.reasons.map((reason, index) => (
+                  <Typography key={index} variant="body1" color="muted">
+                    • {reason}
+                  </Typography>
+                ))}
+              </div>
+
+              <Box
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  marginTop: 12,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={() => handleStartRecommended(best)}
+                >
+                  Start recommended session
+                </Button>
+              </Box>
+            </div>
+
+            {recommendations.length > 1 ? (
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 12 }}
+              >
+                <Typography variant="h6" component="h3">
+                  Other good options
+                </Typography>
+
+                {recommendations.slice(1).map((item) => (
+                  <div
+                    key={item.mode.id}
+                    style={{
+                      border: "1px solid var(--border-color, #d0d7de)",
+                      borderRadius: 12,
+                      padding: 14,
+                    }}
+                  >
+                    <Typography variant="h6" component="h4">
+                      {item.mode.title}
+                    </Typography>
+
+                    <Typography variant="body1" color="muted">
+                      {item.mode.description}
+                    </Typography>
+
+                    <Typography variant="body1" color="muted">
+                      {item.mode.minutes} min • {item.mode.timerMode} • score{" "}
+                      {item.score}
+                    </Typography>
+
+                    <Typography
+                      variant="body1"
+                      color="muted"
+                      style={{ marginTop: 8 }}
+                    >
+                      Why: {item.reasons[0]}
+                    </Typography>
+
+                    <Box
+                      style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginTop: 10,
+                      }}
+                    >
+                      <Button
+                        variant="outlined"
+                        onClick={() => handleStartRecommended(item)}
+                      >
+                        Use this plan
+                      </Button>
+                    </Box>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+          </>
+        )}
 
         {logs.length > 0 ? <EnergyChart logs={logs} maxPoints={14} /> : null}
       </Box>
