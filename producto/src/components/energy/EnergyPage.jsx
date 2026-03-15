@@ -3,7 +3,7 @@ import { useEnergy } from "./context/EnergyContext";
 import EnergyLevelPicker from "./EnergyLevelPicker";
 import EnergyLogList from "./EnergyLogList";
 import EnergyStats from "./EnergyStats";
-import { EnergyChart } from "./EnergyChart";
+import EnergyGraph from "./EnergyGraph";
 import { Box, Typography, Button, Card } from "../ui";
 import { getEnergyTrend } from "../../utils/getEnergyTrend";
 import { exportEnergyLogsCsv } from "../../utils/exportEnergyLogsCsv";
@@ -79,7 +79,7 @@ function EnergyPage() {
           </Button>
         </Box>
 
-        <EnergyChart logs={logs} maxPoints={14} />
+        <EnergyGraph logs={logs} />
 
         <EnergyLogList logs={logs} onDelete={deleteLog} />
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEnergy } from "../energy/context/EnergyContext";
 import { useTheme } from "../Darkmode/ThemeContext";
 import styles from "./smartRecommendation.module.css";
-import { EnergyChart } from "../energy/EnergyChart";
+import EnergyGraph from "../energy/EnergyGraph";
 import { getEnergyTrend } from "../../utils/getEnergyTrend";
 import { getScoredWorkRecommendations } from "../../utils/getWorkRecommendations";
 import { useRecommendationPlan } from "../../contexts/RecommendationPlanContext";
@@ -192,7 +192,7 @@ function SmartRecommendation() {
           </>
         )}
 
-        {logs.length > 0 ? <EnergyChart logs={logs} maxPoints={14} /> : null}
+        {logs.length > 0 ? <EnergyGraph logs={logs} /> : null}
       </Box>
     </Card>
   );
