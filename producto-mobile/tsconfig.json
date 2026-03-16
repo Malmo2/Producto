@@ -12,6 +12,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "features/timer/utils/toSafeMinutes.js",
+    "features/timer/utils/secondsUntil.js",
+    "features/timer/context/TimerContext.jsx",
+    "features/timer/timerReducer.js"
   ]
 }
