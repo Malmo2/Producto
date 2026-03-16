@@ -1,6 +1,5 @@
 import {useReducer} from 'react'
 import { supabase } from '../../lib/supabaseClient'
-import styles from './LoginForm.module.css'
 import { Button, TextField, Typography, Box } from "../ui";
 
 export const ChangePasswordForm = () => {
@@ -76,8 +75,8 @@ export const ChangePasswordForm = () => {
     }
 
     return(
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <Box className={styles.formGroup} style={{ marginBottom: 16 }}>
+            <form onSubmit={handleSubmit} className="change-password-form">
+                <Box className="change-password-form-group" style={{ marginBottom: 16 }}>
                     <TextField
                         label="Current Password"
                         type="password"
@@ -92,7 +91,7 @@ export const ChangePasswordForm = () => {
                     />
                 </Box>
 
-                <Box className={styles.formGroup} style={{ marginBottom: 16 }}>
+                <Box className="change-password-form-group" style={{ marginBottom: 16 }}>
                     <TextField
                         label="New Password"
                         type="password"
@@ -107,7 +106,7 @@ export const ChangePasswordForm = () => {
                     />
                 </Box>
 
-                <Box className={styles.formGroup} style={{ marginBottom: 16 }}>
+                <Box className="change-password-form-group" style={{ marginBottom: 16 }}>
                     <TextField
                         label="Confirm Password"
                         type="password"
@@ -151,9 +150,9 @@ type PasswordFormState = {
 
     }
     errors: {
-        currentPassword?: string;
-        newPassword?: string;
-        confirmPassword?: string;
+        currentPassword?: string | undefined;
+        newPassword?: string | undefined;
+        confirmPassword?: string | undefined;
     }
     status: 'idle' | 'submitting' | 'success' | 'error';
     statusMessage?: string | undefined;

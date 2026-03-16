@@ -307,7 +307,7 @@
   min-width: 0;
 }
 .quick-action-title {
-  color: var(--contrast-text);
+  color: var(--text);
   margin-bottom: 4px;
 }
 .quick-action-card:hover .quick-action-card-inner {
@@ -319,7 +319,7 @@
 .quick-action-card:hover .quick-action-subtitle,
 .quick-action-card:hover .quick-action-icon,
 .quick-action-card:hover .quick-action-chevron {
-  color: var(--contrast-text);
+  color: var(--text);
 }
 @media (max-width: 768px) {
   .quick-actions-container { grid-template-columns: 1fr !important; }
