@@ -2,6 +2,8 @@ import "./Settings.css";
 import { useContext, useState } from "react";
 import { ThemeContext } from "../Darkmode/ThemeContext";
 import { ChangePasswordForm } from "../forms/ChangePasswordForm";
+import { useEnergy } from "../energy/context/EnergyContext";
+import { exportEnergyLogsCsv } from "../../utils/exportEnergyLogsCsv";
 import {
     Card,
     CardContent,
@@ -47,6 +49,7 @@ function readTimerDefaults() {
 
 function Settings() {
     const { theme, toggleTheme } = useContext(ThemeContext);
+    const { logs } = useEnergy();
 
     const [timerDefaults, setTimerDefaults] = useState(readTimerDefaults);
 
@@ -278,6 +281,50 @@ function Settings() {
                                             </Button>
                                         </Box>
                                     </Box>
+                                </Box>
+                            </Box>
+
+                            <Box className="settings-subsection">
+                                <Typography
+                                    variant="subtitle1"
+                                    className="settings-subsection-title"
+                                    style={{ marginBottom: 32 }}
+                                >
+                                    Data export
+                                </Typography>
+
+                                <Box
+                                    className="settings-theme-row"
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        gap: 16,
+                                    }}
+                                >
+                                    <Box>
+                                        <Typography
+                                            variant="subtitle1"
+                                            className="settings-theme-label"
+                                        >
+                                            Energy logs
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            color="muted"
+                                            className="settings-theme-desc"
+                                        >
+                                            Download your energy history as a CSV file
+                                        </Typography>
+                                    </Box>
+
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => exportEnergyLogsCsv(logs)}
+                                        style={{ backgroundColor: "#2563eb", color: "#ffffff" }}
+                                    >
+                                        Export CSV
+                                    </Button>
                                 </Box>
                             </Box>
                         </Box>
