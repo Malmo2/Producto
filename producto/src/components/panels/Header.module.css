@@ -2,9 +2,13 @@
   width: 100%;
   box-sizing: border-box;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   grid-template-rows: auto auto;
-  gap: 6px 18px;
+  grid-template-areas:
+    "title timer action"
+    "date timer action";
+  column-gap: 18px;
+  row-gap: 6px;
   align-items: center;
   padding: 22px 24px;
   border-radius: 0;
@@ -36,6 +40,8 @@
   font-size: 22px;
   font-weight: 700;
   color: var(--text);
+  grid-area: title;
+  min-width: 0;
 }
 
 .headerContainer p {
@@ -43,32 +49,44 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--muted);
+  grid-area: date;
+  min-width: 0;
 }
 
-.headerContainer :global(button) {
-  grid-column: 2;
-  grid-row: 1 / span 2;
+.headerContainer> :nth-child(3) {
+  grid-area: timer;
+  justify-self: center;
+  align-self: center;
+}
+
+.headerContainer> :nth-child(4) {
+  grid-area: action;
   justify-self: end;
+  align-self: center;
 }
 
 @media (max-width: 900px) {
   .headerContainer {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto;
+    grid-template-areas:
+      "title"
+      "date"
+      "timer"
+      "action";
     justify-items: center;
-    text-align: center;
-    gap: 8px;
-    padding: 14px 64px 12px;
+    text-align: left;
+    row-gap: 8px;
+    padding: 14px 16px 12px;
   }
 
   .headerContainer h2,
   .headerContainer p {
-    text-align: center;
+    text-align: left;
   }
 
-  .headerContainer :global(button) {
-    grid-column: 1;
-    grid-row: auto;
+  .headerContainer> :nth-child(3),
+  .headerContainer> :nth-child(4) {
     justify-self: center;
     margin-top: 4px;
   }

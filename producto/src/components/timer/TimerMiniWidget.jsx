@@ -26,7 +26,6 @@ export default function TimerMiniWidget() {
   const R = 12;
   const C = 2 * Math.PI * R;
 
-  // ✅ ADDED: use dashoffset for a smooth “countdown ring”
   const offset = C * (1 - progress);
 
   return (
@@ -38,6 +37,7 @@ export default function TimerMiniWidget() {
         padding: "6px 10px",
         borderRadius: 12,
         border: "1px solid rgba(255,255,255,0.12)",
+        maxWidth: "160px",
       }}
     >
       <Box style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
@@ -75,7 +75,6 @@ export default function TimerMiniWidget() {
           />
         </svg>
       </Box>
-
       <Button
         size="small"
         variant={state.isRunning ? "outlined" : "contained"}
@@ -83,6 +82,7 @@ export default function TimerMiniWidget() {
       >
         {state.isRunning ? "Pause" : "Start"}
       </Button>
+
     </Box>
   );
 }
