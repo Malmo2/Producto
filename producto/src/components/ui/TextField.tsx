@@ -4,7 +4,7 @@ import { Box } from "./Box";
 type TextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
   error?: boolean;
-  helperText?: string;
+  helperText?: string | undefined;
   fullWidth?: boolean;
   size?: "small" | "medium";
   margin?: "none" | "normal";

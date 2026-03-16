@@ -53,7 +53,7 @@
 .activity-session-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--contrast-text);
+  color: var(--text);
   margin: 0;
 }
 
@@ -76,7 +76,7 @@
 .activity-session-value {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--contrast-text);
+  color: var(--text);
 }
 
 .activity-session-tip {
@@ -97,7 +97,7 @@
 
 .activity-session-tip-text {
   font-size: 0.9rem;
-  color: #e2e8f0;
+  color: var(--text);
   line-height: 1.5;
   margin: 0;
 }
