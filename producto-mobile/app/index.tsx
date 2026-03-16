@@ -1,7 +1,8 @@
-import { View, Text } from "react-native";
-import { useTimer } from "../features/timer/context/TimerContext";
 import { formatTime } from "@/features/timer/utils/formatTime";
 import BaseButton from "@/ui/Buttons/BaseButton";
+import { Text, View } from "react-native";
+import TimerDisplay from '../features/timer/components/TimerDisplay';
+import { useTimer } from "../features/timer/context/TimerContext";
 
 
 export default function HomeScreen() {
@@ -17,6 +18,14 @@ export default function HomeScreen() {
         gap: 12,
       }}
     >
+
+      <TimerDisplay
+        timeLeft={state.timeLeft}
+        isRunning={state.isRunning}
+        totalTime={(Number(state.customMinutes) || 0) * 60}
+      />
+
+
       <Text>Timer app is running</Text>
       <Text>Mode: {state.mode}</Text>
       <Text>Running: {state.isRunning ? "Yes" : "No"}</Text>

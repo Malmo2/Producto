@@ -1,0 +1,280 @@
+/* Timer page two-column layout */
+.timer-container {
+    width: 100%;
+}
+
+.timer-page-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.timer-page-main {
+    min-width: 0;
+}
+
+.timer-page-sidebar {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.timer-recent-sessions {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timer-tracking-text {
+    text-align: center;
+    color: var(--contrast-text);
+    font-size: 0.95rem;
+    margin: 0.6rem 0 0 0;
+}
+
+/* Activity Session sidebar */
+.activity-session-sidebar {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.activity-session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.activity-session-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--contrast-text);
+    margin: 0;
+}
+
+.activity-session-info-icon {
+    color: #9aa6b2;
+    flex-shrink: 0;
+}
+
+.activity-session-elapsed {
+    margin-bottom: 1.5rem;
+}
+
+.activity-session-label {
+    display: block;
+    font-size: 0.875rem;
+    color: #9aa6b2;
+    margin-bottom: 0.25rem;
+}
+
+.activity-session-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--contrast-text);
+}
+
+.activity-session-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 1.5rem;
+}
+
+.activity-session-tip-icon {
+    color: #22c55e;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.activity-session-tip-text {
+    font-size: 0.9rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.activity-session-end-btn {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: var(--contrast-text);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.activity-session-end-btn:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.activity-session-end-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (min-width: 1024px) {
+    .timer-page-layout {
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+    }
+
+    .timer-page-sidebar {
+        gap: 24px;
+    }
+
+    .timer-recent-sessions,
+    .activity-session-sidebar {
+        padding: 24px;
+    }
+}
+
+/* Mode selector - segmented control with icons */
+.mode-selector {
+    display: flex;
+    gap: 0;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #9aa6b2;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.mode-btn:hover {
+    color: #e2e8f0;
+}
+
+.mode-btn.active {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--contrast-text);
+}
+
+/* Timer controls - icon + text buttons */
+.timer-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.timer-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+}
+
+.timer-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.timer-btn-primary {
+    background: #2563eb;
+    color: var(--contrast-text);
+}
+
+.timer-btn-primary:hover:not(:disabled) {
+    background: #1d4ed8;
+}
+
+.timer-btn-secondary {
+    background: #2a3142;
+    color: var(--contrast-text);
+}
+
+.timer-btn-secondary:hover:not(:disabled) {
+    background: #1e293b;
+}
+
+/* Container to stack SVG and Text */
+.timer-display-container {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    /* Rotates circle to start at the top */
+}
+
+.timer-ring-bg {
+    fill: none;
+    stroke: #2a3142;
+    /* Dark track color from your image */
+    stroke-width: 8;
+}
+
+.timer-ring-progress {
+    fill: none;
+    stroke: #2563eb;
+    /* Bright blue color from your image */
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+    /* Smooth movement */
+}
+
+.timer-text-overlay {
+    position: absolute;
+    text-align: center;
+}
+
+.time-text {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--contrast-text);
+    margin: 0;
+}
+
+.status-text {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: #888;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+}
+
+[data-theme="light"] .time-text {
+    color: #0b1220;
+}
