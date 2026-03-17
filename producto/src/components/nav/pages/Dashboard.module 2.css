@@ -1,0 +1,67 @@
+.dashboardRoot {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dashboardSections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.sectionTitleNoMargin {
+  font-weight: 700;
+}
+
+.smartRecommendationHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.productivitySnapshotGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.quickActionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .dashboardSections {
+    gap: 20px;
+  }
+
+  .quickActionsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboardSections {
+    gap: 24px;
+  }
+
+  .productivitySnapshotGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .quickActionsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}

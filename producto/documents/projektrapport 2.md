@@ -862,3 +862,28 @@ De största lärdomarna inkluderar:
 - Vite - https://vitejs.dev
 - Jest - https://jestjs.io
 - React Testing Library - https://testing-library.com/react
+
+## 9. Individuella bidrag
+
+### Mattias Eskilsson
+
+### Johannes Folkesson
+
+### Emelie Björkman
+
+**Timer:**
+
+- En komplett timer med fem komponenter (ModeSelector, TimerDisplay, TimerControls, ActivitySessionSidebar, RecentSessions)
+- Implementerade state management med useReducer och TimerContext
+- Integrerade tre contexts: Timer, Auth och Theme
+- Tre fokuslägen (Work, Meeting, Break).
+- Live session-tracking i sidebar
+- Återanvändbara komponenter med props
+- Timestamp-baserad countdown (löste setInterval-drift problem)
+- Context API för global state utan prop drilling
+- Button - Återanvändbar komponent med variants (primary, secondary, danger)
+- Feature branches, pull requests, merge conflict resolution
+
+### Benjame Abi
+
+### Idris Ahmed
