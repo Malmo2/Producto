@@ -1,3 +1,12 @@
+/* TimerContext handles:
+starting and pausing
+ticking every second
+restoring state after refresh
+saving progress
+opening the finish popup
+reacting to changed defaults
+accepting timer recommendations from another context */
+
 import {
   useState,
   useMemo,
