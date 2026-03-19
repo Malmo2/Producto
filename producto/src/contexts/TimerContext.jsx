@@ -20,6 +20,14 @@ const TIMER_DEFAULTS_KEY = "timerDefaults";
 const TIMER_SNAPSHOT_KEY = "timerSnapshotV1";
 const TIMER_DEFAULTS_FALLBACK = { work: 15, meeting: 45, break: 5 };
 
+/**
+ * Reads saved timer default lengths from localStorage.
+ *
+ * If the value is missing, invalid, or contains non-positive numbers,
+ * fallback defaults are returned instead.
+ *
+ * @returns {{ work: number, meeting: number, break: number }}
+ */
 function readTimerDefaults() {
   const raw = localStorage.getItem(TIMER_DEFAULTS_KEY);
   if (!raw) return TIMER_DEFAULTS_FALLBACK;
@@ -45,12 +53,24 @@ function readTimerDefaults() {
   }
 }
 
+/**
+ * Returns the configured number of minutes for a given timer mode.
+ *
+ * @param {"work" | "meeting" | "break"} mode
+ * @returns {number}
+ */
 function minutesForMode(mode) {
   const defaults = readTimerDefaults();
   const n = Number(defaults?.[mode]);
   return n > 0 ? n : TIMER_DEFAULTS_FALLBACK.work;
 }
 
+/**
+ * Safely parses JSON and returns null if parsing fails.
+ *
+ * @param {string} raw
+ * @returns {any | null}
+ */
 function safeParseJson(raw) {
   try {
     return JSON.parse(raw);
@@ -59,6 +79,18 @@ function safeParseJson(raw) {
   }
 }
 
+/**
+ * Builds the timer's initial state.
+ *
+ * This function tries to restore the timer from a saved snapshot in localStorage.
+ * If no snapshot exists, it starts from the reducer's initial state using
+ * the saved default minutes for the current mode.
+ *
+ * It also recalculates `timeLeft` when a timer was running and the page reloads,
+ * so the countdown stays accurate after refresh.
+ *
+ * @returns {object}
+ */
 function buildInitialState() {
   const snapRaw = localStorage.getItem(TIMER_SNAPSHOT_KEY);
   const snap = snapRaw ? safeParseJson(snapRaw) : null;
@@ -83,7 +115,6 @@ function buildInitialState() {
   const isRunning = Boolean(snap.isRunning);
 
   const hasSession = Boolean(startTime);
-
 
   if (!isRunning && !hasSession) {
     const defaultMinutes = minutesForMode(mode);
@@ -143,6 +174,13 @@ function buildInitialState() {
   };
 }
 
+/**
+ * Checks whether the session popup should automatically open on page load.
+ *
+ * This is used when a session had already finished before the app reloaded.
+ *
+ * @returns {boolean}
+ */
 function shouldOpenPopupOnLoad() {
   const snapRaw = localStorage.getItem(TIMER_SNAPSHOT_KEY);
   const snap = snapRaw ? safeParseJson(snapRaw) : null;
@@ -159,6 +197,20 @@ function shouldOpenPopupOnLoad() {
   return isFinished;
 }
 
+/**
+ * Provides timer state and timer actions to all children through React context.
+ *
+ * Responsibilities:
+ * - restore timer state from localStorage
+ * - keep timer ticking while running
+ * - persist snapshot changes
+ * - react to timer-default changes
+ * - apply recommendation plans when entering the /timer route
+ * - control the session popup
+ *
+ * @param {{ children: React.ReactNode }} props
+ * @returns {JSX.Element}
+ */
 export function TimerProvider({ children }) {
   const { plan, clearPlan, consumePlan } = useRecommendationPlan();
   const location = useLocation();
@@ -176,6 +228,10 @@ export function TimerProvider({ children }) {
   const intervalRef = useRef(null);
   const prevTimeLeftRef = useRef(state.timeLeft);
 
+  /**
+   * Starts the ticking interval whenever the timer is running,
+   * and clears it when the timer stops or the component unmounts.
+   */
   useEffect(() => {
     if (!state.isRunning) return;
 
@@ -189,11 +245,21 @@ export function TimerProvider({ children }) {
     };
   }, [state.isRunning]);
 
+  /**
+   * Keeps a ref pointing at the latest state so event listeners
+   * can read fresh values without re-registering.
+   */
   const stateRef = useRef(state);
   useEffect(() => {
     stateRef.current = state;
-  }, [state])
+  }, [state]);
 
+  /**
+   * Detects the moment a session finishes.
+   *
+   * When timeLeft changes from a positive number to 0,
+   * the timer is paused and the session popup opens.
+   */
   useEffect(() => {
     const prev = prevTimeLeftRef.current;
     prevTimeLeftRef.current = state.timeLeft;
@@ -207,6 +273,10 @@ export function TimerProvider({ children }) {
     }
   }, [state.timeLeft, state.startTime]);
 
+  /**
+   * Persists the current timer snapshot to localStorage
+   * whenever important timer values change.
+   */
   useEffect(() => {
     const snapshot = {
       mode: state.mode,
@@ -227,6 +297,12 @@ export function TimerProvider({ children }) {
     state.endTime,
   ]);
 
+  /**
+   * Listens for external timer-default updates.
+   *
+   * If the current timer is idle and using the previous default value,
+   * this effect resets it to the new default for the current mode.
+   */
   useEffect(() => {
     function handleTimerDefaultsChanged(e) {
       const detail = e?.detail;
@@ -234,14 +310,14 @@ export function TimerProvider({ children }) {
       const prevMinutes = Number(detail?.prevMinutes);
       const nextMinutes = Number(detail?.nextMinutes);
 
-      if (!["work", "meeting", "break"].includes(mode) || !(nextMinutes > 0)) return;
+      if (!["work", "meeting", "break"].includes(mode) || !(nextMinutes > 0)) {
+        return;
+      }
 
       const s = stateRef.current;
 
       if (s.isRunning) return;
       if (s.mode !== mode) return;
-
-
 
       const isIdleLike =
         s.timeLeft === s.customMinutes * 60 || s.timeLeft === 0;
@@ -255,28 +331,51 @@ export function TimerProvider({ children }) {
     }
 
     window.addEventListener("timerDefaultsChanged", handleTimerDefaultsChanged);
-    return () => {
-      window.removeEventListener("timerDefaultsChanged", handleTimerDefaultsChanged);
-    }
-  }, [])
 
+    return () => {
+      window.removeEventListener(
+        "timerDefaultsChanged",
+        handleTimerDefaultsChanged,
+      );
+    };
+  }, []);
+
+  /**
+   * Changes both the timer mode and its duration.
+   *
+   * @param {"work" | "meeting" | "break"} mode
+   * @param {number} minutes
+   */
   function setModeAndMinutes(mode, minutes) {
     dispatch({ type: "CHANGE_MODE", payload: mode });
     dispatch({ type: "SET_CUSTOM_MINUTES", payload: minutes });
   }
 
+  /**
+   * Changes mode and applies that mode's saved default minutes.
+   *
+   * @param {"work" | "meeting" | "break"} mode
+   */
   function setModeWithDefaults(mode) {
     const minutes = minutesForMode(mode);
     setModeAndMinutes(mode, minutes);
   }
 
+  /**
+   * Fully resets the timer using the saved default minutes for a mode.
+   *
+   * @param {"work" | "meeting" | "break"} mode
+   */
   function resetToModeDefaults(mode) {
     const minutes = minutesForMode(mode);
     dispatch({ type: "RESET_TIMER", payload: { mode, minutes } });
   }
 
-
-
+  /**
+   * Applies a recommendation plan when the user navigates to /timer.
+   *
+   * The plan is consumed once and used to prefill the timer mode and minutes.
+   */
   useEffect(() => {
     const onTimerRoute = location.pathname.startsWith("/timer");
     if (!onTimerRoute) return;
@@ -287,11 +386,16 @@ export function TimerProvider({ children }) {
     const mode = p.timerMode;
     const minutes = Number(p.minutes);
 
-    if (!["work", "meeting", "break"].includes(mode) || !(minutes > 0)) return;
+    if (!["work", "meeting", "break"].includes(mode) || !(minutes > 0)) {
+      return;
+    }
 
     setModeAndMinutes(mode, minutes);
   }, [location.pathname, consumePlan]);
 
+  /**
+   * Memoized timer context API exposed to consumers.
+   */
   const api = useMemo(
     () => ({
       state,
@@ -314,6 +418,24 @@ export function TimerProvider({ children }) {
   return <TimerContext.Provider value={api}>{children}</TimerContext.Provider>;
 }
 
+/**
+ * Hook for reading the timer context.
+ *
+ * Must be used inside <TimerProvider>.
+ *
+ * @returns {{
+ *   state: object,
+ *   isSessionPopupOpen: boolean,
+ *   startTimer: () => void,
+ *   pauseTimer: () => void,
+ *   resetTimer: () => void,
+ *   setModeWithDefaults: (mode: "work" | "meeting" | "break") => void,
+ *   setModeAndMinutes: (mode: "work" | "meeting" | "break", minutes: number) => void,
+ *   endSession: () => void,
+ *   closeSessionPopup: () => void,
+ *   openSessionPopup: () => void,
+ * }}
+ */
 export function useTimer() {
   const ctx = useContext(TimerContext);
   if (!ctx) throw new Error("useTimer must be used inside TimerProvider");
