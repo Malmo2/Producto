@@ -23,7 +23,7 @@ Built as a school project for Chas Academy (React, TypeScript & React Native cou
 **Frontend:**
 
 - React
-- TypeScript
+- TypeScript / Javascript
 - CSS Modules
 - Context API
 - React Router
@@ -171,9 +171,11 @@ This project was built by a team of 5 students at Chas Academy:
 - [Johannes] -
 - [Benjame] -
 - [Emelie] -
-- [Idris] -
+  
+- [Idris] : Worked on the Energy Tracking feature. Implemented energy level logging (1-5), the energy graph/chart, energy log list with delete functionality, and average energy statistics. Also built CSV export(thats in saperate branch "feat/csv-smart-rec") for energy logs and contributed to the Smart Recommendation feature by creating recommendation logic based on energy level, energy trend, and available time, plus the UI for showing and starting recommended work sessions.
 
 We followed Agile/Scrum methodology with 2-week sprints.
+
 
 ---
 
@@ -196,4 +198,4 @@ We followed Agile/Scrum methodology with 2-week sprints.
 
 ---
 
-**Built with React, TypeScript, and lots of coffee ☕**
+**Built with React, TypeScript/Javascript, and lots of coffee ☕**
