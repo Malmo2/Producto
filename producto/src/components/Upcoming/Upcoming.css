@@ -46,7 +46,7 @@
   align-items: flex-start;
   gap: 16px;
   padding: 20px;
-  background-color: #f8fafc;
+  background-color: var(--card);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -74,7 +74,7 @@
 
 .upcoming-event-text {
   font-size: 14px;
-  color: #0f172a;
+  color: gray;
   line-height: 1.5;
 }
 
