@@ -93,9 +93,9 @@ export function EnergyChart({ logs, maxPoints = 14 }: Props) {
               <Line
                 type="monotone"
                 dataKey="value"
-                stroke="var(--accent)"
+                stroke="orange"
                 strokeWidth={3}
-                dot={{ r: 4, fill: "var(--accent)" }}
+                dot={{ r: 4, fill: "orange" }}
                 activeDot={{ r: 6 }}
               />
             </LineChart>
