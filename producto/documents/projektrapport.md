@@ -6,7 +6,7 @@
 
 **Kurs:** React, TypeScript och React Native  
 **Institution:** Chas Academy  
-**Datum:** Mars 2026  
+**Datum:** Januari - Mars 2026  
 **Projektperiod:** 12 veckor  
 **Team:** Mattias, Johannes, Benjame, Idris, Emelie
 
