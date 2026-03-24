@@ -47,7 +47,7 @@ function SmartRecommendation() {
 
   const heading = best ? best.title : "Log your energy to get recommendations";
   const text = best
-    ? `${best.description} (Trend: ${trend})`
+    ? `${best.description}`
     : "Go to Energy page and save at least 1–2 energy logs.";
 
   const handleStartRecommended = () => {
