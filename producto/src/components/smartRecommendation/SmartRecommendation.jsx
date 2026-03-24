@@ -22,20 +22,26 @@ function SmartRecommendation() {
     return Number.isFinite(n) && n > 0 ? n : 30;
   }, [state.customMinutes]);
 
-  const latestEnergy = logs[0]?.level ?? null;
+  const latestEnergy = useMemo(() => {
+    if (!logs.length) return null;
+    return logs[0]?.level ?? null;
+  }, [logs]);
 
   const trend = useMemo(() => {
     return getEnergyTrend(logs, 6);
   }, [logs]);
 
-  const best = useMemo(() => {
-    const recommendations = GetWorkRecommendations(
+  const recommendations = useMemo(() => {
+    const result = GetWorkRecommendations(
       latestEnergy,
       trend,
       availableMinutes,
     );
-    return recommendations[0] ?? null;
+
+    return result;
   }, [latestEnergy, trend, availableMinutes]);
+
+  const best = recommendations[0] ?? null;
 
   const title = "Smart Recommendations";
 

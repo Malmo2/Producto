@@ -63,9 +63,9 @@ export const WORK_MODES: WorkMode[] = [
         description: "Hard problems, serious focus, creative output.",
         minEnergy: 4,
         maxEnergy: 5,
-        minMinutes: 45,
+        minMinutes: 35,
         maxMinutes: 120,
         timerMode: "work",
-        minutes: 50,
-    },
+        minutes: 45,
+    }
 ];
