@@ -15,6 +15,7 @@ import styles from "./Dashboard.module.css";
 import StatCard from "../../ui/StatCard";
 import BaseStatCard from "../../ui/BaseStatCard";
 import QuickActionCard from "../../ui/QuickCardAction";
+<<<<<<< Updated upstream
 
 const normalize = (v: unknown) =>
   String(v ?? "")
@@ -27,6 +28,8 @@ const isDeepWork = (category: unknown) => {
   const c = normalize(category);
   return c === "deepwork" || c === "deep work" || c.includes("deep work");
 };
+=======
+>>>>>>> Stashed changes
 
 function Dashboard() {
   const { token } = useAuthState();
@@ -79,6 +82,7 @@ function Dashboard() {
   return (
     <Box className={`${styles.dashboardRoot} page-shell`}>
       <Header />
+<<<<<<< Updated upstream
       <Box className="page-content">
         <DashboardLayout>
           <Box className={styles.dashboardSections}>
@@ -137,6 +141,87 @@ function Dashboard() {
           </Box>
         </DashboardLayout>
       </Box>
+=======
+
+      <DashboardLayout>
+        <Box style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <Box>
+            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: 16 }}>
+              Productivity Snapshot
+            </Typography>
+
+            <BaseStatCard
+              style={{
+                backgroundColor: "#121A2B",
+                borderRadius: 12,
+                padding: 20,
+              }}
+            >
+              <Box
+                className="productivity-snapshot"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, 1fr)",
+                  gap: 20,
+                }}
+              >
+                <StatCard label="Time Tracked" value={formatDurationMinutes(timeTracked)} />
+                <StatCard label="Sessions" value={String(sessionCount)} />
+                <StatCard
+                  label="Avg Energy"
+                  value={avgEnergy != null ? `${avgEnergy.toFixed(1)}` : "—"}
+                />
+                <StatCard label="Deep Work" value={formatDurationMinutes(deepWorkSeconds)} />
+              </Box>
+            </BaseStatCard>
+          </Box>
+
+          <Box>
+            <Typography variant="h6" style={{ fontWeight: 700, marginBottom: 16 }}>
+              Quick Actions
+            </Typography>
+
+            <BaseStatCard
+              style={{
+                backgroundColor: "#0d0f1d",
+                borderRadius: 12,
+                padding: 20,
+              }}
+            >
+              <Box
+                className="quick-actions-container"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: 20,
+                }}
+              >
+                <QuickActionCard
+                  icon={FaClock}
+                  title="Start Timer"
+                  subtitle="Begin a focus session"
+                  onClick={() => navigate("/timer")}
+                />
+                <QuickActionCard
+                  icon={FaBolt}
+                  title="Log Energy"
+                  subtitle="Record how you feel"
+                  onClick={() => navigate("/energy")}
+                />
+                <QuickActionCard
+                  icon={FaChartBar}
+                  title="View Insights"
+                  subtitle="Check your analytics"
+                  onClick={() => navigate("/insights")}
+                />
+              </Box>
+            </BaseStatCard>
+          </Box>
+
+          <SmartRecommendation />
+        </Box>
+      </DashboardLayout>
+>>>>>>> Stashed changes
     </Box>
   );
 }
