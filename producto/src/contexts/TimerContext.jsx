@@ -101,6 +101,9 @@ function safeParseJson(raw) {
  * @returns {object}
  */
 function buildInitialState() {
+
+  // reads value from localStorage and checks if truthy
+
   const snapRaw = localStorage.getItem(TIMER_SNAPSHOT_KEY);
   const snap = snapRaw ? safeParseJson(snapRaw) : null;
 
@@ -119,14 +122,21 @@ function buildInitialState() {
     ? snap.mode
     : initialTimerState.mode;
 
+  // Check if they are strings, if they are keep else null.
+
   const startTime = typeof snap.startTime === "string" ? snap.startTime : null;
   const endTime = typeof snap.endTime === "string" ? snap.endTime : null;
   const isRunning = Boolean(snap.isRunning);
+
+  // Does startTime exist? true : false
 
   const hasSession = Boolean(startTime);
 
   if (!isRunning && !hasSession) {
     const defaultMinutes = minutesForMode(mode);
+
+
+    //Converts snaptime to a number and validates.
 
     const snapMinutesCandidate = Number(snap.customMinutes);
     const customMinutes =
@@ -194,6 +204,8 @@ function shouldOpenPopupOnLoad() {
   const snapRaw = localStorage.getItem(TIMER_SNAPSHOT_KEY);
   const snap = snapRaw ? safeParseJson(snapRaw) : null;
   if (!snap) return false;
+
+  // Checks whether snap.startTime is a non-empty string.
 
   const hasStart =
     typeof snap.startTime === "string" && snap.startTime.length > 0;
