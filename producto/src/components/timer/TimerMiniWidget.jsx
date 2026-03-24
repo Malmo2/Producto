@@ -33,7 +33,7 @@ export default function TimerMiniWidget() {
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 10,
+        gap: 4,
         padding: "6px 10px",
         borderRadius: 12,
         border: "1px solid rgba(255,255,255,0.12)",
